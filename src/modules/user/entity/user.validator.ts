@@ -18,14 +18,15 @@ export class UserValidator {
 
 
     static validateName(name: string) {
-        if (name.length < this.MinNameLength || name.length > this.MaxNameLength) {
+        const trimmed = name.trim();
+        if (trimmed.length < this.MinNameLength || trimmed.length > this.MaxNameLength) {
             throwAppError(
                 `Name must be between ${this.MinNameLength} and ${this.MaxNameLength} characters long.`,
                 400,
                 `${this.moduleName}.validateName(Length)`
             );
         }
-        if (!this.namePattern.test(name)) {
+        if (!this.namePattern.test(trimmed)) {
             throwAppError(
                 `Name must not contain '@'.`,
                 400,
@@ -52,14 +53,15 @@ export class UserValidator {
     }
 
     static validateEmail(email: string) {
-        if (email.length < this.MinEmailLength || email.length > this.MaxEmailLength) {
+        const trimmed = email.trim();
+        if (trimmed.length < this.MinEmailLength || trimmed.length > this.MaxEmailLength) {
             throwAppError(
                 `Email must be between ${this.MinEmailLength} and ${this.MaxEmailLength} characters long.`,
                 400,
                 `${this.moduleName}.validateEmail(Length)`,
             );
         }
-        if (!this.emailPattern.test(email)) {
+        if (!this.emailPattern.test(trimmed)) {
             throwAppError(
                 `Email must be a valid email address.`,
                 400,

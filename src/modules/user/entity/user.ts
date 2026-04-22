@@ -12,6 +12,9 @@ export class User {
         public created_at: Date,
         public updated_at: Date,
         public is_deleted: boolean,
+        public is_verified: boolean,
+        public last_password: string,
+        public pending_password: string | null
     ) {
     }
 
@@ -21,12 +24,13 @@ export class User {
         name: string,
         email: string,
         password_hashed: string,
-    ): {name: string, email: string, password_hashed: string} {
+    ): {name: string, email: string, password_hashed: string, last_password: string} {
 
         return {
             name,
             email,
             password_hashed,
+            last_password: password_hashed,
         }
     }
 
@@ -39,8 +43,12 @@ export class User {
         created_at: Date,
         updated_at: Date,
         is_deleted: boolean,
+        is_verified: boolean,
+        last_password: string,
+        pending_password: string | null,
     ): User {
-        UserValidator.validationPipeline(name, email, password_hashed);
+        UserValidator.validateName(name);
+        UserValidator.validateEmail(email);
         return new User (
             id,
             name,
@@ -49,7 +57,31 @@ export class User {
             created_at,
             updated_at,
             is_deleted,
+            is_verified,
+            last_password,
+            pending_password
         )
+    }
+
+    private ensureActiveAndVerified(operation: string): void {
+        if (this.is_deleted) {
+            throwAppError(
+                "User already deleted.",
+                400,
+                `${this.moduleName}.${operation}`,
+            );
+        }
+        if (!this.is_verified) {
+            throwAppError(
+                "User is not verified.",
+                400,
+                `${this.moduleName}.${operation}`,
+            );
+        }
+    }
+
+    checkIfVerified(): boolean {
+        return this.is_verified;
     }
 
     checkIfDeleted(): boolean {
@@ -58,42 +90,32 @@ export class User {
 
     updateName(name: string): void {
         UserValidator.validateName(name);
-        if (this.checkIfDeleted()) {
-            throwAppError(
-                "User already deleted.",
-                400,
-                `${this.moduleName}.updateName()`,
-            );
-        }
+        this.ensureActiveAndVerified("updateName()");
         this.name = name;
     }
 
     updateEmail(email: string): void {
         UserValidator.validateEmail(email);
-        if (this.checkIfDeleted()) {
-            throwAppError(
-                "User already deleted.",
-                400,
-                `${this.moduleName}.updateEmail()`,
-            );
-        }
+        this.ensureActiveAndVerified("updateEmail()");
         this.email = email;
     }
 
     updatePassword(password_hashed: string): void {
-        // we do not validate the password here, because it is already being validated and in here
-        // it will arrive as a hash so we can directly update this entity
-        if (this.checkIfDeleted()) {
-            throwAppError(
-                "User already deleted.",
-                400,
-                `${this.moduleName}.updatePassword()`,
-            );
-        }
+        this.ensureActiveAndVerified("updatePassword()");
         this.password_hashed = password_hashed;
     }
 
-    delete(): void {
+    updateLastPassword(last_password: string): void {
+        this.ensureActiveAndVerified("updateLastPassword()");
+        this.last_password = last_password;
+    }
+
+    updatePendingPassword(pending_password: string | null): void {
+        this.ensureActiveAndVerified("updatePendingPassword()");
+        this.pending_password = pending_password;
+    }
+
+    assertDelete(): void {
         if (this.checkIfDeleted()) {
             throwAppError(
                 "User already deleted.",
@@ -101,6 +123,5 @@ export class User {
                 `${this.moduleName}.delete()`,
             );
         }
-        this.is_deleted = true;
     }
 }
