@@ -37,6 +37,21 @@ export class OtpToken {
         return { user_id: userId, otp_hash: otpHash, purpose, expires_at };
     }
 
+    static restore(row: {
+        id: string;
+        user_id: string;
+        otp_hash: string;
+        purpose: TokenPurpose;
+        expires_at: Date;
+        is_used: boolean;
+        created_at: Date;
+    }): OtpToken {
+        return new OtpToken(
+            row.id, row.user_id, row.otp_hash, row.purpose,
+            row.expires_at, row.is_used, row.created_at,
+        );
+    }
+
     isExpired(): boolean {
         return this.expires_at < new Date();
     }
