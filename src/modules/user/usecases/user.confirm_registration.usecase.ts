@@ -16,18 +16,15 @@ export class ConfirmRegistrationUseCase {
         return new ConfirmRegistrationUseCase(userRepoReader, userRepoWriter, verifyOtpUseCase);
     }
 
-    async execute(userId: string, otp: string): Promise<void> {
-        const user = await this.userRepoReader.getUserById(userId);
-
+    async execute(email: string, otp: string): Promise<void> {
+        const user = await this.userRepoReader.getUserByEmail(email);
         if (!user) {
             throwAppError('User not found.', 404, `${this.moduleName}.execute()`);
         }
-
         if (user.is_verified) {
             throwAppError('User is already verified.', 400, `${this.moduleName}.execute()`);
         }
-
-        await this.verifyOtpUseCase.execute(userId, TokenPurpose.REGISTRATION, otp);
-        await this.userRepoWriter.markUserAsVerified(userId);
+        await this.verifyOtpUseCase.execute(user.id, TokenPurpose.REGISTRATION, otp);
+        await this.userRepoWriter.markUserAsVerified(user.id);
     }
 }
