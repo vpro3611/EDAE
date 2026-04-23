@@ -372,7 +372,7 @@ git commit -m "feat(token): add OtpToken entity with TokenPurpose enum"
 - [ ] **Step 1: Create interface file**
 
 ```typescript
-// src/modules/token/interfaces/interface.repository.ts
+// src/modules/token/interfaces/interfaces.repository.ts
 import { OtpToken, TokenPurpose } from '../entity/token';
 
 export interface TokenRepoReaderInterface {
@@ -389,7 +389,7 @@ export interface TokenRepoWriterInterface {
 - [ ] **Step 2: Commit**
 
 ```bash
-git add src/modules/token/interfaces/interface.repository.ts
+git add src/modules/token/interfaces/interfaces.repository.ts
 git commit -m "feat(token): add token repository interfaces"
 ```
 
@@ -599,7 +599,7 @@ Expected: FAIL — `Cannot find module`.
 // src/modules/token/repository/repository.token.reader.ts
 import { Pool, PoolClient } from 'pg';
 import { OtpToken, TokenPurpose } from '../entity/token';
-import { TokenRepoReaderInterface } from '../interfaces/interface.repository';
+import { TokenRepoReaderInterface } from '../interfaces/interfaces.repository';
 import { handleDatabaseError } from '../../errors/mapper.database';
 
 export class RepositoryTokenReader implements TokenRepoReaderInterface {
@@ -647,7 +647,7 @@ export class RepositoryTokenReader implements TokenRepoReaderInterface {
 // src/modules/token/repository/repository.token.writer.ts
 import { Pool, PoolClient } from 'pg';
 import { TokenPurpose } from '../entity/token';
-import { TokenRepoWriterInterface } from '../interfaces/interface.repository';
+import { TokenRepoWriterInterface } from '../interfaces/interfaces.repository';
 import { handleDatabaseError } from '../../errors/mapper.database';
 
 export class RepositoryTokenWriter implements TokenRepoWriterInterface {
@@ -717,7 +717,7 @@ git commit -m "feat(token): add token reader and writer repositories"
 - [ ] **Step 1: Create email sender interface**
 
 ```typescript
-// src/modules/infra/email/infra.email_sender.interface.ts
+// src/modules/infra/email/infra.email_sender.interfaces.ts
 export interface InfraEmailSenderInterface {
     sendRegistrationOtp(to: string, otp: string): Promise<void>;
     sendPasswordResetOtp(to: string, otp: string): Promise<void>;
@@ -731,7 +731,7 @@ export interface InfraEmailSenderInterface {
 ```typescript
 // src/modules/infra/email/infra.email_nodemailer.implementation.ts
 import * as nodemailer from 'nodemailer';
-import { InfraEmailSenderInterface } from './infra.email_sender.interface';
+import { InfraEmailSenderInterface } from './infra.email_sender.interfaces';
 
 export class InfraEmailNodemailerImplementation implements InfraEmailSenderInterface {
     private transporter: nodemailer.Transporter;
@@ -795,8 +795,8 @@ git commit -m "feat(infra): add email sender interface and nodemailer implementa
 ```typescript
 // tests/modules/token/usecases/token.create_otp.usecase.test.ts
 import { CreateOtpUseCase } from '../../../../src/modules/token/usecases/token.create_otp.usecase';
-import { TokenRepoWriterInterface } from '../../../../src/modules/token/interfaces/interface.repository';
-import { InfraEmailSenderInterface } from '../../../../src/modules/infra/email/infra.email_sender.interface';
+import { TokenRepoWriterInterface } from '../../../../src/modules/token/interfaces/interfaces.repository';
+import { InfraEmailSenderInterface } from '../../../../src/modules/infra/email/infra.email_sender.interfaces';
 import { OtpToken, TokenPurpose } from '../../../../src/modules/token/entity/token';
 
 describe('CreateOtpUseCase Unit Tests', () => {
@@ -880,8 +880,8 @@ Expected: FAIL — `Cannot find module`.
 ```typescript
 // src/modules/token/usecases/token.create_otp.usecase.ts
 import { OtpToken, TokenPurpose } from '../entity/token';
-import { TokenRepoWriterInterface } from '../interfaces/interface.repository';
-import { InfraEmailSenderInterface } from '../../infra/email/infra.email_sender.interface';
+import { TokenRepoWriterInterface } from '../interfaces/interfaces.repository';
+import { InfraEmailSenderInterface } from '../../infra/email/infra.email_sender.interfaces';
 
 export class CreateOtpUseCase {
     private moduleName = 'CreateOtpUseCase';
@@ -949,7 +949,7 @@ git commit -m "feat(token): add CreateOtpUseCase"
 ```typescript
 // tests/modules/token/usecases/token.verify_otp.usecase.test.ts
 import { VerifyOtpUseCase } from '../../../../src/modules/token/usecases/token.verify_otp.usecase';
-import { TokenRepoReaderInterface, TokenRepoWriterInterface } from '../../../../src/modules/token/interfaces/interface.repository';
+import { TokenRepoReaderInterface, TokenRepoWriterInterface } from '../../../../src/modules/token/interfaces/interfaces.repository';
 import { OtpToken, TokenPurpose } from '../../../../src/modules/token/entity/token';
 import { AppError } from '../../../../src/modules/errors/errors.global';
 
@@ -1029,7 +1029,7 @@ Expected: FAIL — `Cannot find module`.
 ```typescript
 // src/modules/token/usecases/token.verify_otp.usecase.ts
 import { OtpToken, TokenPurpose } from '../entity/token';
-import { TokenRepoReaderInterface, TokenRepoWriterInterface } from '../interfaces/interface.repository';
+import { TokenRepoReaderInterface, TokenRepoWriterInterface } from '../interfaces/interfaces.repository';
 import { throwAppError } from '../../errors/errors.global';
 
 export class VerifyOtpUseCase {
@@ -1535,7 +1535,7 @@ git commit -m "feat(user): include pending_email in user repository read and wri
 
 ```typescript
 // tests/modules/user/usecases/user.request_registration_verification.usecase.test.ts
-import { UserRepoReaderInterface } from '../../../../src/modules/user/interfaces/interface.repository';
+import { UserRepoReaderInterface } from '../../../../src/modules/user/interfaces/interfaces.repository';
 import { RequestRegistrationVerificationUseCase } from '../../../../src/modules/user/usecases/user.request_registration_verification.usecase';
 import { CreateOtpUseCase } from '../../../../src/modules/token/usecases/token.create_otp.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
@@ -1586,7 +1586,7 @@ describe('RequestRegistrationVerificationUseCase Unit Tests', () => {
 
 ```typescript
 // tests/modules/user/usecases/user.confirm_registration.usecase.test.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interfaces.repository';
 import { ConfirmRegistrationUseCase } from '../../../../src/modules/user/usecases/user.confirm_registration.usecase';
 import { VerifyOtpUseCase } from '../../../../src/modules/token/usecases/token.verify_otp.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
@@ -1655,7 +1655,7 @@ Expected: FAIL — `Cannot find module`.
 
 ```typescript
 // src/modules/user/usecases/user.request_registration_verification.usecase.ts
-import { UserRepoReaderInterface } from '../interfaces/interface.repository';
+import { UserRepoReaderInterface } from '../interfaces/interfaces.repository';
 import { throwAppError } from '../../errors/errors.global';
 import { CreateOtpUseCase } from '../../token/usecases/token.create_otp.usecase';
 import { TokenPurpose } from '../../token/entity/token';
@@ -1689,7 +1689,7 @@ export class RequestRegistrationVerificationUseCase {
 
 ```typescript
 // src/modules/user/usecases/user.confirm_registration.usecase.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interfaces.repository';
 import { throwAppError } from '../../errors/errors.global';
 import { VerifyOtpUseCase } from '../../token/usecases/token.verify_otp.usecase';
 import { TokenPurpose } from '../../token/entity/token';
@@ -1753,7 +1753,7 @@ git commit -m "feat(user): add registration OTP verification use cases"
 
 ```typescript
 // tests/modules/user/usecases/user.request_password_reset.usecase.test.ts
-import { UserRepoReaderInterface } from '../../../../src/modules/user/interfaces/interface.repository';
+import { UserRepoReaderInterface } from '../../../../src/modules/user/interfaces/interfaces.repository';
 import { RequestPasswordResetUseCase } from '../../../../src/modules/user/usecases/user.request_password_reset.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
 import { TokenPurpose } from '../../../../src/modules/token/entity/token';
@@ -1798,9 +1798,9 @@ describe('RequestPasswordResetUseCase Unit Tests', () => {
 
 ```typescript
 // tests/modules/user/usecases/user.confirm_password_reset.usecase.test.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interfaces.repository';
 import { ConfirmPasswordResetUseCase } from '../../../../src/modules/user/usecases/user.confirm_password_reset.usecase';
-import { InfraPasswordHasherInterface } from '../../../../src/modules/infra/password/infra.password_hasher.interface';
+import { InfraPasswordHasherInterface } from '../../../../src/modules/infra/password/infra.password_hasher.interfaces';
 import { User } from '../../../../src/modules/user/entity/user';
 import { TokenPurpose } from '../../../../src/modules/token/entity/token';
 
@@ -1880,7 +1880,7 @@ Expected: FAIL — `Cannot find module`.
 
 ```typescript
 // src/modules/user/usecases/user.request_password_reset.usecase.ts
-import { UserRepoReaderInterface } from '../interfaces/interface.repository';
+import { UserRepoReaderInterface } from '../interfaces/interfaces.repository';
 import { UserValidator } from '../entity/user.validator';
 import { throwAppError } from '../../errors/errors.global';
 import { CreateOtpUseCase } from '../../token/usecases/token.create_otp.usecase';
@@ -1915,10 +1915,10 @@ export class RequestPasswordResetUseCase {
 
 ```typescript
 // src/modules/user/usecases/user.confirm_password_reset.usecase.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interfaces.repository';
 import { UserValidator } from '../entity/user.validator';
 import { throwAppError } from '../../errors/errors.global';
-import { InfraPasswordHasherInterface } from '../../infra/password/infra.password_hasher.interface';
+import { InfraPasswordHasherInterface } from '../../infra/password/infra.password_hasher.interfaces';
 import { VerifyOtpUseCase } from '../../token/usecases/token.verify_otp.usecase';
 import { TokenPurpose } from '../../token/entity/token';
 
@@ -1992,7 +1992,7 @@ git commit -m "feat(user): add password reset OTP use cases"
 
 ```typescript
 // tests/modules/user/usecases/user.request_email_change.usecase.test.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interfaces.repository';
 import { RequestEmailChangeUseCase } from '../../../../src/modules/user/usecases/user.request_email_change.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
 import { TokenPurpose } from '../../../../src/modules/token/entity/token';
@@ -2058,7 +2058,7 @@ describe('RequestEmailChangeUseCase Unit Tests', () => {
 
 ```typescript
 // tests/modules/user/usecases/user.confirm_email_change.usecase.test.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interfaces.repository';
 import { ConfirmEmailChangeUseCase } from '../../../../src/modules/user/usecases/user.confirm_email_change.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
 import { TokenPurpose } from '../../../../src/modules/token/entity/token';
@@ -2127,7 +2127,7 @@ Expected: FAIL — `Cannot find module`.
 
 ```typescript
 // src/modules/user/usecases/user.request_email_change.usecase.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interfaces.repository';
 import { UserValidator } from '../entity/user.validator';
 import { throwAppError } from '../../errors/errors.global';
 import { CreateOtpUseCase } from '../../token/usecases/token.create_otp.usecase';
@@ -2169,7 +2169,7 @@ export class RequestEmailChangeUseCase {
 
 ```typescript
 // src/modules/user/usecases/user.confirm_email_change.usecase.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interfaces.repository';
 import { throwAppError } from '../../errors/errors.global';
 import { VerifyOtpUseCase } from '../../token/usecases/token.verify_otp.usecase';
 import { TokenPurpose } from '../../token/entity/token';
@@ -2248,7 +2248,7 @@ rm tests/modules/user/usecases/user.delete_user.usecase.test.ts
 
 ```typescript
 // tests/modules/user/usecases/user.request_account_deletion.usecase.test.ts
-import { UserRepoReaderInterface } from '../../../../src/modules/user/interfaces/interface.repository';
+import { UserRepoReaderInterface } from '../../../../src/modules/user/interfaces/interfaces.repository';
 import { RequestAccountDeletionUseCase } from '../../../../src/modules/user/usecases/user.request_account_deletion.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
 import { TokenPurpose } from '../../../../src/modules/token/entity/token';
@@ -2296,7 +2296,7 @@ describe('RequestAccountDeletionUseCase Unit Tests', () => {
 
 ```typescript
 // tests/modules/user/usecases/user.confirm_account_deletion.usecase.test.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../src/modules/user/interfaces/interfaces.repository';
 import { ConfirmAccountDeletionUseCase } from '../../../../src/modules/user/usecases/user.confirm_account_deletion.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
 import { TokenPurpose } from '../../../../src/modules/token/entity/token';
@@ -2362,7 +2362,7 @@ Expected: FAIL — `Cannot find module`.
 
 ```typescript
 // src/modules/user/usecases/user.request_account_deletion.usecase.ts
-import { UserRepoReaderInterface } from '../interfaces/interface.repository';
+import { UserRepoReaderInterface } from '../interfaces/interfaces.repository';
 import { throwAppError } from '../../errors/errors.global';
 import { CreateOtpUseCase } from '../../token/usecases/token.create_otp.usecase';
 import { TokenPurpose } from '../../token/entity/token';
@@ -2394,7 +2394,7 @@ export class RequestAccountDeletionUseCase {
 
 ```typescript
 // src/modules/user/usecases/user.confirm_account_deletion.usecase.ts
-import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interface.repository';
+import { UserRepoReaderInterface, UserRepoWriterInterface } from '../interfaces/interfaces.repository';
 import { throwAppError } from '../../errors/errors.global';
 import { VerifyOtpUseCase } from '../../token/usecases/token.verify_otp.usecase';
 import { TokenPurpose } from '../../token/entity/token';
