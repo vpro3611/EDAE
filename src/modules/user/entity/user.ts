@@ -81,6 +81,14 @@ export class User {
         }
     }
 
+    canLogin() {
+        this.ensureActiveAndVerified("canLogin()");
+    }
+
+    markAsVerified(): void {
+        this.is_verified = true;
+    }
+
     checkIfVerified(): boolean {
         return this.is_verified;
     }

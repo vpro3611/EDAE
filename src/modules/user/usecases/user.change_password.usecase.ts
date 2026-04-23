@@ -12,7 +12,6 @@ export class UserChangePasswordUseCase {
                 private readonly userRepoWriter: UserRepoWriterInterface,
                 private readonly passwordHasher: InfraPasswordHasherInterface) {
     }
-
     static create(userRepoReader: UserRepoReaderInterface, userRepoWriter: UserRepoWriterInterface, passwordHasher: InfraPasswordHasherInterface) {
         return new UserChangePasswordUseCase(userRepoReader, userRepoWriter, passwordHasher);
     }
@@ -21,7 +20,7 @@ export class UserChangePasswordUseCase {
         if (oldPassword === newPassword) {
             throwAppError(
                 "New password must be different from the old password.",
-                   400,
+                400,
                 `${this.moduleName}.ensureNotSamePassword()`,
             );
         }
@@ -36,7 +35,7 @@ export class UserChangePasswordUseCase {
         if (!areSame) {
             throwAppError(
                 "Old password is incorrect. It does not match the current password.",
-                   400,
+                400,
                 `${this.moduleName}.comparePasswords()`,
             );
         }
@@ -51,7 +50,7 @@ export class UserChangePasswordUseCase {
         if (!user) {
             throwAppError(
                 "User not found.",
-                  404,
+                404,
                 `${this.moduleName}.execute()`,
             );
         }
