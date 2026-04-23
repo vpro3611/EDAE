@@ -1,31 +1,68 @@
 import { pool } from "./database";
-import {RepositoryUserReader} from "./modules/user/repository/repository.user.reader";
-import {RepositoryUserWriter} from "./modules/user/repository/repository.user.writer";
-import {InfraPasswordBcryptImplementation} from "./modules/infra/password/infra.pasword_bcrypt.implementation";
-import {UserChangePasswordUseCase} from "./modules/user/usecases/user.change_password.usecase";
-import {RequestAccountDeletionUseCase} from "./modules/user/usecases/user.request_account_deletion.usecase";
-import {ConfirmAccountDeletionUseCase} from "./modules/user/usecases/user.confirm_account_deletion.usecase";
-import {UserUpdateNameUseCase} from "./modules/user/usecases/user.update_name.usecase";
-
+import { RepositoryUserReader } from "./modules/user/repository/repository.user.reader";
+import { RepositoryUserWriter } from "./modules/user/repository/repository.user.writer";
+import { RepositoryTokenReader } from "./modules/token/repository/repository.token.reader";
+import { RepositoryTokenWriter } from "./modules/token/repository/repository.token.writer";
+import { InfraPasswordBcryptImplementation } from "./modules/infra/password/infra.pasword_bcrypt.implementation";
+import { InfraEmailNodemailerImplementation } from "./modules/infra/email/infra.email_nodemailer.implementation";
+import { CreateOtpUseCase } from "./modules/token/usecases/token.create_otp.usecase";
+import { VerifyOtpUseCase } from "./modules/token/usecases/token.verify_otp.usecase";
+import { UserChangePasswordUseCase } from "./modules/user/usecases/user.change_password.usecase";
+import { UserUpdateNameUseCase } from "./modules/user/usecases/user.update_name.usecase";
+import { RequestRegistrationVerificationUseCase } from "./modules/user/usecases/user.request_registration_verification.usecase";
+import { ConfirmRegistrationUseCase } from "./modules/user/usecases/user.confirm_registration.usecase";
+import { RequestPasswordResetUseCase } from "./modules/user/usecases/user.request_password_reset.usecase";
+import { ConfirmPasswordResetUseCase } from "./modules/user/usecases/user.confirm_password_reset.usecase";
+import { RequestEmailChangeUseCase } from "./modules/user/usecases/user.request_email_change.usecase";
+import { ConfirmEmailChangeUseCase } from "./modules/user/usecases/user.confirm_email_change.usecase";
+import { RequestAccountDeletionUseCase } from "./modules/user/usecases/user.request_account_deletion.usecase";
+import { ConfirmAccountDeletionUseCase } from "./modules/user/usecases/user.confirm_account_deletion.usecase";
 
 export function createDepsContainer() {
     const userRepoReader = RepositoryUserReader.create(pool);
     const userRepoWriter = RepositoryUserWriter.create(pool);
+    const tokenRepoReader = RepositoryTokenReader.create(pool);
+    const tokenRepoWriter = RepositoryTokenWriter.create(pool);
 
-    // Define a number of turns (salt rounds) for better protection.
-    // As per default it is 12.
     const bcryptHasher = InfraPasswordBcryptImplementation.create(12);
-    // ..................................................................................................^ HERE
 
-    const userChangePasswordUseCase =
-        UserChangePasswordUseCase.create(userRepoReader, userRepoWriter, bcryptHasher);
+    const emailSender = InfraEmailNodemailerImplementation.create(
+        process.env.SMTP_HOST!,
+        Number(process.env.SMTP_PORT!),
+        process.env.SMTP_USER!,
+        process.env.SMTP_PASS!,
+    );
 
-    const userUpdateNameUseCase =
-        UserUpdateNameUseCase.create(userRepoReader, userRepoWriter);
+    const createOtpUseCase = CreateOtpUseCase.create(tokenRepoWriter, emailSender);
+    const verifyOtpUseCase = VerifyOtpUseCase.create(tokenRepoReader, tokenRepoWriter);
 
+    const userChangePasswordUseCase = UserChangePasswordUseCase.create(userRepoReader, userRepoWriter, bcryptHasher);
+    const userUpdateNameUseCase = UserUpdateNameUseCase.create(userRepoReader, userRepoWriter);
 
+    const requestRegistrationVerificationUseCase = RequestRegistrationVerificationUseCase.create(userRepoReader, createOtpUseCase);
+    const confirmRegistrationUseCase = ConfirmRegistrationUseCase.create(userRepoReader, userRepoWriter, verifyOtpUseCase);
 
+    const requestPasswordResetUseCase = RequestPasswordResetUseCase.create(userRepoReader, createOtpUseCase);
+    const confirmPasswordResetUseCase = ConfirmPasswordResetUseCase.create(userRepoReader, userRepoWriter, bcryptHasher, verifyOtpUseCase);
+
+    const requestEmailChangeUseCase = RequestEmailChangeUseCase.create(userRepoReader, userRepoWriter, createOtpUseCase);
+    const confirmEmailChangeUseCase = ConfirmEmailChangeUseCase.create(userRepoReader, userRepoWriter, verifyOtpUseCase);
+
+    const requestAccountDeletionUseCase = RequestAccountDeletionUseCase.create(userRepoReader, createOtpUseCase);
+    const confirmAccountDeletionUseCase = ConfirmAccountDeletionUseCase.create(userRepoReader, userRepoWriter, verifyOtpUseCase);
+
+    return {
+        userChangePasswordUseCase,
+        userUpdateNameUseCase,
+        requestRegistrationVerificationUseCase,
+        confirmRegistrationUseCase,
+        requestPasswordResetUseCase,
+        confirmPasswordResetUseCase,
+        requestEmailChangeUseCase,
+        confirmEmailChangeUseCase,
+        requestAccountDeletionUseCase,
+        confirmAccountDeletionUseCase,
+    };
 }
-
 
 export type DepsContainer = ReturnType<typeof createDepsContainer>;
