@@ -24,7 +24,6 @@ export class ConfirmAccountDeletionUseCase {
         const user = await this.userRepoReader.getUserById(userId);
         if (!user) {
             throwAppError('User not found.', 404, `${this.moduleName}.execute()`);
-            return;
         }
         user.assertDelete();
         await this.verifyOtpUseCase.execute(userId, TokenPurpose.DELETE_ACCOUNT, otp);

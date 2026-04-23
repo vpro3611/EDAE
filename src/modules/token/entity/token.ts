@@ -27,6 +27,10 @@ export class OtpToken {
         return crypto.createHash('sha256').update(plain).digest('hex');
     }
 
+    static hashesEqual(a: string, b: string): boolean {
+        return crypto.timingSafeEqual(Buffer.from(a, 'hex'), Buffer.from(b, 'hex'));
+    }
+
     static createForDatabase(
         userId: string,
         purpose: TokenPurpose,

@@ -19,7 +19,6 @@ export class RequestAccountDeletionUseCase {
         const user = await this.userRepoReader.getUserById(userId);
         if (!user) {
             throwAppError('User not found.', 404, `${this.moduleName}.execute()`);
-            return;
         }
         user.assertDelete();
         await this.createOtpUseCase.execute(userId, user.email, TokenPurpose.DELETE_ACCOUNT);

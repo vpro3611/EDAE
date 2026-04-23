@@ -23,7 +23,7 @@ export class VerifyOtpUseCase {
 
         token.assertValid();
 
-        if (OtpToken.hash(plainOtp) !== token.otp_hash) {
+        if (!OtpToken.hashesEqual(OtpToken.hash(plainOtp), token.otp_hash)) {
             throwAppError('Invalid or expired verification code.', 400, `${this.moduleName}.execute()`);
         }
 

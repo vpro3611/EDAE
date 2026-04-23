@@ -22,7 +22,6 @@ export class RequestPasswordResetUseCase {
         const user = await this.userRepoReader.getUserByEmail(email);
         if (!user) {
             throwAppError('User not found.', 404, `${this.moduleName}.execute()`);
-            return;
         }
 
         await this.createOtpUseCase.execute(user.id, email, TokenPurpose.RESET_PASSWORD);
