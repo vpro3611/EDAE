@@ -18,7 +18,8 @@ describe("DeleteUserUseCase Unit Tests", () => {
         deleted,
         true,
         "hashed",
-        null
+        null,
+        null   // pending_email
     );
 
     beforeEach(() => {

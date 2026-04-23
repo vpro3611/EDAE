@@ -85,7 +85,8 @@ describe('RepositoryUserWriter Integration Test', () => {
                 row.is_deleted,
                 row.is_verified,
                 row.last_password,
-                row.pending_password
+                row.pending_password,
+                row.pending_email   // pending_email
             );
 
             user.updateName('Updated Name');
@@ -145,7 +146,7 @@ describe('RepositoryUserWriter Integration Test', () => {
         });
 
         it('should throw DatabaseError on database failure in updateUser', async () => {
-            const user = User.restoreUser('id', 'name', 'e@e.com', 'p', new Date(), new Date(), false, true, 'p', null);
+            const user = User.restoreUser('id', 'name', 'e@e.com', 'p', new Date(), new Date(), false, true, 'p', null, null);
             await expect(badWriter.updateUser(user)).rejects.toThrow();
         });
 

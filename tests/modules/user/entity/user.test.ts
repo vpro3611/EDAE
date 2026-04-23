@@ -13,6 +13,7 @@ describe("User Entity Unit Tests", () => {
     is_verified: true,
     last_password: "HashedPass123!",
     pending_password: null as string | null,
+    pending_email: null as string | null,
   };
 
   const createValidUser = (overrides = {}) => {
@@ -27,7 +28,8 @@ describe("User Entity Unit Tests", () => {
       props.is_deleted,
       props.is_verified,
       props.last_password,
-      props.pending_password
+      props.pending_password,
+      props.pending_email
     );
   };
 
@@ -158,6 +160,55 @@ describe("User Entity Unit Tests", () => {
     it("should throw if user is already deleted", () => {
       const user = createValidUser({ is_deleted: true });
       expect(() => user.assertDelete()).toThrow(/User already deleted/);
+    });
+  });
+
+  describe('updatePendingEmail()', () => {
+    it('should set pending_email to a valid email', () => {
+      const user = createValidUser();
+      user.updatePendingEmail('new@example.com');
+      expect(user.pending_email).toBe('new@example.com');
+    });
+
+    it('should set pending_email to null', () => {
+      const user = createValidUser({ pending_email: 'old@example.com' });
+      user.updatePendingEmail(null);
+      expect(user.pending_email).toBeNull();
+    });
+
+    it('should throw AppError for invalid email format', () => {
+      const user = createValidUser();
+      expect(() => user.updatePendingEmail('not-an-email')).toThrow(AppError);
+    });
+
+    it('should throw AppError if user is deleted', () => {
+      const user = createValidUser({ is_deleted: true });
+      expect(() => user.updatePendingEmail('new@example.com')).toThrow(/already deleted/);
+    });
+
+    it('should throw AppError if user is not verified', () => {
+      const user = createValidUser({ is_verified: false });
+      expect(() => user.updatePendingEmail('new@example.com')).toThrow(/not verified/);
+    });
+  });
+
+  describe('resetPassword()', () => {
+    it('should update password_hashed and last_password', () => {
+      const user = createValidUser();
+      user.resetPassword('new_hashed_value');
+      expect(user.password_hashed).toBe('new_hashed_value');
+      expect(user.last_password).toBe('new_hashed_value');
+    });
+
+    it('should work even when user is not verified', () => {
+      const user = createValidUser({ is_verified: false });
+      expect(() => user.resetPassword('new_hashed_value')).not.toThrow();
+      expect(user.password_hashed).toBe('new_hashed_value');
+    });
+
+    it('should work even when user is deleted', () => {
+      const user = createValidUser({ is_deleted: true });
+      expect(() => user.resetPassword('new_hashed_value')).not.toThrow();
     });
   });
 });

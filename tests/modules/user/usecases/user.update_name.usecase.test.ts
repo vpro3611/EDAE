@@ -18,7 +18,8 @@ describe("UserUpdateNameUseCase Unit Tests", () => {
         false,
         true,
         "hashed",
-        null
+        null,
+        null   // pending_email
     );
 
     beforeEach(() => {

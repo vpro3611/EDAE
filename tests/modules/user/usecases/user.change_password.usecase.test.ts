@@ -20,7 +20,8 @@ describe("UserChangePasswordUseCase Unit Tests", () => {
         false,
         true,
         "old_hashed",
-        null
+        null,
+        null   // pending_email
     );
 
     beforeEach(() => {

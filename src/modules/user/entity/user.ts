@@ -14,10 +14,10 @@ export class User {
         public is_deleted: boolean,
         public is_verified: boolean,
         public last_password: string,
-        public pending_password: string | null
+        public pending_password: string | null,
+        public pending_email: string | null,
     ) {
     }
-
 
     static createForDatabase
     (
@@ -25,7 +25,6 @@ export class User {
         email: string,
         password_hashed: string,
     ): {name: string, email: string, password_hashed: string, last_password: string} {
-
         return {
             name,
             email,
@@ -46,6 +45,7 @@ export class User {
         is_verified: boolean,
         last_password: string,
         pending_password: string | null,
+        pending_email: string | null,
     ): User {
         UserValidator.validateName(name);
         UserValidator.validateEmail(email);
@@ -59,7 +59,8 @@ export class User {
             is_deleted,
             is_verified,
             last_password,
-            pending_password
+            pending_password,
+            pending_email,
         )
     }
 
@@ -113,6 +114,19 @@ export class User {
     updatePendingPassword(pending_password: string | null): void {
         this.ensureActiveAndVerified("updatePendingPassword()");
         this.pending_password = pending_password;
+    }
+
+    updatePendingEmail(email: string | null): void {
+        this.ensureActiveAndVerified("updatePendingEmail()");
+        if (email !== null) {
+            UserValidator.validateEmail(email);
+        }
+        this.pending_email = email;
+    }
+
+    resetPassword(hash: string): void {
+        this.password_hashed = hash;
+        this.last_password = hash;
     }
 
     assertDelete(): void {
