@@ -3,7 +3,8 @@ import {RepositoryUserReader} from "./modules/user/repository/repository.user.re
 import {RepositoryUserWriter} from "./modules/user/repository/repository.user.writer";
 import {InfraPasswordBcryptImplementation} from "./modules/infra/password/infra.pasword_bcrypt.implementation";
 import {UserChangePasswordUseCase} from "./modules/user/usecases/user.change_password.usecase";
-import {DeleteUserUseCase} from "./modules/user/usecases/user.delete_user.usecase";
+import {RequestAccountDeletionUseCase} from "./modules/user/usecases/user.request_account_deletion.usecase";
+import {ConfirmAccountDeletionUseCase} from "./modules/user/usecases/user.confirm_account_deletion.usecase";
 import {UserUpdateNameUseCase} from "./modules/user/usecases/user.update_name.usecase";
 
 
@@ -18,9 +19,6 @@ export function createDepsContainer() {
 
     const userChangePasswordUseCase =
         UserChangePasswordUseCase.create(userRepoReader, userRepoWriter, bcryptHasher);
-
-    const userDeleteUserUseCase =
-        DeleteUserUseCase.create(userRepoReader, userRepoWriter);
 
     const userUpdateNameUseCase =
         UserUpdateNameUseCase.create(userRepoReader, userRepoWriter);
