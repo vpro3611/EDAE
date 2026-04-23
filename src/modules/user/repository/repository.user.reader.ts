@@ -25,6 +25,7 @@ export class RepositoryUserReader implements UserRepoReaderInterface {
             row.is_verified,
             row.last_password,
             row.pending_password,
+            row.pending_email,
         )
     }
 

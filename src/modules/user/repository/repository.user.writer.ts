@@ -26,8 +26,8 @@ export class RepositoryUserWriter implements UserRepoWriterInterface {
     async updateUser(user: User): Promise<void> {
         try {
             await this.db.query(
-                "UPDATE users SET name = $1, email = $2, password_hashed = $3, updated_at = now(), last_password = $4, pending_password = $5 WHERE id = $6",
-                [user.name, user.email, user.password_hashed, user.last_password, user.pending_password, user.id]
+                "UPDATE users SET name = $1, email = $2, password_hashed = $3, updated_at = now(), last_password = $4, pending_password = $5, pending_email = $6 WHERE id = $7",
+                [user.name, user.email, user.password_hashed, user.last_password, user.pending_password, user.pending_email, user.id]
             );
         } catch (e) {
             handleDatabaseError(e, `${this.moduleName}.updateUser: ${user.id} ${user.email}`);
