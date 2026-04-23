@@ -39,7 +39,7 @@ export function createDepsContainer() {
     const userChangePasswordUseCase = UserChangePasswordUseCase.create(userRepoReader, userRepoWriter, bcryptHasher);
     const userUpdateNameUseCase = UserUpdateNameUseCase.create(userRepoReader, userRepoWriter);
 
-    const requestRegistrationVerificationUseCase = RequestRegistrationVerificationUseCase.create(userRepoReader, createOtpUseCase);
+    const requestRegistrationVerificationUseCase = RequestRegistrationVerificationUseCase.create(userRepoReader, userRepoWriter, bcryptHasher, createOtpUseCase);
     const confirmRegistrationUseCase = ConfirmRegistrationUseCase.create(userRepoReader, userRepoWriter, verifyOtpUseCase);
 
     const requestPasswordResetUseCase = RequestPasswordResetUseCase.create(userRepoReader, createOtpUseCase);
