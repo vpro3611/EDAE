@@ -9,6 +9,7 @@ export enum TokenPurpose {
 }
 
 export class OtpToken {
+    private moduleName = 'OtpToken';
     constructor(
         public readonly id: string,
         public readonly user_id: string,
@@ -62,10 +63,10 @@ export class OtpToken {
 
     assertValid(): void {
         if (this.is_used) {
-            throwAppError('Verification code has already been used.', 400, 'OtpToken.assertValid()');
+            throwAppError('Verification code has already been used.', 400, `${this.moduleName}.assertValid()`);
         }
         if (this.isExpired()) {
-            throwAppError('Verification code has expired.', 400, 'OtpToken.assertValid()');
+            throwAppError('Verification code has expired.', 400, `${this.moduleName}.assertValid()`);
         }
     }
 }
