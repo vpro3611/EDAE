@@ -65,8 +65,6 @@ export class UserChangePasswordUseCase {
         user.updatePassword(newPasswordHashed);
         user.updateLastPassword(newPasswordHashed);
 
-        // TODO : PLACE FOR EMAIL SENDING!!
-
         await this.userRepoWriter.updateUser(user);
     }
 }
