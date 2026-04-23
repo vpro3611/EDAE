@@ -3,6 +3,7 @@ import { ConfirmRegistrationUseCase } from '../../../../src/modules/user/usecase
 import { VerifyOtpUseCase } from '../../../../src/modules/token/usecases/token.verify_otp.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
 import { TokenPurpose } from '../../../../src/modules/token/entity/token';
+import { UserDtoMapper } from '../../../../src/modules/user/dto/user.dto.mapper';
 
 describe('ConfirmRegistrationUseCase Unit Tests', () => {
     let mockUserRepoReader: jest.Mocked<UserRepoReaderInterface>;
@@ -33,6 +34,7 @@ describe('ConfirmRegistrationUseCase Unit Tests', () => {
             mockUserRepoReader,
             mockUserRepoWriter,
             mockVerifyOtp as any,
+            UserDtoMapper.create(),
         );
     });
 
@@ -46,10 +48,12 @@ describe('ConfirmRegistrationUseCase Unit Tests', () => {
         await expect(useCase.execute('john@example.com', '123456')).rejects.toThrow(/already verified/);
     });
 
-    it('should call VerifyOtpUseCase then markUserAsVerified using user.id from email lookup', async () => {
+    it('should call VerifyOtpUseCase then markUserAsVerified and return dto with is_verified true', async () => {
         mockUserRepoReader.getUserByEmail.mockResolvedValue(makeUser(false));
-        await useCase.execute('john@example.com', '123456');
+        const result = await useCase.execute('john@example.com', '123456');
         expect(mockVerifyOtp.execute).toHaveBeenCalledWith('uuid-1', TokenPurpose.REGISTRATION, '123456');
         expect(mockUserRepoWriter.markUserAsVerified).toHaveBeenCalledWith('uuid-1');
+        expect(result.id).toBe('uuid-1');
+        expect(result.is_verified).toBe(true);
     });
 });

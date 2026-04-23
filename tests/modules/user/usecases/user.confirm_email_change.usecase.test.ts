@@ -2,6 +2,7 @@ import { UserRepoReaderInterface, UserRepoWriterInterface } from '../../../../sr
 import { ConfirmEmailChangeUseCase } from '../../../../src/modules/user/usecases/user.confirm_email_change.usecase';
 import { User } from '../../../../src/modules/user/entity/user';
 import { TokenPurpose } from '../../../../src/modules/token/entity/token';
+import { UserDtoMapper } from '../../../../src/modules/user/dto/user.dto.mapper';
 
 describe('ConfirmEmailChangeUseCase Unit Tests', () => {
     let mockUserRepoReader: jest.Mocked<UserRepoReaderInterface>;
@@ -28,7 +29,7 @@ describe('ConfirmEmailChangeUseCase Unit Tests', () => {
             markUserAsVerified: jest.fn(),
         };
         mockVerifyOtp = { execute: jest.fn().mockResolvedValue(undefined) };
-        useCase = new ConfirmEmailChangeUseCase(mockUserRepoReader, mockUserRepoWriter, mockVerifyOtp as any);
+        useCase = new ConfirmEmailChangeUseCase(mockUserRepoReader, mockUserRepoWriter, mockVerifyOtp as any, UserDtoMapper.create());
     });
 
     it('should throw 404 if user not found', async () => {
@@ -41,15 +42,17 @@ describe('ConfirmEmailChangeUseCase Unit Tests', () => {
         await expect(useCase.execute('uuid-1', '123456')).rejects.toThrow(/No pending email change/);
     });
 
-    it('should verify OTP, apply pending_email, clear it, and persist', async () => {
+    it('should verify OTP, apply pending_email, clear it, persist, and return dto', async () => {
         const user = makeUser('new@example.com');
         mockUserRepoReader.getUserById.mockResolvedValue(user);
 
-        await useCase.execute('uuid-1', '123456');
+        const result = await useCase.execute('uuid-1', '123456');
 
         expect(mockVerifyOtp.execute).toHaveBeenCalledWith('uuid-1', TokenPurpose.CHANGE_EMAIL, '123456');
         expect(user.email).toBe('new@example.com');
         expect(user.pending_email).toBeNull();
         expect(mockUserRepoWriter.updateUser).toHaveBeenCalledWith(user);
+        expect(result.id).toBe('uuid-1');
+        expect(result.email).toBe('new@example.com');
     });
 });
