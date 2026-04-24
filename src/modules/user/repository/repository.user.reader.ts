@@ -22,26 +22,32 @@ export class RepositoryUserReader implements UserRepoReaderInterface {
             row.created_at,
             row.updated_at,
             row.is_deleted,
+            row.is_verified,
+            row.last_password,
+            row.pending_password,
+            row.pending_email,
         )
     }
 
-    async getUserById(id: string): Promise<User> {
+    async getUserById(id: string): Promise<User | null> {
         try {
-            const result = await this.db.query("SELECT * FROM users WHERE id = $1", [id]);
+            const result = await this.db.query("SELECT * FROM users WHERE id = $1 AND is_deleted = false", [id]);
             const row = result.rows[0];
+            if (!row) return null;
             return this.restoreHelper(row);
         } catch (e) {
-            handleDatabaseError(e, this.moduleName);
+            handleDatabaseError(e, `${this.moduleName}.getUserById: ${id}`);
         }
     }
 
-    async getUserByEmail(email: string): Promise<User> {
+    async getUserByEmail(email: string): Promise<User | null> {
         try {
-            const result = await this.db.query("SELECT * FROM users WHERE email = $1", [email]);
+            const result = await this.db.query("SELECT * FROM users WHERE email = $1 AND is_deleted = false", [email]);
             const row = result.rows[0];
+            if (!row) return null;
             return this.restoreHelper(row);
         } catch (e) {
-            handleDatabaseError(e, this.moduleName);
+            handleDatabaseError(e, `${this.moduleName}.getUserByEmail: ${email}`);
         }
     }
 
@@ -50,7 +56,16 @@ export class RepositoryUserReader implements UserRepoReaderInterface {
             const result = await this.db.query("SELECT * FROM users WHERE is_deleted = false");
             return result.rows.map(row => this.restoreHelper(row));
         } catch (e) {
-            handleDatabaseError(e, this.moduleName);
+            handleDatabaseError(e, `${this.moduleName}.getNonDeletedUsers`);
+        }
+    }
+
+    async getVerifiedUsers(): Promise<User[]> {
+        try {
+            const result = await this.db.query("SELECT * FROM users WHERE is_deleted = false AND is_verified = true");
+            return result.rows.map(row => this.restoreHelper(row));
+        } catch (e) {
+            handleDatabaseError(e, `${this.moduleName}.getVerifiedUsers`);
         }
     }
 }

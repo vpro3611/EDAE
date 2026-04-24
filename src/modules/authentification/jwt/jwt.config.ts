@@ -1,0 +1,3 @@
+export const ACCESS_TOKEN_TIME = "15m"
+export const REFRESH_TOKEN_TIME = "7d"
+export const REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE = 7 * 24 * 60 * 60 * 1000
