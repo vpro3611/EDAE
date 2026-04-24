@@ -29,6 +29,26 @@ import { TxServiceRequestPasswordReset } from "./modules/user/transactional_serv
 import { TxServiceConfirmPasswordReset } from "./modules/user/transactional_services/tx_service.confirm_password_reset";
 import { TxServiceRequestAccountDeletion } from "./modules/user/transactional_services/tx_service.request_account_deletion";
 import { TxServiceConfirmAccountDeletion } from "./modules/user/transactional_services/tx_service.confirm_account_deletion";
+import {RegisterRequestController} from "./modules/authentification/controllers/controller.register_request";
+import {ControllerRegisterConfirm} from "./modules/authentification/controllers/controller.register_confirm";
+import {ControllerRefresh} from "./modules/authentification/controllers/controller.refresh";
+import {ControllerLogout} from "./modules/authentification/controllers/controller.logout";
+import {ControllerLoginEmail} from "./modules/authentification/controllers/controller.login_email";
+import {ControllerChangePassword} from "./modules/user/controllers/controller.change_password";
+import {UserIdExtractor} from "./modules/authentification/extractor.extract_user_id";
+import {ControllerConfirmAccountDeletion} from "./modules/user/controllers/controller.confirm_account_deletion";
+import {ControllerConfirmEmailChange} from "./modules/user/controllers/controller.confirm_email_change";
+import {ControllerConfirmPasswordReset} from "./modules/user/controllers/controller.confirm_password_reset";
+import {ControllerRequestAccountDeletion} from "./modules/user/controllers/controller.request_account_deletion";
+import {ControllerRequestEmailChange} from "./modules/user/controllers/controller.request_email_change";
+import {ControllerRequestPasswordReset} from "./modules/user/controllers/controller.request_password_reset";
+import {ControllerUpdateName} from "./modules/user/controllers/controller.update_name";
+import {UserGetSelfProfileUseCase} from "./modules/user/usecases/user.get_self_profile.usecase";
+import {UserGetOtherProfileUseCase} from "./modules/user/usecases/user.get_other_profile.usecase";
+import {TxServiceGetSelfProfile} from "./modules/user/transactional_services/tx_service.get_self_profile";
+import {TxServiceGetOtherProfileService} from "./modules/user/transactional_services/tx_service.get_other_profile";
+import {ControllerGetSelfProfile} from "./modules/user/controllers/controller.get_self_profile";
+import {ControllerGetOtherProfile} from "./modules/user/controllers/controller.get_other_profile";
 
 export function createDepsContainer() {
     const userRepoReader = RepositoryUserReader.create(pool);
@@ -44,6 +64,8 @@ export function createDepsContainer() {
         process.env.SMTP_USER!,
         process.env.SMTP_PASS!,
     );
+
+    const userIdExtractor = UserIdExtractor.create();
 
     const userDtoMapper = UserDtoMapper.create();
     const txManager = TransactionManager.create(pool);
@@ -67,6 +89,9 @@ export function createDepsContainer() {
     const requestAccountDeletionUseCase = RequestAccountDeletionUseCase.create(userRepoReader, createOtpUseCase);
     const confirmAccountDeletionUseCase = ConfirmAccountDeletionUseCase.create(userRepoReader, userRepoWriter, verifyOtpUseCase);
 
+    const getSelfProfileUseCase = UserGetSelfProfileUseCase.create(userRepoReader, userDtoMapper);
+    const getOtherProfileUseCase = UserGetOtherProfileUseCase.create(userRepoReader, userDtoMapper);
+
     const authentificationService = AuthentificationService.create(jwtTokenService, txManager, bcryptHasher, emailSender, userDtoMapper);
 
     const txChangePassword = TxServiceChangePassword.create(txManager, bcryptHasher);
@@ -77,6 +102,26 @@ export function createDepsContainer() {
     const txConfirmPasswordReset = TxServiceConfirmPasswordReset.create(txManager, bcryptHasher);
     const txRequestAccountDeletion = TxServiceRequestAccountDeletion.create(txManager, emailSender);
     const txConfirmAccountDeletion = TxServiceConfirmAccountDeletion.create(txManager);
+    const txGetSelfProfile = TxServiceGetSelfProfile.create(txManager, userDtoMapper);
+    const txGetOtherProfile = TxServiceGetOtherProfileService.create(txManager, userDtoMapper);
+
+    const controllerRegisterRequest = RegisterRequestController.create(authentificationService);
+    const controllerRegisterConfirm = ControllerRegisterConfirm.create(authentificationService);
+    const controllerRefresh = ControllerRefresh.create(authentificationService);
+    const controllerLogout = ControllerLogout.create(authentificationService);
+    const controllerLoginEmail = ControllerLoginEmail.create(authentificationService);
+
+    const controllerChangePassword = ControllerChangePassword.create(txChangePassword, userIdExtractor);
+    const controllerConfirmAccountDeletion = ControllerConfirmAccountDeletion.create(txConfirmAccountDeletion, userIdExtractor);
+    const controllerConfirmEmailChange = ControllerConfirmEmailChange.create(txConfirmEmailChange, userIdExtractor);
+    const controllerConfirmPasswordReset = ControllerConfirmPasswordReset.create(txConfirmPasswordReset);
+    const controllerRequestAccountDeletion = ControllerRequestAccountDeletion.create(txRequestAccountDeletion, userIdExtractor);
+    const controllerRequestEmailChange = ControllerRequestEmailChange.create(txRequestEmailChange, userIdExtractor);
+    const controllerRequestPasswordReset = ControllerRequestPasswordReset.create(txRequestPasswordReset);
+    const controllerUpdateName = ControllerUpdateName.create(txUpdateName, userIdExtractor);
+    const controllerGetSelfProfile = ControllerGetSelfProfile.create(txGetSelfProfile, userIdExtractor);
+    const controllerGetOtherProfile = ControllerGetOtherProfile.create(txGetOtherProfile, userIdExtractor);
+
 
     return {
         jwtTokenService,
@@ -99,6 +144,26 @@ export function createDepsContainer() {
         txConfirmPasswordReset,
         txRequestAccountDeletion,
         txConfirmAccountDeletion,
+
+        // actual controllers
+        controllerRegisterRequest,
+        controllerRegisterConfirm,
+        controllerRefresh,
+        controllerLogout,
+        controllerLoginEmail,
+
+        controllerChangePassword,
+        controllerConfirmAccountDeletion,
+        controllerConfirmEmailChange,
+        controllerConfirmPasswordReset,
+        controllerRequestAccountDeletion,
+        controllerRequestEmailChange,
+        controllerRequestPasswordReset,
+        controllerUpdateName,
+
+        controllerGetSelfProfile,
+        controllerGetOtherProfile,
+
     };
 }
 
