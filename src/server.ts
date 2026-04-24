@@ -1,5 +1,5 @@
-import {createDepsContainer} from "../container";
-import {createApp} from "../app";
+import {createDepsContainer} from "./container";
+import {createApp} from "./app";
 import * as http from "node:http";
 
 
