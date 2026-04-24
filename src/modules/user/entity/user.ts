@@ -64,7 +64,7 @@ export class User {
         )
     }
 
-    private ensureActiveAndVerified(operation: string): void {
+     ensureActiveAndVerified(operation: string): void {
         if (this.is_deleted) {
             throwAppError(
                 "User already deleted.",
