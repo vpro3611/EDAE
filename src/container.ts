@@ -79,6 +79,7 @@ export function createDepsContainer() {
     const txConfirmAccountDeletion = TxServiceConfirmAccountDeletion.create(txManager);
 
     return {
+        jwtTokenService,
         userChangePasswordUseCase,
         userUpdateNameUseCase,
         requestRegistrationVerificationUseCase,
