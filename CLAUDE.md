@@ -41,13 +41,18 @@ src/modules/<domain>/
 
 src/modules/authentification/          ← AuthentificationService (register/login/refresh/logout)
 src/modules/authentification/jwt/      ← JwtTokenService, JwtRefreshTokenRepository, config
+src/modules/authentification/controllers/  ← HTTP controllers for auth routes (register, login, refresh, logout)
+src/modules/authentification/extractor.extract_user_id.ts  ← UserIdExtractor (reads actor ID from req.user)
 src/modules/infra/<concern>/           ← cross-cutting infrastructure
   ├── password/              ← InfraPasswordHasherInterface + bcrypt implementation
   ├── email/                 ← InfraEmailSenderInterface + nodemailer implementation
   └── transaction_manager/   ← TransactionManagerInterface + pg implementation
 src/modules/errors/          ← AppError, DatabaseError, handleDatabaseError()
+src/modules/middlewares/     ← validateBody (Zod), errorsMiddleware (AppError/DatabaseError/ZodError → HTTP)
+src/modules/<domain>/controllers/  ← HTTP controllers per domain; receive deps via constructor injection
 src/database.ts              ← exports a shared pg.Pool
-src/container.ts             ← wires all dependencies together
+src/container.ts             ← wires all dependencies and controllers together
+src/app.ts                   ← mounts public (/pub) and protected (/protected) routers; applies middlewares
 ```
 
 ### Key conventions
@@ -64,6 +69,16 @@ src/container.ts             ← wires all dependencies together
 
 **Authentication** is handled by `AuthentificationService`, which orchestrates `registerRequest`, `registerConfirm`, `loginEmail`, `refresh`, and `logout`. Refresh tokens are hashed with SHA-256 before being stored in the `refresh_tokens` table. Access tokens are short-lived JWTs; refresh tokens are long-lived JWTs whose hashes are stored for revocation.
 
+**Controllers** are thin HTTP adapters: validate body via `validateBody(ZodSchema)` middleware before the handler runs, extract the actor ID from `req.user.sub` via `UserIdExtractor`, delegate to the appropriate transactional service or `AuthentificationService`, and return a typed response. They never contain domain logic.
+
+**Routes** split into two Express routers mounted on `src/app.ts`:
+- `/pub/*` — unauthenticated (register, login, refresh, logout, password-reset)
+- `/protected/*` — gated by `authMiddleware`, which verifies the Bearer access token and populates `req.user`
+
+**Refresh tokens** travel exclusively as `httpOnly` cookies (`refreshToken`). Access tokens are returned in the response body and sent as `Authorization: Bearer <token>` on protected requests.
+
+**`errorsMiddleware`** is the last middleware registered. It maps `ZodError` → 400, `AppError` → its own `statusCode`, `DatabaseError` → 500, and any unknown error → 500.
+
 ### Testing patterns
 
 | Test type | Location | Strategy |
@@ -73,8 +88,13 @@ src/container.ts             ← wires all dependencies together
 | Transactional service unit | `tests/modules/<domain>/transactional_services/` | `jest.mock()` on static-factory classes (repos + use cases); verify transaction called, args forwarded, errors propagate |
 | Repository integration | `tests/modules/<domain>/repository/` | Real PostgreSQL; seed in `beforeAll`, close pool in `afterAll` |
 | DTO mapper unit | `tests/modules/<domain>/dto/` | No mocks; exercise mapper directly |
+| Controller e2e | `tests/modules/<domain>/controllers/` | `supertest` against real Express app; real controllers + mocked tx services; covers success, 400 validation, 401 auth guard, AppError propagation |
 
 Factory helpers (e.g. `createValidUser`) are co-located in test files to reduce boilerplate.
+
+A `buildContainer()` helper in each e2e test file constructs a `DepsContainer`-shaped object with real controllers wrapping mocked services — no database required. The `JwtTokenService` runs for real so auth middleware is exercised against genuine signed tokens.
+
+Coverage threshold is enforced globally at **90%** (statements, branches, functions, lines) via `jest.config.js`.
 
 ### Commit style
 
