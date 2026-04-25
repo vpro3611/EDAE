@@ -19,7 +19,10 @@ export const errorsMiddleware = () => {
             return res.status(500)
                 .json({message: 'Internal server error', originalMessageError: err.message});
         }
-
-        return res.status(500).json({message: 'Unexpected internal server error'});
+        if (process.env.NODE_ENV === 'production') {
+            return res.status(500).json({message: `Unexpected internal server error`});
+        } else {
+            return res.status(500).json({message: `Unexpected internal server error: ${err.message} | stack: ${err.stack} | cause: ${err.cause}`})
+        }
     }
 }
