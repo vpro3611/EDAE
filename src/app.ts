@@ -3,6 +3,7 @@ import express, {Express} from "express";
 import cookieParser from "cookie-parser";
 import {authMiddleware} from "./modules/middlewares/middleware.auth";
 import {validateBody} from "./modules/middlewares/middleware.validators";
+import {CorsOptions} from "cors";
 
 // auth controllers
 import { RegisterRequestBodySchema} from "./modules/authentification/controllers/controller.register_request";
@@ -29,6 +30,22 @@ export function createApp(dependencies: DepsContainer): Express {
 
     const publicRouter = express.Router();
     const privateRouter = express.Router();
+
+    const allowedOrigins = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:9000",
+    ];
+
+    const corsOptions: CorsOptions = {
+        origin(origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(null, false);
+            }
+        }
+    };
 
     app.use("/pub", publicRouter);
     app.use("/protected", privateRouter);
