@@ -1,4 +1,11 @@
 import request from "supertest";
+
+jest.mock("../../../../src/redis", () => ({ REDIS: {} }));
+jest.mock("../../../../src/api_limiter", () => ({
+    preDefinedPublicLimiters: () => ({}),
+    constructMiddlewareWrapper: () => (_req: any, _res: any, next: any) => next(),
+}));
+
 import { createApp } from "../../../../src/app";
 import { DepsContainer } from "../../../../src/container";
 import { JwtTokenService } from "../../../../src/modules/authentification/jwt/service/jwt.token_service";
@@ -53,6 +60,12 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
         controllerConfirmPasswordReset: noopTxCtrl("confirmPasswordResetCont"),
         controllerRequestAccountDeletion: noopTxCtrl("requestAccountDeletionCont"),
         controllerConfirmAccountDeletion: noopTxCtrl("confirmAccountDeletionCont"),
+        controllerConnectionCreate: { createConnectionCont: jest.fn() } as any,
+        controllerConnectionListActive: { listActiveConnectionsCont: jest.fn() } as any,
+        controllerConnectionListDeleted: { listDeletedConnectionsCont: jest.fn() } as any,
+        controllerConnectionUpdate: { updateConnectionCont: jest.fn() } as any,
+        controllerConnectionSoftDelete: { softDeleteConnectionCont: jest.fn() } as any,
+        controllerConnectionRestore: { restoreConnectionCont: jest.fn() } as any,
         ...overrides,
     } as DepsContainer;
 }

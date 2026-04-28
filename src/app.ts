@@ -18,8 +18,12 @@ import { ConfirmEmailChangeBodySchema} from "./modules/user/controllers/controll
 import { RequestPasswordResetBodySchema} from "./modules/user/controllers/controller.request_password_reset";
 import { ConfirmPasswordResetBodySchema} from "./modules/user/controllers/controller.confirm_password_reset";
 import { ConfirmAccountDeletionBodySchema} from "./modules/user/controllers/controller.confirm_account_deletion";
+import { CreateConnectionBodySchema } from './modules/connection/controllers/controller.connection.create';
+import { UpdateConnectionBodySchema } from './modules/connection/controllers/controller.connection.update';
 
+// middlewares
 import {errorsMiddleware} from "./modules/middlewares/middleware.errors";
+import { constructMiddlewareWrapper, preDefinedPublicLimiters} from "./api_limiter";
 
 export function createApp(dependencies: DepsContainer): Express {
     const app = express();
@@ -30,7 +34,6 @@ export function createApp(dependencies: DepsContainer): Express {
 
     const publicRouter = express.Router();
     const privateRouter = express.Router();
-
     const allowedOrigins = [
         "http://localhost:3000",
         "http://localhost:5173",
@@ -56,14 +59,49 @@ export function createApp(dependencies: DepsContainer): Express {
         res.status(200).json({message: "OK"});
     });
 
-    publicRouter.post("/auth/register", validateBody(RegisterRequestBodySchema), dependencies.controllerRegisterRequest.registerRequestCont);
-    publicRouter.post("/auth/register/confirm", validateBody(RegisterConfirmRequestBodySchema), dependencies.controllerRegisterConfirm.registerConfirmCont);
-    publicRouter.post("/auth/login", validateBody(LoginEmailRequestBodySchema), dependencies.controllerLoginEmail.loginEmailCont);
-    publicRouter.post("/auth/refresh", dependencies.controllerRefresh.refreshCont);
-    publicRouter.post("/auth/logout", dependencies.controllerLogout.logoutCont);
+    const buckets = preDefinedPublicLimiters();
 
-    publicRouter.post("/user/password-reset", validateBody(RequestPasswordResetBodySchema), dependencies.controllerRequestPasswordReset.requestPasswordResetCont);
-    publicRouter.post("/user/password-reset/confirm", validateBody(ConfirmPasswordResetBodySchema), dependencies.controllerConfirmPasswordReset.confirmPasswordResetCont);
+    publicRouter.post(
+        "/auth/register",
+        validateBody(RegisterRequestBodySchema),
+        constructMiddlewareWrapper(buckets.registerTokenBucket, 'email+ip', 'rl:register'),
+        dependencies.controllerRegisterRequest.registerRequestCont
+    );
+    publicRouter.post(
+        "/auth/register/confirm",
+        validateBody(RegisterConfirmRequestBodySchema),
+        constructMiddlewareWrapper(buckets.registerConfirmTokenBucket, 'email+ip', 'rl:register-confirm'),
+        dependencies.controllerRegisterConfirm.registerConfirmCont
+    );
+    publicRouter.post(
+        "/auth/login",
+        validateBody(LoginEmailRequestBodySchema),
+        constructMiddlewareWrapper(buckets.loginTokenBucket, 'email+ip', 'rl:login'),
+        dependencies.controllerLoginEmail.loginEmailCont
+    );
+    publicRouter.post(
+        "/auth/refresh",
+        constructMiddlewareWrapper(buckets.refreshTokenBucket, 'cookieToken', 'rl:refresh'),
+        dependencies.controllerRefresh.refreshCont
+    );
+    publicRouter.post(
+        "/auth/logout",
+        constructMiddlewareWrapper(buckets.logoutTokenBucket, 'ip', 'rl:logout'),
+        dependencies.controllerLogout.logoutCont
+    );
+
+    publicRouter.post(
+        "/user/password-reset",
+        validateBody(RequestPasswordResetBodySchema),
+        constructMiddlewareWrapper(buckets.passwordResetTokenBucket, 'email+ip', 'rl:pw-reset'),
+        dependencies.controllerRequestPasswordReset.requestPasswordResetCont
+    );
+    publicRouter.post(
+        "/user/password-reset/confirm",
+        validateBody(ConfirmPasswordResetBodySchema),
+        constructMiddlewareWrapper(buckets.passwordResetConfirmTokenBucket, 'email+ip', 'rl:pw-reset-confirm'),
+        dependencies.controllerConfirmPasswordReset.confirmPasswordResetCont
+    );
 
     privateRouter.patch("/user/password", validateBody(ChangePasswordBodySchema), dependencies.controllerChangePassword.changePasswordCont);
     privateRouter.patch("/user/name", validateBody(UpdateNameBodySchema), dependencies.controllerUpdateName.updateNameCont);
@@ -74,6 +112,14 @@ export function createApp(dependencies: DepsContainer): Express {
 
     privateRouter.get("/user/me", dependencies.controllerGetSelfProfile.getSelfProfileCont);
     privateRouter.get("/user/:targetId", dependencies.controllerGetOtherProfile.getOtherProfileCont);
+
+    // connection routes
+    privateRouter.post('/connections', validateBody(CreateConnectionBodySchema), dependencies.controllerConnectionCreate.createConnectionCont);
+    privateRouter.get('/connections', dependencies.controllerConnectionListActive.listActiveConnectionsCont);
+    privateRouter.get('/connections/deleted', dependencies.controllerConnectionListDeleted.listDeletedConnectionsCont);
+    privateRouter.patch('/connections/:id', validateBody(UpdateConnectionBodySchema), dependencies.controllerConnectionUpdate.updateConnectionCont);
+    privateRouter.delete('/connections/:id', dependencies.controllerConnectionSoftDelete.softDeleteConnectionCont);
+    privateRouter.post('/connections/:id/restore', dependencies.controllerConnectionRestore.restoreConnectionCont);
 
     app.use(errorsMiddleware());
 

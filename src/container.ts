@@ -49,6 +49,20 @@ import {TxServiceGetSelfProfile} from "./modules/user/transactional_services/tx_
 import {TxServiceGetOtherProfileService} from "./modules/user/transactional_services/tx_service.get_other_profile";
 import {ControllerGetSelfProfile} from "./modules/user/controllers/controller.get_self_profile";
 import {ControllerGetOtherProfile} from "./modules/user/controllers/controller.get_other_profile";
+import { InfraCryptoAesImplementation } from './modules/infra/encryption/infra.encryption_aes.implementation';
+import { ConnectionDtoMapper } from './modules/connection/dto/connection.dto.mapper';
+import { TxServiceConnectionCreate } from './modules/connection/transactional_services/tx_service.connection.create';
+import { TxServiceConnectionListActive } from './modules/connection/transactional_services/tx_service.connection.list_active';
+import { TxServiceConnectionListDeleted } from './modules/connection/transactional_services/tx_service.connection.list_deleted';
+import { TxServiceConnectionUpdate } from './modules/connection/transactional_services/tx_service.connection.update';
+import { TxServiceConnectionSoftDelete } from './modules/connection/transactional_services/tx_service.connection.soft_delete';
+import { TxServiceConnectionRestore } from './modules/connection/transactional_services/tx_service.connection.restore';
+import { ControllerConnectionCreate } from './modules/connection/controllers/controller.connection.create';
+import { ControllerConnectionListActive } from './modules/connection/controllers/controller.connection.list_active';
+import { ControllerConnectionListDeleted } from './modules/connection/controllers/controller.connection.list_deleted';
+import { ControllerConnectionUpdate } from './modules/connection/controllers/controller.connection.update';
+import { ControllerConnectionSoftDelete } from './modules/connection/controllers/controller.connection.soft_delete';
+import { ControllerConnectionRestore } from './modules/connection/controllers/controller.connection.restore';
 
 export function createDepsContainer() {
     const userRepoReader = RepositoryUserReader.create(pool);
@@ -70,6 +84,23 @@ export function createDepsContainer() {
     const userDtoMapper = UserDtoMapper.create();
     const txManager = TransactionManager.create(pool);
     const jwtTokenService = JwtTokenService.create();
+
+    const encryption = InfraCryptoAesImplementation.create(process.env.ENCRYPTION_KEY!);
+    const connectionDtoMapper = ConnectionDtoMapper.create();
+
+    const txConnectionCreate = TxServiceConnectionCreate.create(txManager, encryption, connectionDtoMapper);
+    const txConnectionListActive = TxServiceConnectionListActive.create(txManager, encryption, connectionDtoMapper);
+    const txConnectionListDeleted = TxServiceConnectionListDeleted.create(txManager, encryption, connectionDtoMapper);
+    const txConnectionUpdate = TxServiceConnectionUpdate.create(txManager, encryption, connectionDtoMapper);
+    const txConnectionSoftDelete = TxServiceConnectionSoftDelete.create(txManager, encryption);
+    const txConnectionRestore = TxServiceConnectionRestore.create(txManager, encryption, connectionDtoMapper);
+
+    const controllerConnectionCreate = ControllerConnectionCreate.create(txConnectionCreate, userIdExtractor);
+    const controllerConnectionListActive = ControllerConnectionListActive.create(txConnectionListActive, userIdExtractor);
+    const controllerConnectionListDeleted = ControllerConnectionListDeleted.create(txConnectionListDeleted, userIdExtractor);
+    const controllerConnectionUpdate = ControllerConnectionUpdate.create(txConnectionUpdate, userIdExtractor);
+    const controllerConnectionSoftDelete = ControllerConnectionSoftDelete.create(txConnectionSoftDelete, userIdExtractor);
+    const controllerConnectionRestore = ControllerConnectionRestore.create(txConnectionRestore, userIdExtractor);
 
     const createOtpUseCase = CreateOtpUseCase.create(tokenRepoWriter, emailSender);
     const verifyOtpUseCase = VerifyOtpUseCase.create(tokenRepoReader, tokenRepoWriter);
@@ -163,6 +194,13 @@ export function createDepsContainer() {
 
         controllerGetSelfProfile,
         controllerGetOtherProfile,
+
+        controllerConnectionCreate,
+        controllerConnectionListActive,
+        controllerConnectionListDeleted,
+        controllerConnectionUpdate,
+        controllerConnectionSoftDelete,
+        controllerConnectionRestore,
 
     };
 }
