@@ -1,4 +1,11 @@
 import request from "supertest";
+
+jest.mock("../../../../src/redis", () => ({ REDIS: {} }));
+jest.mock("../../../../src/api_limiter", () => ({
+    preDefinedPublicLimiters: () => ({}),
+    constructMiddlewareWrapper: () => (_req: any, _res: any, next: any) => next(),
+}));
+
 import { createApp } from "../../../../src/app";
 import { DepsContainer } from "../../../../src/container";
 import { JwtTokenService } from "../../../../src/modules/authentification/jwt/service/jwt.token_service";
