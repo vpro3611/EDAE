@@ -111,6 +111,13 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
         controllerGetSelfProfile: ControllerGetSelfProfile.create(mockGetSelfProfileService(), extractor),
         controllerGetOtherProfile: ControllerGetOtherProfile.create(mockGetOtherProfileService(), extractor),
 
+        controllerConnectionCreate: { createConnectionCont: jest.fn() } as any,
+        controllerConnectionListActive: { listActiveConnectionsCont: jest.fn() } as any,
+        controllerConnectionListDeleted: { listDeletedConnectionsCont: jest.fn() } as any,
+        controllerConnectionUpdate: { updateConnectionCont: jest.fn() } as any,
+        controllerConnectionSoftDelete: { softDeleteConnectionCont: jest.fn() } as any,
+        controllerConnectionRestore: { restoreConnectionCont: jest.fn() } as any,
+
         ...overrides,
     } as DepsContainer;
 }
