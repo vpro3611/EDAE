@@ -18,6 +18,8 @@ import { ConfirmEmailChangeBodySchema} from "./modules/user/controllers/controll
 import { RequestPasswordResetBodySchema} from "./modules/user/controllers/controller.request_password_reset";
 import { ConfirmPasswordResetBodySchema} from "./modules/user/controllers/controller.confirm_password_reset";
 import { ConfirmAccountDeletionBodySchema} from "./modules/user/controllers/controller.confirm_account_deletion";
+import { CreateConnectionBodySchema } from './modules/connection/controllers/controller.connection.create';
+import { UpdateConnectionBodySchema } from './modules/connection/controllers/controller.connection.update';
 
 import {errorsMiddleware} from "./modules/middlewares/middleware.errors";
 
@@ -74,6 +76,14 @@ export function createApp(dependencies: DepsContainer): Express {
 
     privateRouter.get("/user/me", dependencies.controllerGetSelfProfile.getSelfProfileCont);
     privateRouter.get("/user/:targetId", dependencies.controllerGetOtherProfile.getOtherProfileCont);
+
+    // connection routes
+    privateRouter.post('/connections', validateBody(CreateConnectionBodySchema), dependencies.controllerConnectionCreate.createConnectionCont);
+    privateRouter.get('/connections', dependencies.controllerConnectionListActive.listActiveConnectionsCont);
+    privateRouter.get('/connections/deleted', dependencies.controllerConnectionListDeleted.listDeletedConnectionsCont);
+    privateRouter.patch('/connections/:id', validateBody(UpdateConnectionBodySchema), dependencies.controllerConnectionUpdate.updateConnectionCont);
+    privateRouter.delete('/connections/:id', dependencies.controllerConnectionSoftDelete.softDeleteConnectionCont);
+    privateRouter.post('/connections/:id/restore', dependencies.controllerConnectionRestore.restoreConnectionCont);
 
     app.use(errorsMiddleware());
 
