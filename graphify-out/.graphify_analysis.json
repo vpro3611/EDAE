@@ -1,0 +1,1041 @@
+{
+  "communities": {
+    "0": [
+      "authentification_extractor_extract_user_id_useridextractor",
+      "authentification_extractor_extract_user_id_useridextractor_create",
+      "authentification_extractor_extract_user_id_useridextractor_extractuserid",
+      "entity_connection_connection",
+      "entity_connection_connection_constructor",
+      "entity_connection_connection_createfordatabase",
+      "entity_connection_connection_ensureisdeleted",
+      "entity_connection_connection_ensurenotdeleted",
+      "entity_connection_connection_ensureownership",
+      "entity_connection_connection_restore",
+      "entity_connection_connection_softdelete",
+      "entity_connection_connection_updatecredentials",
+      "entity_connection_connection_updatename",
+      "entity_connection_validator_connectionvalidator",
+      "entity_connection_validator_connectionvalidator_validatecredentials",
+      "entity_connection_validator_connectionvalidator_validatename",
+      "entity_user_validator_uservalidator",
+      "entity_user_validator_uservalidator_validateemail",
+      "entity_user_validator_uservalidator_validatename",
+      "entity_user_validator_uservalidator_validatepassword",
+      "errors_errors_global_apperror",
+      "errors_errors_global_apperror_constructor",
+      "errors_errors_global_throwapperror",
+      "src_modules_authentification_extractor_extract_user_id_ts",
+      "src_modules_connection_entity_connection_ts",
+      "src_modules_connection_entity_connection_validator_ts",
+      "src_modules_errors_errors_global_ts",
+      "src_modules_user_entity_user_validator_ts",
+      "src_modules_user_usecases_user_confirm_account_deletion_usecase_ts",
+      "src_modules_user_usecases_user_get_other_profile_usecase_ts",
+      "src_modules_user_usecases_user_request_account_deletion_usecase_ts",
+      "src_modules_user_usecases_user_update_name_usecase_ts",
+      "usecases_user_confirm_account_deletion_usecase_confirmaccountdeletionusecase",
+      "usecases_user_confirm_account_deletion_usecase_confirmaccountdeletionusecase_constructor",
+      "usecases_user_confirm_account_deletion_usecase_confirmaccountdeletionusecase_create",
+      "usecases_user_confirm_account_deletion_usecase_confirmaccountdeletionusecase_execute",
+      "usecases_user_get_other_profile_usecase_usergetotherprofileusecase",
+      "usecases_user_get_other_profile_usecase_usergetotherprofileusecase_constructor",
+      "usecases_user_get_other_profile_usecase_usergetotherprofileusecase_create",
+      "usecases_user_get_other_profile_usecase_usergetotherprofileusecase_getotheruserprofile",
+      "usecases_user_request_account_deletion_usecase_requestaccountdeletionusecase",
+      "usecases_user_request_account_deletion_usecase_requestaccountdeletionusecase_constructor",
+      "usecases_user_request_account_deletion_usecase_requestaccountdeletionusecase_create",
+      "usecases_user_request_account_deletion_usecase_requestaccountdeletionusecase_execute",
+      "usecases_user_update_name_usecase_userupdatenameusecase",
+      "usecases_user_update_name_usecase_userupdatenameusecase_constructor",
+      "usecases_user_update_name_usecase_userupdatenameusecase_create",
+      "usecases_user_update_name_usecase_userupdatenameusecase_execute"
+    ],
+    "1": [
+      "errors_errors_database_databaseerror",
+      "errors_errors_database_databaseerror_constructor",
+      "errors_errors_database_throwdatabaseerror",
+      "errors_mapper_database_handledatabaseerror",
+      "repository_repository_connection_reader_repositoryconnectionreader",
+      "repository_repository_connection_reader_repositoryconnectionreader_constructor",
+      "repository_repository_connection_reader_repositoryconnectionreader_create",
+      "repository_repository_connection_reader_repositoryconnectionreader_getactiveconnectionsbyuserid",
+      "repository_repository_connection_reader_repositoryconnectionreader_getconnectionbyid",
+      "repository_repository_connection_reader_repositoryconnectionreader_getdeletedconnectionsbyuserid",
+      "repository_repository_connection_reader_repositoryconnectionreader_restorehelper",
+      "repository_repository_connection_writer_repositoryconnectionwriter",
+      "repository_repository_connection_writer_repositoryconnectionwriter_constructor",
+      "repository_repository_connection_writer_repositoryconnectionwriter_create",
+      "repository_repository_connection_writer_repositoryconnectionwriter_createconnection",
+      "repository_repository_connection_writer_repositoryconnectionwriter_encrypt",
+      "repository_repository_connection_writer_repositoryconnectionwriter_restoreconnection",
+      "repository_repository_connection_writer_repositoryconnectionwriter_restorehelper",
+      "repository_repository_connection_writer_repositoryconnectionwriter_softdeleteconnection",
+      "repository_repository_connection_writer_repositoryconnectionwriter_updateconnection",
+      "repository_repository_user_reader_repositoryuserreader",
+      "repository_repository_user_reader_repositoryuserreader_constructor",
+      "repository_repository_user_reader_repositoryuserreader_create",
+      "repository_repository_user_reader_repositoryuserreader_getnondeletedusers",
+      "repository_repository_user_reader_repositoryuserreader_getuserbyemail",
+      "repository_repository_user_reader_repositoryuserreader_getuserbyid",
+      "repository_repository_user_reader_repositoryuserreader_getverifiedusers",
+      "repository_repository_user_reader_repositoryuserreader_restorehelper",
+      "repository_repository_user_writer_repositoryuserwriter",
+      "repository_repository_user_writer_repositoryuserwriter_constructor",
+      "repository_repository_user_writer_repositoryuserwriter_create",
+      "repository_repository_user_writer_repositoryuserwriter_createuser",
+      "repository_repository_user_writer_repositoryuserwriter_deleteuser",
+      "repository_repository_user_writer_repositoryuserwriter_markuserasverified",
+      "repository_repository_user_writer_repositoryuserwriter_updateuser",
+      "src_modules_connection_repository_repository_connection_reader_ts",
+      "src_modules_connection_repository_repository_connection_writer_ts",
+      "src_modules_errors_errors_database_ts",
+      "src_modules_errors_mapper_database_ts",
+      "src_modules_user_repository_repository_user_reader_ts",
+      "src_modules_user_repository_repository_user_writer_ts"
+    ],
+    "2": [
+      "api_auth_confirmpasswordreset",
+      "api_auth_confirmregistration",
+      "api_auth_login",
+      "api_auth_logout",
+      "api_auth_refresh",
+      "api_auth_register",
+      "api_auth_requestpasswordreset",
+      "api_client_call",
+      "api_client_extracterror",
+      "api_connections_createconnection",
+      "api_connections_listactive",
+      "api_connections_listdeleted",
+      "api_connections_restore",
+      "api_connections_softdelete",
+      "api_connections_updateconnection",
+      "api_user_changepassword",
+      "api_user_confirmaccountdeletion",
+      "api_user_confirmemailchange",
+      "api_user_getotherprofile",
+      "api_user_getselfprofile",
+      "api_user_requestaccountdeletion",
+      "api_user_requestemailchange",
+      "api_user_updatename",
+      "frontend_src_api_auth_ts",
+      "frontend_src_api_client_ts",
+      "frontend_src_api_connections_ts",
+      "frontend_src_api_user_ts"
+    ],
+    "3": [
+      "middlewares_middleware_auth_authmiddleware",
+      "middlewares_middleware_errors_errorsmiddleware",
+      "middlewares_middleware_validators_validatebody",
+      "middlewares_middleware_validators_validateparams",
+      "src_api_limiter_constructlimiterwithpresets",
+      "src_api_limiter_constructmiddlewarewrapper",
+      "src_api_limiter_predefinedpubliclimiters",
+      "src_api_limiter_ts",
+      "src_app_createapp",
+      "src_app_ts",
+      "src_container_createdepscontainer",
+      "src_container_ts",
+      "src_index_main",
+      "src_index_ts",
+      "src_modules_middlewares_middleware_auth_ts",
+      "src_modules_middlewares_middleware_errors_ts",
+      "src_modules_middlewares_middleware_validators_ts",
+      "src_server_startserver",
+      "src_server_ts"
+    ],
+    "4": [
+      "entity_user_user",
+      "entity_user_user_assertdelete",
+      "entity_user_user_canlogin",
+      "entity_user_user_checkifdeleted",
+      "entity_user_user_checkifverified",
+      "entity_user_user_ensureactiveandverified",
+      "entity_user_user_markasverified",
+      "entity_user_user_resetpassword",
+      "entity_user_user_updateemail",
+      "entity_user_user_updatelastpassword",
+      "entity_user_user_updatename",
+      "entity_user_user_updatepassword",
+      "entity_user_user_updatependingemail",
+      "entity_user_user_updatependingpassword",
+      "src_modules_user_entity_user_ts"
+    ],
+    "5": [
+      "controllers_user_controllers_e2e_test_bearerfor",
+      "controllers_user_controllers_e2e_test_buildcontainer",
+      "controllers_user_controllers_e2e_test_mockchangepwservice",
+      "controllers_user_controllers_e2e_test_mockconfaccdeletionservice",
+      "controllers_user_controllers_e2e_test_mockconfemailchangeservice",
+      "controllers_user_controllers_e2e_test_mockconfpwresetservice",
+      "controllers_user_controllers_e2e_test_mockgetotherprofileservice",
+      "controllers_user_controllers_e2e_test_mockgetselfprofileservice",
+      "controllers_user_controllers_e2e_test_mockreqaccdeletionservice",
+      "controllers_user_controllers_e2e_test_mockreqemailchangeservice",
+      "controllers_user_controllers_e2e_test_mockreqpwresetservice",
+      "controllers_user_controllers_e2e_test_mockupdatenameservice",
+      "tests_modules_user_controllers_user_controllers_e2e_test_ts"
+    ],
+    "6": [
+      "authentification_auth_service_authentificationservice",
+      "authentification_auth_service_authentificationservice_assertexistingtoken",
+      "authentification_auth_service_authentificationservice_constructor",
+      "authentification_auth_service_authentificationservice_create",
+      "authentification_auth_service_authentificationservice_generatetokens",
+      "authentification_auth_service_authentificationservice_hashtoken",
+      "authentification_auth_service_authentificationservice_loginemail",
+      "authentification_auth_service_authentificationservice_logout",
+      "authentification_auth_service_authentificationservice_refresh",
+      "authentification_auth_service_authentificationservice_registerconfirm",
+      "authentification_auth_service_authentificationservice_registerrequest",
+      "src_modules_authentification_auth_service_ts"
+    ],
+    "7": [
+      "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation",
+      "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation_constructor",
+      "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation_create",
+      "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation_send",
+      "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation_sendaccountdeletionotp",
+      "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation_sendemailchangeotp",
+      "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation_sendpasswordresetotp",
+      "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation_sendregistrationotp",
+      "src_modules_infra_email_infra_email_nodemailer_implementation_ts"
+    ],
+    "8": [
+      "controllers_controller_connection_e2e_test_bearerfor",
+      "controllers_controller_connection_e2e_test_buildcontainer",
+      "controllers_controller_connection_e2e_test_mockcreatesvc",
+      "controllers_controller_connection_e2e_test_mocklistactivesvc",
+      "controllers_controller_connection_e2e_test_mocklistdeletedsvc",
+      "controllers_controller_connection_e2e_test_mockrestoresvc",
+      "controllers_controller_connection_e2e_test_mocksoftdeletesvc",
+      "controllers_controller_connection_e2e_test_mockupdatesvc",
+      "tests_modules_connection_controllers_controller_connection_e2e_test_ts"
+    ],
+    "9": [
+      "frontend_src_views_dashboardview_vue",
+      "views_dashboardview_handlechangepassword",
+      "views_dashboardview_handleconfirmdeletion",
+      "views_dashboardview_handleconfirmemailchange",
+      "views_dashboardview_handlerequestdeletion",
+      "views_dashboardview_handlerequestemailchange",
+      "views_dashboardview_openeditname",
+      "views_dashboardview_resetpasswordform"
+    ],
+    "10": [
+      "src_modules_user_usecases_user_login_email_usecase_ts",
+      "usecases_user_login_email_usecase_userloginemailusecase",
+      "usecases_user_login_email_usecase_userloginemailusecase_comparepasswords",
+      "usecases_user_login_email_usecase_userloginemailusecase_constructor",
+      "usecases_user_login_email_usecase_userloginemailusecase_create",
+      "usecases_user_login_email_usecase_userloginemailusecase_execute"
+    ],
+    "11": [
+      "encryption_infra_encryption_aes_implementation_infracryptoaesimplementation",
+      "encryption_infra_encryption_aes_implementation_infracryptoaesimplementation_constructor",
+      "encryption_infra_encryption_aes_implementation_infracryptoaesimplementation_create",
+      "encryption_infra_encryption_aes_implementation_infracryptoaesimplementation_decrypt",
+      "encryption_infra_encryption_aes_implementation_infracryptoaesimplementation_encrypt",
+      "src_modules_infra_encryption_infra_encryption_aes_implementation_ts"
+    ],
+    "12": [
+      "password_infra_pasword_bcrypt_implementation_infrapasswordbcryptimplementation",
+      "password_infra_pasword_bcrypt_implementation_infrapasswordbcryptimplementation_compare",
+      "password_infra_pasword_bcrypt_implementation_infrapasswordbcryptimplementation_constructor",
+      "password_infra_pasword_bcrypt_implementation_infrapasswordbcryptimplementation_create",
+      "password_infra_pasword_bcrypt_implementation_infrapasswordbcryptimplementation_hash",
+      "src_modules_infra_password_infra_pasword_bcrypt_implementation_ts"
+    ],
+    "13": [
+      "src_modules_infra_transaction_manager_transaction_manager_implementation_ts",
+      "transaction_manager_transaction_manager_implementation_transactionmanager",
+      "transaction_manager_transaction_manager_implementation_transactionmanager_asserterror",
+      "transaction_manager_transaction_manager_implementation_transactionmanager_constructor",
+      "transaction_manager_transaction_manager_implementation_transactionmanager_create",
+      "transaction_manager_transaction_manager_implementation_transactionmanager_runintransaction"
+    ],
+    "14": [
+      "dto_user_dto_mapper_userdtomapper",
+      "dto_user_dto_mapper_userdtomapper_create",
+      "dto_user_dto_mapper_userdtomapper_maptouserdto",
+      "dto_user_dto_mapper_userdtomapper_maptouserdtoforothers",
+      "src_modules_user_dto_user_dto_mapper_ts"
+    ],
+    "15": [
+      "src_modules_user_usecases_user_get_self_profile_usecase_ts",
+      "usecases_user_get_self_profile_usecase_usergetselfprofileusecase",
+      "usecases_user_get_self_profile_usecase_usergetselfprofileusecase_constructor",
+      "usecases_user_get_self_profile_usecase_usergetselfprofileusecase_create",
+      "usecases_user_get_self_profile_usecase_usergetselfprofileusecase_getselfprofile"
+    ],
+    "16": [
+      "src_modules_user_usecases_user_request_registration_verification_usecase_ts",
+      "usecases_user_request_registration_verification_usecase_requestregistrationverificationusecase",
+      "usecases_user_request_registration_verification_usecase_requestregistrationverificationusecase_constructor",
+      "usecases_user_request_registration_verification_usecase_requestregistrationverificationusecase_create",
+      "usecases_user_request_registration_verification_usecase_requestregistrationverificationusecase_execute"
+    ],
+    "17": [
+      "src_modules_user_usecases_user_request_email_change_usecase_ts",
+      "usecases_user_request_email_change_usecase_requestemailchangeusecase",
+      "usecases_user_request_email_change_usecase_requestemailchangeusecase_constructor",
+      "usecases_user_request_email_change_usecase_requestemailchangeusecase_create",
+      "usecases_user_request_email_change_usecase_requestemailchangeusecase_execute"
+    ],
+    "18": [
+      "src_modules_user_usecases_user_confirm_registration_usecase_ts",
+      "usecases_user_confirm_registration_usecase_confirmregistrationusecase",
+      "usecases_user_confirm_registration_usecase_confirmregistrationusecase_constructor",
+      "usecases_user_confirm_registration_usecase_confirmregistrationusecase_create",
+      "usecases_user_confirm_registration_usecase_confirmregistrationusecase_execute"
+    ],
+    "19": [
+      "src_modules_user_usecases_user_confirm_email_change_usecase_ts",
+      "usecases_user_confirm_email_change_usecase_confirmemailchangeusecase",
+      "usecases_user_confirm_email_change_usecase_confirmemailchangeusecase_constructor",
+      "usecases_user_confirm_email_change_usecase_confirmemailchangeusecase_create",
+      "usecases_user_confirm_email_change_usecase_confirmemailchangeusecase_execute"
+    ],
+    "20": [
+      "src_modules_user_transactional_services_tx_service_request_account_deletion_ts",
+      "transactional_services_tx_service_request_account_deletion_txservicerequestaccountdeletion",
+      "transactional_services_tx_service_request_account_deletion_txservicerequestaccountdeletion_constructor",
+      "transactional_services_tx_service_request_account_deletion_txservicerequestaccountdeletion_create",
+      "transactional_services_tx_service_request_account_deletion_txservicerequestaccountdeletion_requestaccountdeletionservice"
+    ],
+    "21": [
+      "src_modules_user_transactional_services_tx_service_get_other_profile_ts",
+      "transactional_services_tx_service_get_other_profile_txservicegetotherprofileservice",
+      "transactional_services_tx_service_get_other_profile_txservicegetotherprofileservice_constructor",
+      "transactional_services_tx_service_get_other_profile_txservicegetotherprofileservice_create",
+      "transactional_services_tx_service_get_other_profile_txservicegetotherprofileservice_getotherprofileservice"
+    ],
+    "22": [
+      "src_modules_user_transactional_services_tx_service_request_email_change_ts",
+      "transactional_services_tx_service_request_email_change_txservicerequestemailchange",
+      "transactional_services_tx_service_request_email_change_txservicerequestemailchange_constructor",
+      "transactional_services_tx_service_request_email_change_txservicerequestemailchange_create",
+      "transactional_services_tx_service_request_email_change_txservicerequestemailchange_requestemailchangeservice"
+    ],
+    "23": [
+      "src_modules_user_transactional_services_tx_service_confirm_account_deletion_ts",
+      "transactional_services_tx_service_confirm_account_deletion_txserviceconfirmaccountdeletion",
+      "transactional_services_tx_service_confirm_account_deletion_txserviceconfirmaccountdeletion_confirmaccountdeletionservice",
+      "transactional_services_tx_service_confirm_account_deletion_txserviceconfirmaccountdeletion_constructor",
+      "transactional_services_tx_service_confirm_account_deletion_txserviceconfirmaccountdeletion_create"
+    ],
+    "24": [
+      "src_modules_user_transactional_services_tx_service_get_self_profile_ts",
+      "transactional_services_tx_service_get_self_profile_txservicegetselfprofile",
+      "transactional_services_tx_service_get_self_profile_txservicegetselfprofile_constructor",
+      "transactional_services_tx_service_get_self_profile_txservicegetselfprofile_create",
+      "transactional_services_tx_service_get_self_profile_txservicegetselfprofile_getselfprofileservice"
+    ],
+    "25": [
+      "src_modules_user_transactional_services_tx_service_update_name_ts",
+      "transactional_services_tx_service_update_name_txserviceupdatename",
+      "transactional_services_tx_service_update_name_txserviceupdatename_constructor",
+      "transactional_services_tx_service_update_name_txserviceupdatename_create",
+      "transactional_services_tx_service_update_name_txserviceupdatename_updatenameservice"
+    ],
+    "26": [
+      "src_modules_user_transactional_services_tx_service_confirm_email_change_ts",
+      "transactional_services_tx_service_confirm_email_change_txserviceconfirmemailchange",
+      "transactional_services_tx_service_confirm_email_change_txserviceconfirmemailchange_confirmemailchangeservice",
+      "transactional_services_tx_service_confirm_email_change_txserviceconfirmemailchange_constructor",
+      "transactional_services_tx_service_confirm_email_change_txserviceconfirmemailchange_create"
+    ],
+    "27": [
+      "src_modules_connection_usecases_connection_create_usecase_ts",
+      "usecases_connection_create_usecase_connectioncreateusecase",
+      "usecases_connection_create_usecase_connectioncreateusecase_constructor",
+      "usecases_connection_create_usecase_connectioncreateusecase_create",
+      "usecases_connection_create_usecase_connectioncreateusecase_execute"
+    ],
+    "28": [
+      "src_modules_connection_usecases_connection_soft_delete_usecase_ts",
+      "usecases_connection_soft_delete_usecase_connectionsoftdeleteusecase",
+      "usecases_connection_soft_delete_usecase_connectionsoftdeleteusecase_constructor",
+      "usecases_connection_soft_delete_usecase_connectionsoftdeleteusecase_create",
+      "usecases_connection_soft_delete_usecase_connectionsoftdeleteusecase_execute"
+    ],
+    "29": [
+      "src_modules_connection_usecases_connection_update_usecase_ts",
+      "usecases_connection_update_usecase_connectionupdateusecase",
+      "usecases_connection_update_usecase_connectionupdateusecase_constructor",
+      "usecases_connection_update_usecase_connectionupdateusecase_create",
+      "usecases_connection_update_usecase_connectionupdateusecase_execute"
+    ],
+    "30": [
+      "src_modules_connection_usecases_connection_list_active_usecase_ts",
+      "usecases_connection_list_active_usecase_connectionlistactiveusecase",
+      "usecases_connection_list_active_usecase_connectionlistactiveusecase_constructor",
+      "usecases_connection_list_active_usecase_connectionlistactiveusecase_create",
+      "usecases_connection_list_active_usecase_connectionlistactiveusecase_execute"
+    ],
+    "31": [
+      "src_modules_connection_usecases_connection_restore_usecase_ts",
+      "usecases_connection_restore_usecase_connectionrestoreusecase",
+      "usecases_connection_restore_usecase_connectionrestoreusecase_constructor",
+      "usecases_connection_restore_usecase_connectionrestoreusecase_create",
+      "usecases_connection_restore_usecase_connectionrestoreusecase_execute"
+    ],
+    "32": [
+      "src_modules_connection_usecases_connection_list_deleted_usecase_ts",
+      "usecases_connection_list_deleted_usecase_connectionlistdeletedusecase",
+      "usecases_connection_list_deleted_usecase_connectionlistdeletedusecase_constructor",
+      "usecases_connection_list_deleted_usecase_connectionlistdeletedusecase_create",
+      "usecases_connection_list_deleted_usecase_connectionlistdeletedusecase_execute"
+    ],
+    "33": [
+      "src_modules_connection_transactional_services_tx_service_connection_restore_ts",
+      "transactional_services_tx_service_connection_restore_txserviceconnectionrestore",
+      "transactional_services_tx_service_connection_restore_txserviceconnectionrestore_constructor",
+      "transactional_services_tx_service_connection_restore_txserviceconnectionrestore_create",
+      "transactional_services_tx_service_connection_restore_txserviceconnectionrestore_restoreconnectionservice"
+    ],
+    "34": [
+      "src_modules_connection_transactional_services_tx_service_connection_update_ts",
+      "transactional_services_tx_service_connection_update_txserviceconnectionupdate",
+      "transactional_services_tx_service_connection_update_txserviceconnectionupdate_constructor",
+      "transactional_services_tx_service_connection_update_txserviceconnectionupdate_create",
+      "transactional_services_tx_service_connection_update_txserviceconnectionupdate_updateconnectionservice"
+    ],
+    "35": [
+      "src_modules_connection_transactional_services_tx_service_connection_create_ts",
+      "transactional_services_tx_service_connection_create_txserviceconnectioncreate",
+      "transactional_services_tx_service_connection_create_txserviceconnectioncreate_constructor",
+      "transactional_services_tx_service_connection_create_txserviceconnectioncreate_create",
+      "transactional_services_tx_service_connection_create_txserviceconnectioncreate_createconnectionservice"
+    ],
+    "36": [
+      "src_modules_connection_transactional_services_tx_service_connection_soft_delete_ts",
+      "transactional_services_tx_service_connection_soft_delete_txserviceconnectionsoftdelete",
+      "transactional_services_tx_service_connection_soft_delete_txserviceconnectionsoftdelete_constructor",
+      "transactional_services_tx_service_connection_soft_delete_txserviceconnectionsoftdelete_create",
+      "transactional_services_tx_service_connection_soft_delete_txserviceconnectionsoftdelete_softdeleteconnectionservice"
+    ],
+    "37": [
+      "src_modules_connection_transactional_services_tx_service_connection_list_active_ts",
+      "transactional_services_tx_service_connection_list_active_txserviceconnectionlistactive",
+      "transactional_services_tx_service_connection_list_active_txserviceconnectionlistactive_constructor",
+      "transactional_services_tx_service_connection_list_active_txserviceconnectionlistactive_create",
+      "transactional_services_tx_service_connection_list_active_txserviceconnectionlistactive_listactiveconnectionsservice"
+    ],
+    "38": [
+      "src_modules_connection_transactional_services_tx_service_connection_list_deleted_ts",
+      "transactional_services_tx_service_connection_list_deleted_txserviceconnectionlistdeleted",
+      "transactional_services_tx_service_connection_list_deleted_txserviceconnectionlistdeleted_constructor",
+      "transactional_services_tx_service_connection_list_deleted_txserviceconnectionlistdeleted_create",
+      "transactional_services_tx_service_connection_list_deleted_txserviceconnectionlistdeleted_listdeletedconnectionsservice"
+    ],
+    "39": [
+      "frontend_src_components_authlayout_vue",
+      "frontend_src_views_loginview_vue",
+      "views_loginview_handlelogin",
+      "views_loginview_validate"
+    ],
+    "40": [
+      "controllers_controller_register_confirm_controllerregisterconfirm",
+      "controllers_controller_register_confirm_controllerregisterconfirm_constructor",
+      "controllers_controller_register_confirm_controllerregisterconfirm_create",
+      "src_modules_authentification_controllers_controller_register_confirm_ts"
+    ],
+    "41": [
+      "controllers_controller_logout_controllerlogout",
+      "controllers_controller_logout_controllerlogout_constructor",
+      "controllers_controller_logout_controllerlogout_create",
+      "src_modules_authentification_controllers_controller_logout_ts"
+    ],
+    "42": [
+      "controllers_controller_refresh_controllerrefresh",
+      "controllers_controller_refresh_controllerrefresh_constructor",
+      "controllers_controller_refresh_controllerrefresh_create",
+      "src_modules_authentification_controllers_controller_refresh_ts"
+    ],
+    "43": [
+      "controllers_controller_login_email_controllerloginemail",
+      "controllers_controller_login_email_controllerloginemail_constructor",
+      "controllers_controller_login_email_controllerloginemail_create",
+      "src_modules_authentification_controllers_controller_login_email_ts"
+    ],
+    "44": [
+      "controllers_controller_register_request_registerrequestcontroller",
+      "controllers_controller_register_request_registerrequestcontroller_constructor",
+      "controllers_controller_register_request_registerrequestcontroller_create",
+      "src_modules_authentification_controllers_controller_register_request_ts"
+    ],
+    "45": [
+      "controllers_controller_get_self_profile_controllergetselfprofile",
+      "controllers_controller_get_self_profile_controllergetselfprofile_constructor",
+      "controllers_controller_get_self_profile_controllergetselfprofile_create",
+      "src_modules_user_controllers_controller_get_self_profile_ts"
+    ],
+    "46": [
+      "controllers_controller_confirm_account_deletion_controllerconfirmaccountdeletion",
+      "controllers_controller_confirm_account_deletion_controllerconfirmaccountdeletion_constructor",
+      "controllers_controller_confirm_account_deletion_controllerconfirmaccountdeletion_create",
+      "src_modules_user_controllers_controller_confirm_account_deletion_ts"
+    ],
+    "47": [
+      "controllers_controller_confirm_email_change_controllerconfirmemailchange",
+      "controllers_controller_confirm_email_change_controllerconfirmemailchange_constructor",
+      "controllers_controller_confirm_email_change_controllerconfirmemailchange_create",
+      "src_modules_user_controllers_controller_confirm_email_change_ts"
+    ],
+    "48": [
+      "controllers_controller_update_name_controllerupdatename",
+      "controllers_controller_update_name_controllerupdatename_constructor",
+      "controllers_controller_update_name_controllerupdatename_create",
+      "src_modules_user_controllers_controller_update_name_ts"
+    ],
+    "49": [
+      "controllers_controller_request_account_deletion_controllerrequestaccountdeletion",
+      "controllers_controller_request_account_deletion_controllerrequestaccountdeletion_constructor",
+      "controllers_controller_request_account_deletion_controllerrequestaccountdeletion_create",
+      "src_modules_user_controllers_controller_request_account_deletion_ts"
+    ],
+    "50": [
+      "controllers_controller_get_other_profile_controllergetotherprofile",
+      "controllers_controller_get_other_profile_controllergetotherprofile_constructor",
+      "controllers_controller_get_other_profile_controllergetotherprofile_create",
+      "src_modules_user_controllers_controller_get_other_profile_ts"
+    ],
+    "51": [
+      "controllers_controller_request_email_change_controllerrequestemailchange",
+      "controllers_controller_request_email_change_controllerrequestemailchange_constructor",
+      "controllers_controller_request_email_change_controllerrequestemailchange_create",
+      "src_modules_user_controllers_controller_request_email_change_ts"
+    ],
+    "52": [
+      "dto_connection_dto_mapper_connectiondtomapper",
+      "dto_connection_dto_mapper_connectiondtomapper_create",
+      "dto_connection_dto_mapper_connectiondtomapper_maptodto",
+      "src_modules_connection_dto_connection_dto_mapper_ts"
+    ],
+    "53": [
+      "controllers_controller_connection_list_deleted_controllerconnectionlistdeleted",
+      "controllers_controller_connection_list_deleted_controllerconnectionlistdeleted_constructor",
+      "controllers_controller_connection_list_deleted_controllerconnectionlistdeleted_create",
+      "src_modules_connection_controllers_controller_connection_list_deleted_ts"
+    ],
+    "54": [
+      "controllers_controller_connection_list_active_controllerconnectionlistactive",
+      "controllers_controller_connection_list_active_controllerconnectionlistactive_constructor",
+      "controllers_controller_connection_list_active_controllerconnectionlistactive_create",
+      "src_modules_connection_controllers_controller_connection_list_active_ts"
+    ],
+    "55": [
+      "controllers_controller_connection_restore_controllerconnectionrestore",
+      "controllers_controller_connection_restore_controllerconnectionrestore_constructor",
+      "controllers_controller_connection_restore_controllerconnectionrestore_create",
+      "src_modules_connection_controllers_controller_connection_restore_ts"
+    ],
+    "56": [
+      "controllers_controller_connection_update_controllerconnectionupdate",
+      "controllers_controller_connection_update_controllerconnectionupdate_constructor",
+      "controllers_controller_connection_update_controllerconnectionupdate_create",
+      "src_modules_connection_controllers_controller_connection_update_ts"
+    ],
+    "57": [
+      "controllers_controller_connection_create_controllerconnectioncreate",
+      "controllers_controller_connection_create_controllerconnectioncreate_constructor",
+      "controllers_controller_connection_create_controllerconnectioncreate_create",
+      "src_modules_connection_controllers_controller_connection_create_ts"
+    ],
+    "58": [
+      "controllers_controller_connection_soft_delete_controllerconnectionsoftdelete",
+      "controllers_controller_connection_soft_delete_controllerconnectionsoftdelete_constructor",
+      "controllers_controller_connection_soft_delete_controllerconnectionsoftdelete_create",
+      "src_modules_connection_controllers_controller_connection_soft_delete_ts"
+    ],
+    "59": [
+      "tests_api_limiter_test_makebucket",
+      "tests_api_limiter_test_makectx",
+      "tests_api_limiter_test_ts"
+    ],
+    "60": [
+      "frontend_src_app_vue",
+      "frontend_src_main_ts"
+    ],
+    "61": [
+      "components_otpinput_if",
+      "frontend_src_components_otpinput_vue"
+    ],
+    "62": [
+      "components_connectionstab_if",
+      "frontend_src_components_connectionstab_vue"
+    ],
+    "63": [
+      "controllers_auth_controllers_e2e_test_buildcontainer",
+      "tests_modules_authentification_controllers_auth_controllers_e2e_test_ts"
+    ],
+    "64": [
+      "tests_modules_user_usecases_user_request_account_deletion_usecase_test_ts",
+      "usecases_user_request_account_deletion_usecase_test_makeuser"
+    ],
+    "65": [
+      "tests_modules_user_usecases_user_confirm_email_change_usecase_test_ts",
+      "usecases_user_confirm_email_change_usecase_test_makeuser"
+    ],
+    "66": [
+      "tests_modules_user_usecases_user_request_email_change_usecase_test_ts",
+      "usecases_user_request_email_change_usecase_test_makeuser"
+    ],
+    "67": [
+      "tests_modules_user_usecases_user_request_registration_verification_usecase_test_ts",
+      "usecases_user_request_registration_verification_usecase_test_makeuser"
+    ],
+    "68": [
+      "tests_modules_user_usecases_user_confirm_registration_usecase_test_ts",
+      "usecases_user_confirm_registration_usecase_test_makeuser"
+    ],
+    "69": [
+      "tests_modules_user_usecases_user_confirm_account_deletion_usecase_test_ts",
+      "usecases_user_confirm_account_deletion_usecase_test_makeuser"
+    ],
+    "70": [
+      "entity_user_test_createvaliduser",
+      "tests_modules_user_entity_user_test_ts"
+    ],
+    "71": [
+      "middlewares_middleware_errors_test_makeres",
+      "tests_modules_middlewares_middleware_errors_test_ts"
+    ],
+    "72": [
+      "dto_connection_dto_mapper_test_makeconnection",
+      "tests_modules_connection_dto_connection_dto_mapper_test_ts"
+    ],
+    "73": [
+      "tests_modules_connection_usecases_connection_list_deleted_usecase_test_ts",
+      "usecases_connection_list_deleted_usecase_test_makedeletedconn"
+    ],
+    "74": [
+      "tests_modules_connection_usecases_connection_soft_delete_usecase_test_ts",
+      "usecases_connection_soft_delete_usecase_test_makeconn"
+    ],
+    "75": [
+      "tests_modules_connection_usecases_connection_restore_usecase_test_ts",
+      "usecases_connection_restore_usecase_test_makeconn"
+    ],
+    "76": [
+      "tests_modules_connection_usecases_connection_create_usecase_test_ts",
+      "usecases_connection_create_usecase_test_makeconnection"
+    ],
+    "77": [
+      "tests_modules_connection_usecases_connection_list_active_usecase_test_ts",
+      "usecases_connection_list_active_usecase_test_makeconn"
+    ],
+    "78": [
+      "tests_modules_connection_usecases_connection_update_usecase_test_ts",
+      "usecases_connection_update_usecase_test_makeconn"
+    ],
+    "79": [
+      "entity_connection_test_makeconnection",
+      "tests_modules_connection_entity_connection_test_ts"
+    ],
+    "80": [
+      "frontend_src_stores_auth_ts"
+    ],
+    "81": [
+      "frontend_src_types_index_ts"
+    ],
+    "82": [
+      "frontend_src_views_registerview_vue"
+    ],
+    "83": [
+      "frontend_src_views_confirmview_vue"
+    ],
+    "84": [
+      "frontend_src_router_index_ts"
+    ],
+    "85": [
+      "src_redis_ts"
+    ],
+    "86": [
+      "src_database_ts"
+    ],
+    "87": [
+      "src_express_declare_global_ts"
+    ],
+    "88": [
+      "src_modules_authentification_jwt_jwt_config_ts"
+    ],
+    "89": [
+      "src_modules_authentification_jwt_payload_payloads_ts"
+    ],
+    "90": [
+      "src_modules_user_dto_user_dto_ts"
+    ],
+    "91": [
+      "src_modules_user_interfaces_interface_repository_ts"
+    ],
+    "92": [
+      "src_modules_connection_dto_connection_dto_ts"
+    ],
+    "93": [
+      "src_modules_connection_interfaces_interface_repository_ts"
+    ],
+    "94": [
+      "src_modules_token_interfaces_interface_repository_ts"
+    ],
+    "95": [
+      "src_modules_infra_encryption_infra_encryption_interface_ts"
+    ],
+    "96": [
+      "src_modules_infra_transaction_manager_transaction_manager_interface_ts"
+    ],
+    "97": [
+      "src_modules_infra_email_infra_email_sender_interface_ts"
+    ],
+    "98": [
+      "tests_modules_authentification_auth_service_test_ts"
+    ],
+    "99": [
+      "tests_modules_user_dto_user_dto_mapper_test_ts"
+    ],
+    "100": [
+      "tests_modules_user_usecases_user_get_self_profile_usecase_test_ts"
+    ],
+    "101": [
+      "tests_modules_user_usecases_user_login_email_usecase_test_ts"
+    ],
+    "102": [
+      "tests_modules_user_usecases_user_update_name_usecase_test_ts"
+    ],
+    "103": [
+      "tests_modules_user_usecases_user_get_other_profile_usecase_test_ts"
+    ],
+    "104": [
+      "tests_modules_user_repository_repository_user_writer_test_ts"
+    ],
+    "105": [
+      "tests_modules_user_repository_repository_user_reader_test_ts"
+    ],
+    "106": [
+      "tests_modules_user_transactional_services_tx_service_confirm_email_change_test_ts"
+    ],
+    "107": [
+      "tests_modules_user_transactional_services_tx_service_request_account_deletion_test_ts"
+    ],
+    "108": [
+      "tests_modules_user_transactional_services_tx_service_confirm_account_deletion_test_ts"
+    ],
+    "109": [
+      "tests_modules_user_transactional_services_tx_service_get_self_profile_test_ts"
+    ],
+    "110": [
+      "tests_modules_user_transactional_services_tx_service_get_other_profile_test_ts"
+    ],
+    "111": [
+      "tests_modules_user_transactional_services_tx_service_update_name_test_ts"
+    ],
+    "112": [
+      "tests_modules_user_transactional_services_tx_service_request_email_change_test_ts"
+    ],
+    "113": [
+      "tests_modules_user_entity_user_validator_test_ts"
+    ],
+    "114": [
+      "tests_modules_connection_repository_repository_connection_test_ts"
+    ],
+    "115": [
+      "tests_modules_connection_transactional_services_tx_service_connection_update_test_ts"
+    ],
+    "116": [
+      "tests_modules_connection_transactional_services_tx_service_connection_create_test_ts"
+    ],
+    "117": [
+      "tests_modules_connection_transactional_services_tx_service_connection_soft_delete_test_ts"
+    ],
+    "118": [
+      "tests_modules_connection_transactional_services_tx_service_connection_list_active_test_ts"
+    ],
+    "119": [
+      "tests_modules_connection_transactional_services_tx_service_connection_restore_test_ts"
+    ],
+    "120": [
+      "tests_modules_connection_transactional_services_tx_service_connection_list_deleted_test_ts"
+    ],
+    "121": [
+      "tests_modules_infra_encryption_infra_encryption_test_ts"
+    ],
+    "122": [
+      "tests_modules_infra_transaction_manager_transaction_manager_test_ts"
+    ],
+    "123": [
+      "tests_modules_errors_mapper_database_test_ts"
+    ]
+  },
+  "cohesion": {
+    "0": 0.05,
+    "1": 0.07,
+    "2": 0.13,
+    "3": 0.12,
+    "4": 0.21,
+    "5": 0.28,
+    "6": 0.2,
+    "7": 0.33,
+    "8": 0.39,
+    "9": 0.29,
+    "10": 0.4,
+    "11": 0.33,
+    "12": 0.33,
+    "13": 0.4,
+    "14": 0.4,
+    "15": 0.4,
+    "16": 0.4,
+    "17": 0.4,
+    "18": 0.4,
+    "19": 0.4,
+    "20": 0.4,
+    "21": 0.4,
+    "22": 0.4,
+    "23": 0.4,
+    "24": 0.4,
+    "25": 0.4,
+    "26": 0.4,
+    "27": 0.4,
+    "28": 0.4,
+    "29": 0.4,
+    "30": 0.4,
+    "31": 0.4,
+    "32": 0.4,
+    "33": 0.4,
+    "34": 0.4,
+    "35": 0.4,
+    "36": 0.4,
+    "37": 0.4,
+    "38": 0.4,
+    "39": 0.67,
+    "40": 0.5,
+    "41": 0.5,
+    "42": 0.5,
+    "43": 0.5,
+    "44": 0.5,
+    "45": 0.5,
+    "46": 0.5,
+    "47": 0.5,
+    "48": 0.5,
+    "49": 0.5,
+    "50": 0.5,
+    "51": 0.5,
+    "52": 0.5,
+    "53": 0.5,
+    "54": 0.5,
+    "55": 0.5,
+    "56": 0.5,
+    "57": 0.5,
+    "58": 0.5,
+    "59": 0.67,
+    "60": 1.0,
+    "61": 1.0,
+    "62": 1.0,
+    "63": 1.0,
+    "64": 1.0,
+    "65": 1.0,
+    "66": 1.0,
+    "67": 1.0,
+    "68": 1.0,
+    "69": 1.0,
+    "70": 1.0,
+    "71": 1.0,
+    "72": 1.0,
+    "73": 1.0,
+    "74": 1.0,
+    "75": 1.0,
+    "76": 1.0,
+    "77": 1.0,
+    "78": 1.0,
+    "79": 1.0,
+    "80": 1.0,
+    "81": 1.0,
+    "82": 1.0,
+    "83": 1.0,
+    "84": 1.0,
+    "85": 1.0,
+    "86": 1.0,
+    "87": 1.0,
+    "88": 1.0,
+    "89": 1.0,
+    "90": 1.0,
+    "91": 1.0,
+    "92": 1.0,
+    "93": 1.0,
+    "94": 1.0,
+    "95": 1.0,
+    "96": 1.0,
+    "97": 1.0,
+    "98": 1.0,
+    "99": 1.0,
+    "100": 1.0,
+    "101": 1.0,
+    "102": 1.0,
+    "103": 1.0,
+    "104": 1.0,
+    "105": 1.0,
+    "106": 1.0,
+    "107": 1.0,
+    "108": 1.0,
+    "109": 1.0,
+    "110": 1.0,
+    "111": 1.0,
+    "112": 1.0,
+    "113": 1.0,
+    "114": 1.0,
+    "115": 1.0,
+    "116": 1.0,
+    "117": 1.0,
+    "118": 1.0,
+    "119": 1.0,
+    "120": 1.0,
+    "121": 1.0,
+    "122": 1.0,
+    "123": 1.0
+  },
+  "gods": [
+    {
+      "id": "errors_errors_global_throwapperror",
+      "label": "throwAppError()",
+      "degree": 28
+    },
+    {
+      "id": "api_client_call",
+      "label": "call()",
+      "degree": 22
+    },
+    {
+      "id": "errors_mapper_database_handledatabaseerror",
+      "label": "handleDatabaseError()",
+      "degree": 17
+    },
+    {
+      "id": "entity_user_user",
+      "label": "User",
+      "degree": 14
+    },
+    {
+      "id": "authentification_auth_service_authentificationservice",
+      "label": "AuthentificationService",
+      "degree": 11
+    },
+    {
+      "id": "controllers_user_controllers_e2e_test_buildcontainer",
+      "label": "buildContainer()",
+      "degree": 11
+    },
+    {
+      "id": "entity_connection_connection",
+      "label": "Connection",
+      "degree": 10
+    },
+    {
+      "id": "repository_repository_connection_writer_repositoryconnectionwriter",
+      "label": "RepositoryConnectionWriter",
+      "degree": 9
+    },
+    {
+      "id": "repository_repository_user_reader_repositoryuserreader",
+      "label": "RepositoryUserReader",
+      "degree": 8
+    },
+    {
+      "id": "email_infra_email_nodemailer_implementation_infraemailnodemailerimplementation",
+      "label": "InfraEmailNodemailerImplementation",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "getSelfProfile()",
+      "target": "call()",
+      "source_files": [
+        "frontend/src/api/user.ts",
+        "frontend/src/api/client.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `getSelfProfile()` unexpectedly reaches hub `call()`"
+    },
+    {
+      "source": "getOtherProfile()",
+      "target": "call()",
+      "source_files": [
+        "frontend/src/api/user.ts",
+        "frontend/src/api/client.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `getOtherProfile()` unexpectedly reaches hub `call()`"
+    },
+    {
+      "source": "updateName()",
+      "target": "call()",
+      "source_files": [
+        "frontend/src/api/user.ts",
+        "frontend/src/api/client.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `updateName()` unexpectedly reaches hub `call()`"
+    },
+    {
+      "source": "changePassword()",
+      "target": "call()",
+      "source_files": [
+        "frontend/src/api/user.ts",
+        "frontend/src/api/client.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `changePassword()` unexpectedly reaches hub `call()`"
+    },
+    {
+      "source": "requestEmailChange()",
+      "target": "call()",
+      "source_files": [
+        "frontend/src/api/user.ts",
+        "frontend/src/api/client.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `requestEmailChange()` unexpectedly reaches hub `call()`"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `throwAppError()` connect `Community 0` to `Community 4`, `Community 6`, `Community 10`, `Community 13`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 28`, `Community 29`, `Community 31`?",
+      "why": "High betweenness centrality (0.056) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 27 inferred relationships involving `throwAppError()` (e.g. with `.assertExistingToken()` and `.extractUserId()`) actually correct?",
+      "why": "`throwAppError()` has 27 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 20 inferred relationships involving `call()` (e.g. with `getSelfProfile()` and `getOtherProfile()`) actually correct?",
+      "why": "`call()` has 20 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 16 inferred relationships involving `handleDatabaseError()` (e.g. with `.createUser()` and `.updateUser()`) actually correct?",
+      "why": "`handleDatabaseError()` has 16 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.05 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 2` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.13 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
