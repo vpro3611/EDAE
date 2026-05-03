@@ -1,0 +1,357 @@
+{
+  "nodes": [
+    {
+      "id": "jest_config",
+      "label": "Jest Configuration",
+      "file_type": "code",
+      "source_file": "jest.config.js"
+    },
+    {
+      "id": "migration_connections",
+      "label": "Migration: Create Connections Table",
+      "file_type": "code",
+      "source_file": "migrations/1776790409980_create-initial-connections-schema.ts"
+    },
+    {
+      "id": "migration_github_subscriptions",
+      "label": "Migration: Create GitHub Subscriptions Table",
+      "file_type": "code",
+      "source_file": "migrations/1777824058668_create-github-subscriptions-table.ts"
+    },
+    {
+      "id": "migration_github_sources",
+      "label": "Migration: Create GitHub Sources Table",
+      "file_type": "code",
+      "source_file": "migrations/1777824058667_create-github-sources-table.ts"
+    },
+    {
+      "id": "migration_is_verified",
+      "label": "Migration: Add is_verified Column",
+      "file_type": "code",
+      "source_file": "migrations/1776866562931_add-column-is-verified.ts"
+    },
+    {
+      "id": "migration_users",
+      "label": "Migration: Create Users Table",
+      "file_type": "code",
+      "source_file": "migrations/1776789704550_create-initial-users-schema.ts"
+    },
+    {
+      "id": "migration_pending_email",
+      "label": "Migration: Add pending_email Column",
+      "file_type": "code",
+      "source_file": "migrations/1776872210000_add-pending-email-column.ts"
+    },
+    {
+      "id": "vite_config",
+      "label": "Vite Configuration",
+      "file_type": "code",
+      "source_file": "frontend/vite.config.ts"
+    },
+    {
+      "id": "frontend_main",
+      "label": "Frontend Entry Point",
+      "file_type": "code",
+      "source_file": "frontend/src/main.ts"
+    },
+    {
+      "id": "frontend_app",
+      "label": "App Component",
+      "file_type": "code",
+      "source_file": "frontend/src/App.vue"
+    },
+    {
+      "id": "frontend_store_auth",
+      "label": "Auth Pinia Store",
+      "file_type": "code",
+      "source_file": "frontend/src/stores/auth.ts"
+    },
+    {
+      "id": "frontend_types",
+      "label": "Frontend Type Definitions",
+      "file_type": "code",
+      "source_file": "frontend/src/types/index.ts"
+    },
+    {
+      "id": "frontend_api_client",
+      "label": "API Client Utility",
+      "file_type": "code",
+      "source_file": "frontend/src/api/client.ts"
+    },
+    {
+      "id": "frontend_api_user",
+      "label": "User API Service",
+      "file_type": "code",
+      "source_file": "frontend/src/api/user.ts"
+    },
+    {
+      "id": "frontend_api_connections",
+      "label": "Connections API Service",
+      "file_type": "code",
+      "source_file": "frontend/src/api/connections.ts"
+    },
+    {
+      "id": "frontend_api_auth",
+      "label": "Auth API Service",
+      "file_type": "code",
+      "source_file": "frontend/src/api/auth.ts"
+    },
+    {
+      "id": "frontend_view_register",
+      "label": "Register View",
+      "file_type": "code",
+      "source_file": "frontend/src/views/RegisterView.vue"
+    },
+    {
+      "id": "frontend_view_confirm",
+      "label": "Confirm Registration View",
+      "file_type": "code",
+      "source_file": "frontend/src/views/ConfirmView.vue"
+    },
+    {
+      "id": "frontend_view_dashboard",
+      "label": "Dashboard View",
+      "file_type": "code",
+      "source_file": "frontend/src/views/DashboardView.vue"
+    },
+    {
+      "id": "frontend_view_login",
+      "label": "Login View",
+      "file_type": "code",
+      "source_file": "frontend/src/views/LoginView.vue"
+    },
+    {
+      "id": "frontend_router",
+      "label": "Frontend Router",
+      "file_type": "code",
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "id": "frontend_component_otp",
+      "label": "OTP Input Component",
+      "file_type": "code",
+      "source_file": "frontend/src/components/OtpInput.vue"
+    }
+  ],
+  "edges": [
+    {
+      "source": "migration_connections",
+      "target": "migration_users",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "migrations/1776790409980_create-initial-connections-schema.ts"
+    },
+    {
+      "source": "migration_github_subscriptions",
+      "target": "migration_github_sources",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "migrations/1777824058668_create-github-subscriptions-table.ts"
+    },
+    {
+      "source": "migration_github_subscriptions",
+      "target": "migration_connections",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "migrations/1777824058668_create-github-subscriptions-table.ts"
+    },
+    {
+      "source": "migration_github_sources",
+      "target": "migration_users",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "migrations/1777824058667_create-github-sources-table.ts"
+    },
+    {
+      "source": "frontend_main",
+      "target": "frontend_app",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/main.ts"
+    },
+    {
+      "source": "frontend_main",
+      "target": "frontend_router",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/main.ts"
+    },
+    {
+      "source": "frontend_app",
+      "target": "frontend_router",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.vue"
+    },
+    {
+      "source": "frontend_store_auth",
+      "target": "frontend_api_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/stores/auth.ts"
+    },
+    {
+      "source": "frontend_store_auth",
+      "target": "frontend_types",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/stores/auth.ts"
+    },
+    {
+      "source": "frontend_api_user",
+      "target": "frontend_api_client",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/user.ts"
+    },
+    {
+      "source": "frontend_api_user",
+      "target": "frontend_types",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/user.ts"
+    },
+    {
+      "source": "frontend_api_connections",
+      "target": "frontend_api_client",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/connections.ts"
+    },
+    {
+      "source": "frontend_api_connections",
+      "target": "frontend_types",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/connections.ts"
+    },
+    {
+      "source": "frontend_api_auth",
+      "target": "frontend_api_client",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/auth.ts"
+    },
+    {
+      "source": "frontend_api_auth",
+      "target": "frontend_types",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/auth.ts"
+    },
+    {
+      "source": "frontend_view_register",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/RegisterView.vue"
+    },
+    {
+      "source": "frontend_view_confirm",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/ConfirmView.vue"
+    },
+    {
+      "source": "frontend_view_confirm",
+      "target": "frontend_component_otp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/ConfirmView.vue"
+    },
+    {
+      "source": "frontend_view_dashboard",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/DashboardView.vue"
+    },
+    {
+      "source": "frontend_view_dashboard",
+      "target": "frontend_api_user",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/DashboardView.vue"
+    },
+    {
+      "source": "frontend_view_dashboard",
+      "target": "frontend_component_otp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/DashboardView.vue"
+    },
+    {
+      "source": "frontend_view_login",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/LoginView.vue"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_view_login",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_view_register",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_view_confirm",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_view_dashboard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

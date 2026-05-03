@@ -1,0 +1,13 @@
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/github_source/repository/repository.github_source.reader.ts.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/github_source/transactional_services/tx_service.github_source.list.ts.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/github_source/transactional_services/index.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/github_source/transactional_services/tx_service.github_source.create.ts.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/github_source/transactional_services/tx_service.github_source.delete.ts.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/github_source/entity/index.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/github_source/entity/github_source.validator.ts.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/github_source/entity/github_source.ts.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/errors/mapper.database.ts.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/errors/errors.database.ts.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/errors/index.html
+/home/vpro3611/EDAE/coverage/lcov-report/src/modules/errors/errors.global.ts.html
+/home/vpro3611/EDAE/docs/superpowers/plans/2026-05-03-github-polling-notifications.md

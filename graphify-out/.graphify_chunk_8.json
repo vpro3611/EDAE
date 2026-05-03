@@ -1,0 +1,167 @@
+{
+  "nodes": [
+    {
+      "id": "tx_service_request_password_reset",
+      "label": "TxServiceRequestPasswordReset",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "id": "connection_entity",
+      "label": "Connection",
+      "file_type": "code",
+      "source_file": "src/modules/connection/entity/connection.ts"
+    },
+    {
+      "id": "repository_connection_reader",
+      "label": "RepositoryConnectionReader",
+      "file_type": "code",
+      "source_file": "src/modules/connection/repository/repository.connection.reader.ts"
+    },
+    {
+      "id": "connection_create_usecase",
+      "label": "ConnectionCreateUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/connection/usecases/connection.create.usecase.ts"
+    },
+    {
+      "id": "authentification_service",
+      "label": "AuthentificationService",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "id": "jwt_token_service",
+      "label": "JwtTokenService",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/jwt/service/jwt.token_service.ts"
+    },
+    {
+      "id": "user_id_extractor",
+      "label": "UserIdExtractor",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/extractor.extract_user_id.ts"
+    },
+    {
+      "id": "controller_connection_create",
+      "label": "ControllerConnectionCreate",
+      "file_type": "code",
+      "source_file": "src/modules/connection/controllers/controller.connection.create.ts"
+    },
+    {
+      "id": "tx_service_connection_create",
+      "label": "TxServiceConnectionCreate",
+      "file_type": "code",
+      "source_file": "src/modules/connection/transactional_services/tx_service.connection.create.ts"
+    }
+  ],
+  "edges": [
+    {
+      "source": "tx_service_request_password_reset",
+      "target": "repository_user_reader",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "source": "tx_service_request_password_reset",
+      "target": "create_otp_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "source": "tx_service_request_password_reset",
+      "target": "request_password_reset_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "jwt_token_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "jwt_refresh_token_repository",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "repository_user_reader",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "create_otp_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "confirm_registration_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "repository_connection_reader",
+      "target": "connection_entity",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/repository/repository.connection.reader.ts"
+    },
+    {
+      "source": "connection_create_usecase",
+      "target": "connection_entity",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/usecases/connection.create.usecase.ts"
+    },
+    {
+      "source": "controller_connection_create",
+      "target": "tx_service_connection_create",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/controllers/controller.connection.create.ts"
+    },
+    {
+      "source": "controller_connection_create",
+      "target": "user_id_extractor",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/controllers/controller.connection.create.ts"
+    },
+    {
+      "source": "tx_service_connection_create",
+      "target": "connection_create_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/transactional_services/tx_service.connection.create.ts"
+    }
+  ],
+  "hyperedges": [],
+  "input_tokens": 0,
+  "output_tokens": 0
+}
