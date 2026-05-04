@@ -7,9 +7,23 @@ export type PollResult = {
     events: TemplateVars[];
 };
 
+const BOOTSTRAP_MARKER = '__bootstrapped';
+
 export class GithubPollerService {
     static create(): GithubPollerService {
         return new GithubPollerService();
+    }
+
+    private isBootstrapped(lastSeen: Record<string, unknown>): boolean {
+        return lastSeen[BOOTSTRAP_MARKER] === true;
+    }
+
+    private withBootstrap(lastSeen: Record<string, unknown>, extra: Record<string, unknown> = {}): Record<string, unknown> {
+        return {
+            ...lastSeen,
+            ...extra,
+            [BOOTSTRAP_MARKER]: true,
+        };
     }
 
     async pollNewRelease(
@@ -19,11 +33,11 @@ export class GithubPollerService {
         lastSeen: Record<string, unknown>,
     ): Promise<PollResult> {
         const { data } = await octokit.rest.repos.listReleases({ owner, repo, per_page: 10 });
-        if (!data.length) return { initialized: true, newLastSeen: {}, events: [] };
+        if (!data.length) return { initialized: !this.isBootstrapped(lastSeen), newLastSeen: this.withBootstrap(lastSeen), events: [] };
 
         const latestId = data[0].id;
-        const newLastSeen = { latest_release_id: latestId };
-        if (lastSeen['latest_release_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
+        const newLastSeen = this.withBootstrap(lastSeen, { latest_release_id: latestId });
+        if (lastSeen['latest_release_id'] === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
         if (latestId === lastSeen['latest_release_id']) return { initialized: false, newLastSeen, events: [] };
 
         const seenIdx = data.findIndex(r => r.id === lastSeen['latest_release_id']);
@@ -48,11 +62,11 @@ export class GithubPollerService {
         lastSeen: Record<string, unknown>,
     ): Promise<PollResult> {
         const { data } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 20 });
-        if (!data.length) return { initialized: true, newLastSeen: {}, events: [] };
+        if (!data.length) return { initialized: !this.isBootstrapped(lastSeen), newLastSeen: this.withBootstrap(lastSeen), events: [] };
 
         const latestSha = data[0].sha;
-        const newLastSeen = { sha: latestSha };
-        if (lastSeen['sha'] === undefined) return { initialized: true, newLastSeen, events: [] };
+        const newLastSeen = this.withBootstrap(lastSeen, { sha: latestSha });
+        if (lastSeen['sha'] === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
         if (latestSha === lastSeen['sha']) return { initialized: false, newLastSeen, events: [] };
 
         const seenIdx = data.findIndex(c => c.sha === lastSeen['sha']);
@@ -81,9 +95,9 @@ export class GithubPollerService {
         const { data } = await octokit.rest.repos.listBranches({ owner, repo, per_page: 100 });
         const names = data.map(b => b.name);
         const seenBranches: string[] = (lastSeen['branches'] as string[] | undefined) ?? [];
-        const newLastSeen = { branches: names };
+        const newLastSeen = this.withBootstrap(lastSeen, { branches: names });
 
-        if (!seenBranches.length) return { initialized: true, newLastSeen, events: [] };
+        if (!seenBranches.length && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
 
         const newBranches = names.filter(n => !seenBranches.includes(n));
         return {
@@ -103,9 +117,9 @@ export class GithubPollerService {
         const { data } = await octokit.rest.repos.listTags({ owner, repo, per_page: 100 });
         const names = data.map(t => t.name);
         const seenTags: string[] = (lastSeen['tags'] as string[] | undefined) ?? [];
-        const newLastSeen = { tags: names };
+        const newLastSeen = this.withBootstrap(lastSeen, { tags: names });
 
-        if (!seenTags.length) return { initialized: true, newLastSeen, events: [] };
+        if (!seenTags.length && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
 
         const newTags = names.filter(n => !seenTags.includes(n));
         return {
@@ -126,11 +140,11 @@ export class GithubPollerService {
             owner, repo, state: 'all', per_page: 20, sort: 'created', direction: 'desc',
         });
         const issues = data.filter(i => !i.pull_request);
-        if (!issues.length) return { initialized: true, newLastSeen: {}, events: [] };
+        if (!issues.length) return { initialized: !this.isBootstrapped(lastSeen), newLastSeen: this.withBootstrap(lastSeen), events: [] };
 
         const latestId = issues[0].id;
-        const newLastSeen = { latest_issue_id: latestId };
-        if (lastSeen['latest_issue_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
+        const newLastSeen = this.withBootstrap(lastSeen, { latest_issue_id: latestId });
+        if (lastSeen['latest_issue_id'] === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
         if (latestId === lastSeen['latest_issue_id']) return { initialized: false, newLastSeen, events: [] };
 
         const seenIdx = issues.findIndex(i => i.id === lastSeen['latest_issue_id']);
@@ -158,7 +172,11 @@ export class GithubPollerService {
         const now = new Date().toISOString();
 
         if (!since) {
-            return { initialized: true, newLastSeen: { last_closed_at: now }, events: [] };
+            return {
+                initialized: !this.isBootstrapped(lastSeen),
+                newLastSeen: this.withBootstrap(lastSeen, { last_closed_at: now }),
+                events: [],
+            };
         }
 
         // `since` filters by updated_at; we then filter by closed_at to avoid false positives
@@ -169,7 +187,7 @@ export class GithubPollerService {
 
         return {
             initialized: false,
-            newLastSeen: { last_closed_at: now },
+            newLastSeen: this.withBootstrap(lastSeen, { last_closed_at: now }),
             events: issues.map(i => ({
                 repo: `${owner}/${repo}`,
                 title: i.title,
@@ -189,11 +207,11 @@ export class GithubPollerService {
         const { data } = await octokit.rest.pulls.list({
             owner, repo, state: 'all', per_page: 20, sort: 'created', direction: 'desc',
         });
-        if (!data.length) return { initialized: true, newLastSeen: {}, events: [] };
+        if (!data.length) return { initialized: !this.isBootstrapped(lastSeen), newLastSeen: this.withBootstrap(lastSeen), events: [] };
 
         const latestId = data[0].id;
-        const newLastSeen = { latest_pr_id: latestId };
-        if (lastSeen['latest_pr_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
+        const newLastSeen = this.withBootstrap(lastSeen, { latest_pr_id: latestId });
+        if (lastSeen['latest_pr_id'] === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
         if (latestId === lastSeen['latest_pr_id']) return { initialized: false, newLastSeen, events: [] };
 
         const seenIdx = data.findIndex(p => p.id === lastSeen['latest_pr_id']);
@@ -219,13 +237,13 @@ export class GithubPollerService {
     ): Promise<PollResult> {
         const { data } = await octokit.rest.pulls.list({ owner, repo, state: 'closed', per_page: 20, sort: 'updated', direction: 'desc' });
         const merged = data.filter(p => p.merged_at);
-        if (!merged.length) return { initialized: true, newLastSeen: {}, events: [] };
+        if (!merged.length) return { initialized: !this.isBootstrapped(lastSeen), newLastSeen: this.withBootstrap(lastSeen), events: [] };
 
         const seenIds: number[] = (lastSeen['merged_pr_ids'] as number[] | undefined) ?? [];
         const allIds = merged.map(p => p.id);
-        const newLastSeen = { merged_pr_ids: allIds };
+        const newLastSeen = this.withBootstrap(lastSeen, { merged_pr_ids: allIds });
 
-        if (!seenIds.length) return { initialized: true, newLastSeen, events: [] };
+        if (!seenIds.length && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
 
         const newPrs = merged.filter(p => !seenIds.includes(p.id));
         return {
@@ -246,11 +264,11 @@ export class GithubPollerService {
         if (config['workflow_id']) params.workflow_id = String(config['workflow_id']);
 
         const { data } = await octokit.rest.actions.listWorkflowRunsForRepo(params);
-        if (!data.workflow_runs.length) return { initialized: true, newLastSeen: {}, events: [] };
+        if (!data.workflow_runs.length) return { initialized: !this.isBootstrapped(lastSeen), newLastSeen: this.withBootstrap(lastSeen), events: [] };
 
         const latestId = data.workflow_runs[0].id;
-        const newLastSeen = { latest_run_id: latestId };
-        if (lastSeen['latest_run_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
+        const newLastSeen = this.withBootstrap(lastSeen, { latest_run_id: latestId });
+        if (lastSeen['latest_run_id'] === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
         if (latestId === lastSeen['latest_run_id']) return { initialized: false, newLastSeen, events: [] };
 
         const seenIdx = data.workflow_runs.findIndex(r => r.id === lastSeen['latest_run_id']);
@@ -280,9 +298,9 @@ export class GithubPollerService {
         const milestone = Number(config['milestone'] ?? 100);
 
         const seenStars = lastSeen['stars'] as number | undefined;
-        const newLastSeen = { stars };
+        const newLastSeen = this.withBootstrap(lastSeen, { stars });
 
-        if (seenStars === undefined) return { initialized: true, newLastSeen, events: [] };
+        if (seenStars === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
 
         if (seenStars < milestone && stars >= milestone) {
             return {
@@ -307,9 +325,9 @@ export class GithubPollerService {
         const milestone = Number(config['milestone'] ?? 10);
 
         const seenForks = lastSeen['forks'] as number | undefined;
-        const newLastSeen = { forks };
+        const newLastSeen = this.withBootstrap(lastSeen, { forks });
 
-        if (seenForks === undefined) return { initialized: true, newLastSeen, events: [] };
+        if (seenForks === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
 
         if (seenForks < milestone && forks >= milestone) {
             return {

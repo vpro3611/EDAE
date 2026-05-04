@@ -9,13 +9,18 @@ import { InfraEmailSenderInterface } from '../modules/infra/email/infra.email_se
 
 const QUEUE_NAME = 'github-poll';
 const JOB_KEY = 'github-poll-tick';
-const POLL_INTERVAL_MS = 5 * 60 * 1000;
+const DEFAULT_POLL_INTERVAL_MS = 5 * 60 * 1000;
 
 export async function bootstrapWorkers(
     db: Pool,
     encryption: InfraEncryptionInterface,
     emailSender: InfraEmailSenderInterface,
 ): Promise<void> {
+    const rawPollIntervalMs = Number(process.env.GITHUB_POLL_INTERVAL_MS ?? DEFAULT_POLL_INTERVAL_MS);
+    const pollIntervalMs = Number.isFinite(rawPollIntervalMs) && rawPollIntervalMs > 0
+        ? rawPollIntervalMs
+        : DEFAULT_POLL_INTERVAL_MS;
+
     const redisConnection = {
         host: process.env.REDIS_HOST ?? 'localhost',
         port: Number(process.env.REDIS_PORT ?? 6379),
@@ -28,7 +33,7 @@ export async function bootstrapWorkers(
         JOB_KEY,
         {},
         {
-            repeat: { every: POLL_INTERVAL_MS },
+            repeat: { every: pollIntervalMs },
             jobId: JOB_KEY,
         },
     );
@@ -41,7 +46,7 @@ export async function bootstrapWorkers(
     const worker = new Worker(
         QUEUE_NAME,
         async (job) => {
-            console.log(`[WorkerBootstrap] tick fired — job=${job.id}`);
+            console.log(`[WorkerBootstrap] tick fired - job=${job.id}`);
             const reader = RepositorySubscriptionReader.create(db, encryption);
 
             let subscriptions;
@@ -63,12 +68,12 @@ export async function bootstrapWorkers(
             if (failed.length > 0) {
                 failed.forEach(r => console.error('[WorkerBootstrap] subscription processing rejected:', (r as PromiseRejectedResult).reason));
             }
-            console.log(`[WorkerBootstrap] tick complete — ${results.length - failed.length}/${results.length} subscriptions processed OK`);
+            console.log(`[WorkerBootstrap] tick complete - ${results.length - failed.length}/${results.length} subscriptions processed OK`);
         },
         { connection: redisConnection },
     );
 
     worker.on('error', (err) => console.error('[WorkerBootstrap] Worker error:', err));
 
-    console.log(`[WorkerBootstrap] GitHub poll worker started — interval ${POLL_INTERVAL_MS / 1000}s`);
+    console.log(`[WorkerBootstrap] GitHub poll worker started - interval ${pollIntervalMs / 1000}s`);
 }

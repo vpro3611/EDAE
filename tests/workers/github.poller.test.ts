@@ -60,7 +60,20 @@ describe('GithubPollerService', () => {
       const result = await service.pollNewRelease(octokit, OWNER, REPO, {});
       expect(result.initialized).toBe(true);
       expect(result.events).toHaveLength(0);
-      expect(result.newLastSeen).toEqual({ latest_release_id: 1 });
+      expect(result.newLastSeen).toEqual({ __bootstrapped: true, latest_release_id: 1 });
+    });
+
+    it('notifies when the first release appears after an empty repo was already bootstrapped', async () => {
+      const octokit = makeOctokit({
+        listReleases: jest.fn().mockResolvedValue({
+          data: [{ id: 1, tag_name: 'v1.0', name: 'v1.0', html_url: 'url1' }],
+        }),
+      });
+      const result = await service.pollNewRelease(octokit, OWNER, REPO, { __bootstrapped: true });
+      expect(result.initialized).toBe(false);
+      expect(result.events).toHaveLength(1);
+      expect(result.events[0]).toMatchObject({ tag_name: 'v1.0' });
+      expect(result.newLastSeen).toEqual({ __bootstrapped: true, latest_release_id: 1 });
     });
 
     it('returns no events when the latest release has not changed', async () => {
@@ -88,7 +101,7 @@ describe('GithubPollerService', () => {
       expect(result.events).toHaveLength(2);
       expect(result.events[0]).toMatchObject({ tag_name: 'v3.0' });
       expect(result.events[1]).toMatchObject({ tag_name: 'v2.0' });
-      expect(result.newLastSeen).toEqual({ latest_release_id: 30 });
+      expect(result.newLastSeen).toEqual({ latest_release_id: 30, __bootstrapped: true });
     });
   });
 
@@ -209,6 +222,7 @@ describe('GithubPollerService', () => {
       expect(result.events).toHaveLength(0);
       expect(result.newLastSeen.last_closed_at as string >= before).toBe(true);
       expect(result.newLastSeen.last_closed_at as string <= after).toBe(true);
+      expect(result.newLastSeen.__bootstrapped).toBe(true);
     });
 
     it('detects multiple issues closed in one poll interval', async () => {
@@ -331,7 +345,7 @@ describe('GithubPollerService', () => {
       expect(result.events).toHaveLength(2);
       expect(result.events[0]).toMatchObject({ conclusion: 'success' });
       expect(result.events[1]).toMatchObject({ conclusion: 'failure' });
-      expect(result.newLastSeen).toEqual({ latest_run_id: 300 });
+      expect(result.newLastSeen).toEqual({ latest_run_id: 300, __bootstrapped: true });
     });
 
     it('passes workflow_id config to the API when provided', async () => {
@@ -341,6 +355,36 @@ describe('GithubPollerService', () => {
       expect(listWorkflowRunsForRepo).toHaveBeenCalledWith(
         expect.objectContaining({ workflow_id: 'deploy.yml' }),
       );
+    });
+  });
+
+  describe('pollPrMerged', () => {
+    it('notifies when the first merged PR appears after an empty merged history was already bootstrapped', async () => {
+      const octokit = makeOctokit({
+        pullsList: jest.fn().mockResolvedValue({
+          data: [{ id: 700, number: 70, title: 'Merged PR', html_url: 'url70', merged_at: '2024-01-01T01:00:00.000Z' }],
+        }),
+      });
+      const result = await service.pollPrMerged(octokit, OWNER, REPO, { __bootstrapped: true });
+      expect(result.initialized).toBe(false);
+      expect(result.events).toHaveLength(1);
+      expect(result.events[0]).toMatchObject({ number: 70 });
+      expect(result.newLastSeen).toEqual({ __bootstrapped: true, merged_pr_ids: [700] });
+    });
+  });
+
+  describe('pollNewTag', () => {
+    it('notifies when the first tag appears after an empty repo was already bootstrapped', async () => {
+      const octokit = makeOctokit({
+        listTags: jest.fn().mockResolvedValue({
+          data: [{ name: 'v1.0.0' }],
+        }),
+      });
+      const result = await service.pollNewTag(octokit, OWNER, REPO, { __bootstrapped: true });
+      expect(result.initialized).toBe(false);
+      expect(result.events).toHaveLength(1);
+      expect(result.events[0]).toMatchObject({ tag: 'v1.0.0' });
+      expect(result.newLastSeen).toEqual({ __bootstrapped: true, tags: ['v1.0.0'] });
     });
   });
 });
