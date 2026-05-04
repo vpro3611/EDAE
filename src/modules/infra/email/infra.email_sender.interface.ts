@@ -3,4 +3,5 @@ export interface InfraEmailSenderInterface {
     sendPasswordResetOtp(to: string, otp: string): Promise<void>;
     sendEmailChangeOtp(to: string, otp: string): Promise<void>;
     sendAccountDeletionOtp(to: string, otp: string): Promise<void>;
+    sendNotification(to: string, subject: string, body: string): Promise<void>;
 }

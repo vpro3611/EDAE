@@ -40,4 +40,8 @@ export class InfraEmailNodemailerImplementation implements InfraEmailSenderInter
     async sendAccountDeletionOtp(to: string, otp: string): Promise<void> {
         await this.send(to, 'Confirm account deletion', `Your account deletion code is: ${otp}\n\nIt expires in 15 minutes.`);
     }
+
+    async sendNotification(to: string, subject: string, body: string): Promise<void> {
+        await this.send(to, subject, body);
+    }
 }
