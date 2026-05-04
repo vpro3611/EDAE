@@ -1,11 +1,12 @@
 import {createDepsContainer} from "./container";
 import {createApp} from "./app";
+import {bootstrapWorkers} from "./workers/worker.bootstrap";
+import {pool} from "./database";
 import * as http from "node:http";
 
 
 export async function startServer(): Promise<void> {
     const dependencies = createDepsContainer();
-
 
     const app = createApp(dependencies);
 
@@ -15,5 +16,9 @@ export async function startServer(): Promise<void> {
 
     server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
-    })
+    });
+
+    bootstrapWorkers(pool, dependencies.encryption, dependencies.emailSender).catch((err) => {
+        console.error('[Server] Worker bootstrap failed — polling disabled:', err);
+    });
 }
