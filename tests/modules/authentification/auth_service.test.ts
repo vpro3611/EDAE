@@ -53,6 +53,7 @@ describe("AuthentificationService Unit Tests", () => {
       sendPasswordResetOtp: jest.fn(),
       sendEmailChangeOtp: jest.fn(),
       sendAccountDeletionOtp: jest.fn(),
+      sendNotification: jest.fn(),
     };
 
     userDtoMapper = UserDtoMapper.create();

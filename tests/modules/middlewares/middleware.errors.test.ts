@@ -78,7 +78,11 @@ describe("errorsMiddleware", () => {
             handler(err, req, res, next);
 
             expect(status).toHaveBeenCalledWith(500);
-            expect(json).toHaveBeenCalledWith({ message: "Unexpected internal server error" });
+            expect(json).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    message: expect.stringContaining("Unexpected internal server error: something went very wrong"),
+                })
+            );
         });
     });
 });
