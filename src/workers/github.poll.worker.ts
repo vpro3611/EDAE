@@ -9,6 +9,8 @@ import { RepositoryConnectionReader } from '../modules/connection/repository/rep
 import { RepositorySubscriptionWriter } from '../modules/subscription/repository/repository.subscription.writer';
 import { InfraEncryptionInterface } from '../modules/infra/encryption/infra.encryption.interface';
 
+const TAG = '[GithubPollWorker]';
+
 export class GithubPollWorker {
     constructor(
         private readonly db: Pool,
@@ -27,36 +29,65 @@ export class GithubPollWorker {
     }
 
     async processSubscription(sub: SubscriptionWithSource): Promise<void> {
+        const label = `${sub.repo_owner}/${sub.repo_name} [${sub.event_type}] sub=${sub.subscription_id}`;
+        console.log(`${TAG} polling ${label}`);
+
         const octokit = new Octokit({ auth: sub.access_token ?? undefined });
 
         let result: PollResult;
         try {
             result = await this.poll(octokit, sub);
         } catch (e) {
-            console.error(`[GithubPollWorker] Poll failed for subscription ${sub.subscription_id}:`, e);
+            console.error(`${TAG} poll error — ${label}:`, e);
             return;
         }
+
+        console.log(`${TAG} poll result — ${label}: initialized=${result.initialized} events=${result.events.length} newLastSeen=${JSON.stringify(result.newLastSeen)}`);
 
         if (Object.keys(result.newLastSeen).length > 0) {
-            const writer = RepositorySubscriptionWriter.create(this.db);
-            await writer.updateLastSeen(sub.subscription_id, result.newLastSeen);
+            try {
+                const writer = RepositorySubscriptionWriter.create(this.db);
+                await writer.updateLastSeen(sub.subscription_id, result.newLastSeen);
+                console.log(`${TAG} lastSeen updated — ${label}`);
+            } catch (e) {
+                console.error(`${TAG} failed to update lastSeen — ${label}:`, e);
+            }
         }
 
-        if (result.initialized || result.events.length === 0) return;
-
-        const connectionReader = RepositoryConnectionReader.create(this.db, this.encryption);
-        const connection = await connectionReader.getConnectionById(sub.connection_id);
-        if (!connection) {
-            console.warn(`[GithubPollWorker] Connection ${sub.connection_id} not found for subscription ${sub.subscription_id}`);
+        if (result.initialized) {
+            console.log(`${TAG} first poll — initialised lastSeen, no notifications — ${label}`);
             return;
         }
+
+        if (result.events.length === 0) {
+            console.log(`${TAG} no new events — ${label}`);
+            return;
+        }
+
+        console.log(`${TAG} fetching connection ${sub.connection_id} — ${label}`);
+        let connection;
+        try {
+            const connectionReader = RepositoryConnectionReader.create(this.db, this.encryption);
+            connection = await connectionReader.getConnectionById(sub.connection_id);
+        } catch (e) {
+            console.error(`${TAG} failed to fetch connection ${sub.connection_id} — ${label}:`, e);
+            return;
+        }
+
+        if (!connection) {
+            console.warn(`${TAG} connection ${sub.connection_id} not found — ${label}`);
+            return;
+        }
+
+        console.log(`${TAG} dispatching ${result.events.length} notification(s) via ${connection.credentials.provider} — ${label}`);
 
         for (const vars of result.events) {
             const message = renderTemplate(sub.message_template, vars);
             try {
                 await this.dispatcher.dispatch(connection.credentials, message);
+                console.log(`${TAG} dispatched OK — ${label} | message: ${message.slice(0, 80)}`);
             } catch (e) {
-                console.error(`[GithubPollWorker] Dispatch failed for subscription ${sub.subscription_id}:`, e);
+                console.error(`${TAG} dispatch failed — ${label}:`, e);
             }
         }
     }

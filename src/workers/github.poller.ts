@@ -18,18 +18,26 @@ export class GithubPollerService {
         repo: string,
         lastSeen: Record<string, unknown>,
     ): Promise<PollResult> {
-        const { data } = await octokit.rest.repos.getLatestRelease({ owner, repo }).catch(() => ({ data: null }));
-        if (!data) return { initialized: true, newLastSeen: {}, events: [] };
+        const { data } = await octokit.rest.repos.listReleases({ owner, repo, per_page: 10 });
+        if (!data.length) return { initialized: true, newLastSeen: {}, events: [] };
 
-        const seenId = lastSeen['latest_release_id'];
-        const newLastSeen = { latest_release_id: data.id };
-        if (seenId === undefined) return { initialized: true, newLastSeen, events: [] };
-        if (data.id === seenId) return { initialized: false, newLastSeen, events: [] };
+        const latestId = data[0].id;
+        const newLastSeen = { latest_release_id: latestId };
+        if (lastSeen['latest_release_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
+        if (latestId === lastSeen['latest_release_id']) return { initialized: false, newLastSeen, events: [] };
+
+        const seenIdx = data.findIndex(r => r.id === lastSeen['latest_release_id']);
+        const newReleases = seenIdx === -1 ? [data[0]] : data.slice(0, seenIdx);
 
         return {
             initialized: false,
             newLastSeen,
-            events: [{ repo: `${owner}/${repo}`, tag_name: data.tag_name, name: data.name ?? data.tag_name, url: data.html_url }],
+            events: newReleases.map(r => ({
+                repo: `${owner}/${repo}`,
+                tag_name: r.tag_name,
+                name: r.name ?? r.tag_name,
+                url: r.html_url,
+            })),
         };
     }
 
@@ -39,7 +47,7 @@ export class GithubPollerService {
         repo: string,
         lastSeen: Record<string, unknown>,
     ): Promise<PollResult> {
-        const { data } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 1 });
+        const { data } = await octokit.rest.repos.listCommits({ owner, repo, per_page: 20 });
         if (!data.length) return { initialized: true, newLastSeen: {}, events: [] };
 
         const latestSha = data[0].sha;
@@ -47,17 +55,19 @@ export class GithubPollerService {
         if (lastSeen['sha'] === undefined) return { initialized: true, newLastSeen, events: [] };
         if (latestSha === lastSeen['sha']) return { initialized: false, newLastSeen, events: [] };
 
-        const commit = data[0].commit;
+        const seenIdx = data.findIndex(c => c.sha === lastSeen['sha']);
+        const newCommits = seenIdx === -1 ? [data[0]] : data.slice(0, seenIdx);
+
         return {
             initialized: false,
             newLastSeen,
-            events: [{
+            events: newCommits.map(c => ({
                 repo: `${owner}/${repo}`,
-                sha: latestSha.slice(0, 7),
-                message: commit.message.split('\n')[0],
-                author: commit.author?.name ?? 'unknown',
-                url: data[0].html_url,
-            }],
+                sha: c.sha.slice(0, 7),
+                message: c.commit.message.split('\n')[0],
+                author: c.commit.author?.name ?? 'unknown',
+                url: c.html_url,
+            })),
         };
     }
 
@@ -111,7 +121,10 @@ export class GithubPollerService {
         repo: string,
         lastSeen: Record<string, unknown>,
     ): Promise<PollResult> {
-        const { data } = await octokit.rest.issues.listForRepo({ owner, repo, state: 'open', per_page: 1, sort: 'created', direction: 'desc' });
+        // state:'all' so we catch issues opened and closed before the next poll
+        const { data } = await octokit.rest.issues.listForRepo({
+            owner, repo, state: 'all', per_page: 20, sort: 'created', direction: 'desc',
+        });
         const issues = data.filter(i => !i.pull_request);
         if (!issues.length) return { initialized: true, newLastSeen: {}, events: [] };
 
@@ -120,10 +133,18 @@ export class GithubPollerService {
         if (lastSeen['latest_issue_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
         if (latestId === lastSeen['latest_issue_id']) return { initialized: false, newLastSeen, events: [] };
 
+        const seenIdx = issues.findIndex(i => i.id === lastSeen['latest_issue_id']);
+        const newIssues = seenIdx === -1 ? [issues[0]] : issues.slice(0, seenIdx);
+
         return {
             initialized: false,
             newLastSeen,
-            events: [{ repo: `${owner}/${repo}`, title: issues[0].title, number: issues[0].number, url: issues[0].html_url }],
+            events: newIssues.map(i => ({
+                repo: `${owner}/${repo}`,
+                title: i.title,
+                number: i.number,
+                url: i.html_url,
+            })),
         };
     }
 
@@ -133,19 +154,28 @@ export class GithubPollerService {
         repo: string,
         lastSeen: Record<string, unknown>,
     ): Promise<PollResult> {
-        const { data } = await octokit.rest.issues.listForRepo({ owner, repo, state: 'closed', per_page: 1, sort: 'created', direction: 'desc' });
-        const issues = data.filter(i => !i.pull_request);
-        if (!issues.length) return { initialized: true, newLastSeen: {}, events: [] };
+        const since = lastSeen['last_closed_at'] as string | undefined;
+        const now = new Date().toISOString();
 
-        const latestId = issues[0].id;
-        const newLastSeen = { latest_closed_issue_id: latestId };
-        if (lastSeen['latest_closed_issue_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
-        if (latestId === lastSeen['latest_closed_issue_id']) return { initialized: false, newLastSeen, events: [] };
+        if (!since) {
+            return { initialized: true, newLastSeen: { last_closed_at: now }, events: [] };
+        }
+
+        // `since` filters by updated_at; we then filter by closed_at to avoid false positives
+        const { data } = await octokit.rest.issues.listForRepo({
+            owner, repo, state: 'closed', since, per_page: 20, sort: 'updated', direction: 'desc',
+        });
+        const issues = data.filter(i => !i.pull_request && !!i.closed_at && i.closed_at > since);
 
         return {
             initialized: false,
-            newLastSeen,
-            events: [{ repo: `${owner}/${repo}`, title: issues[0].title, number: issues[0].number, url: issues[0].html_url }],
+            newLastSeen: { last_closed_at: now },
+            events: issues.map(i => ({
+                repo: `${owner}/${repo}`,
+                title: i.title,
+                number: i.number,
+                url: i.html_url,
+            })),
         };
     }
 
@@ -155,7 +185,10 @@ export class GithubPollerService {
         repo: string,
         lastSeen: Record<string, unknown>,
     ): Promise<PollResult> {
-        const { data } = await octokit.rest.pulls.list({ owner, repo, state: 'open', per_page: 1, sort: 'created', direction: 'desc' });
+        // state:'all' so we catch PRs opened and merged/closed before the next poll
+        const { data } = await octokit.rest.pulls.list({
+            owner, repo, state: 'all', per_page: 20, sort: 'created', direction: 'desc',
+        });
         if (!data.length) return { initialized: true, newLastSeen: {}, events: [] };
 
         const latestId = data[0].id;
@@ -163,10 +196,18 @@ export class GithubPollerService {
         if (lastSeen['latest_pr_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
         if (latestId === lastSeen['latest_pr_id']) return { initialized: false, newLastSeen, events: [] };
 
+        const seenIdx = data.findIndex(p => p.id === lastSeen['latest_pr_id']);
+        const newPrs = seenIdx === -1 ? [data[0]] : data.slice(0, seenIdx);
+
         return {
             initialized: false,
             newLastSeen,
-            events: [{ repo: `${owner}/${repo}`, title: data[0].title, number: data[0].number, url: data[0].html_url }],
+            events: newPrs.map(p => ({
+                repo: `${owner}/${repo}`,
+                title: p.title,
+                number: p.number,
+                url: p.html_url,
+            })),
         };
     }
 
@@ -201,26 +242,29 @@ export class GithubPollerService {
         lastSeen: Record<string, unknown>,
         config: Record<string, unknown>,
     ): Promise<PollResult> {
-        const params: any = { owner, repo, status: 'completed', per_page: 1 };
-        if (config['workflow_id']) params.workflow_id = config['workflow_id'];
+        const params: any = { owner, repo, status: 'completed', per_page: 10 };
+        if (config['workflow_id']) params.workflow_id = String(config['workflow_id']);
 
         const { data } = await octokit.rest.actions.listWorkflowRunsForRepo(params);
         if (!data.workflow_runs.length) return { initialized: true, newLastSeen: {}, events: [] };
 
-        const run = data.workflow_runs[0];
-        const newLastSeen = { latest_run_id: run.id };
+        const latestId = data.workflow_runs[0].id;
+        const newLastSeen = { latest_run_id: latestId };
         if (lastSeen['latest_run_id'] === undefined) return { initialized: true, newLastSeen, events: [] };
-        if (run.id === lastSeen['latest_run_id']) return { initialized: false, newLastSeen, events: [] };
+        if (latestId === lastSeen['latest_run_id']) return { initialized: false, newLastSeen, events: [] };
+
+        const seenIdx = data.workflow_runs.findIndex(r => r.id === lastSeen['latest_run_id']);
+        const newRuns = seenIdx === -1 ? [data.workflow_runs[0]] : data.workflow_runs.slice(0, seenIdx);
 
         return {
             initialized: false,
             newLastSeen,
-            events: [{
+            events: newRuns.map(r => ({
                 repo: `${owner}/${repo}`,
-                workflow: run.name ?? run.display_title,
-                conclusion: run.conclusion ?? 'unknown',
-                url: run.html_url,
-            }],
+                workflow: r.name ?? r.display_title,
+                conclusion: r.conclusion ?? 'unknown',
+                url: r.html_url,
+            })),
         };
     }
 

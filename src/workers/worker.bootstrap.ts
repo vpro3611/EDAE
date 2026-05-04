@@ -40,13 +40,30 @@ export async function bootstrapWorkers(
     // Worker must be stored to prevent GC
     const worker = new Worker(
         QUEUE_NAME,
-        async () => {
+        async (job) => {
+            console.log(`[WorkerBootstrap] tick fired — job=${job.id}`);
             const reader = RepositorySubscriptionReader.create(db, encryption);
-            const subscriptions = await reader.getActiveSubscriptions();
 
-            await Promise.allSettled(
+            let subscriptions;
+            try {
+                subscriptions = await reader.getActiveSubscriptions();
+            } catch (e) {
+                console.error('[WorkerBootstrap] failed to load subscriptions:', e);
+                return;
+            }
+
+            console.log(`[WorkerBootstrap] ${subscriptions.length} active subscription(s) to process`);
+            if (subscriptions.length === 0) return;
+
+            const results = await Promise.allSettled(
                 subscriptions.map(sub => pollWorker.processSubscription(sub)),
             );
+
+            const failed = results.filter(r => r.status === 'rejected');
+            if (failed.length > 0) {
+                failed.forEach(r => console.error('[WorkerBootstrap] subscription processing rejected:', (r as PromiseRejectedResult).reason));
+            }
+            console.log(`[WorkerBootstrap] tick complete — ${results.length - failed.length}/${results.length} subscriptions processed OK`);
         },
         { connection: redisConnection },
     );
