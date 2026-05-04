@@ -63,6 +63,20 @@ import { ControllerConnectionListDeleted } from './modules/connection/controller
 import { ControllerConnectionUpdate } from './modules/connection/controllers/controller.connection.update';
 import { ControllerConnectionSoftDelete } from './modules/connection/controllers/controller.connection.soft_delete';
 import { ControllerConnectionRestore } from './modules/connection/controllers/controller.connection.restore';
+import { GithubSourceDtoMapper } from './modules/github_source/dto/github_source.dto.mapper';
+import { TxServiceGithubSourceCreate } from './modules/github_source/transactional_services/tx_service.github_source.create';
+import { TxServiceGithubSourceList } from './modules/github_source/transactional_services/tx_service.github_source.list';
+import { TxServiceGithubSourceDelete } from './modules/github_source/transactional_services/tx_service.github_source.delete';
+import { ControllerGithubSourceCreate } from './modules/github_source/controllers/controller.github_source.create';
+import { ControllerGithubSourceList } from './modules/github_source/controllers/controller.github_source.list';
+import { ControllerGithubSourceDelete } from './modules/github_source/controllers/controller.github_source.delete';
+import { SubscriptionDtoMapper } from './modules/subscription/dto/subscription.dto.mapper';
+import { TxServiceSubscriptionCreate } from './modules/subscription/transactional_services/tx_service.subscription.create';
+import { TxServiceSubscriptionList } from './modules/subscription/transactional_services/tx_service.subscription.list';
+import { TxServiceSubscriptionDelete } from './modules/subscription/transactional_services/tx_service.subscription.delete';
+import { ControllerSubscriptionCreate } from './modules/subscription/controllers/controller.subscription.create';
+import { ControllerSubscriptionList } from './modules/subscription/controllers/controller.subscription.list';
+import { ControllerSubscriptionDelete } from './modules/subscription/controllers/controller.subscription.delete';
 
 export function createDepsContainer() {
     const userRepoReader = RepositoryUserReader.create(pool);
@@ -101,6 +115,22 @@ export function createDepsContainer() {
     const controllerConnectionUpdate = ControllerConnectionUpdate.create(txConnectionUpdate, userIdExtractor);
     const controllerConnectionSoftDelete = ControllerConnectionSoftDelete.create(txConnectionSoftDelete, userIdExtractor);
     const controllerConnectionRestore = ControllerConnectionRestore.create(txConnectionRestore, userIdExtractor);
+
+    const githubSourceDtoMapper = GithubSourceDtoMapper.create();
+    const txGithubSourceCreate = TxServiceGithubSourceCreate.create(txManager, encryption, githubSourceDtoMapper);
+    const txGithubSourceList = TxServiceGithubSourceList.create(txManager, encryption, githubSourceDtoMapper);
+    const txGithubSourceDelete = TxServiceGithubSourceDelete.create(txManager, encryption);
+    const controllerGithubSourceCreate = ControllerGithubSourceCreate.create(txGithubSourceCreate, userIdExtractor);
+    const controllerGithubSourceList = ControllerGithubSourceList.create(txGithubSourceList, userIdExtractor);
+    const controllerGithubSourceDelete = ControllerGithubSourceDelete.create(txGithubSourceDelete, userIdExtractor);
+
+    const subscriptionDtoMapper = SubscriptionDtoMapper.create();
+    const txSubscriptionCreate = TxServiceSubscriptionCreate.create(txManager, encryption, subscriptionDtoMapper);
+    const txSubscriptionList = TxServiceSubscriptionList.create(txManager, encryption, subscriptionDtoMapper);
+    const txSubscriptionDelete = TxServiceSubscriptionDelete.create(txManager, encryption);
+    const controllerSubscriptionCreate = ControllerSubscriptionCreate.create(txSubscriptionCreate, userIdExtractor);
+    const controllerSubscriptionList = ControllerSubscriptionList.create(txSubscriptionList, userIdExtractor);
+    const controllerSubscriptionDelete = ControllerSubscriptionDelete.create(txSubscriptionDelete, userIdExtractor);
 
     const createOtpUseCase = CreateOtpUseCase.create(tokenRepoWriter, emailSender);
     const verifyOtpUseCase = VerifyOtpUseCase.create(tokenRepoReader, tokenRepoWriter);
@@ -202,6 +232,16 @@ export function createDepsContainer() {
         controllerConnectionSoftDelete,
         controllerConnectionRestore,
 
+        controllerGithubSourceCreate,
+        controllerGithubSourceList,
+        controllerGithubSourceDelete,
+
+        controllerSubscriptionCreate,
+        controllerSubscriptionList,
+        controllerSubscriptionDelete,
+
+        emailSender,
+        encryption,
     };
 }
 
