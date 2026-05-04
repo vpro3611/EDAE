@@ -20,6 +20,8 @@ import { ConfirmPasswordResetBodySchema} from "./modules/user/controllers/contro
 import { ConfirmAccountDeletionBodySchema} from "./modules/user/controllers/controller.confirm_account_deletion";
 import { CreateConnectionBodySchema } from './modules/connection/controllers/controller.connection.create';
 import { UpdateConnectionBodySchema } from './modules/connection/controllers/controller.connection.update';
+import { CreateGithubSourceBodySchema } from './modules/github_source/controllers/controller.github_source.create';
+import { CreateSubscriptionBodySchema } from './modules/subscription/controllers/controller.subscription.create';
 
 // middlewares
 import {errorsMiddleware} from "./modules/middlewares/middleware.errors";
@@ -120,6 +122,16 @@ export function createApp(dependencies: DepsContainer): Express {
     privateRouter.patch('/connections/:id', validateBody(UpdateConnectionBodySchema), dependencies.controllerConnectionUpdate.updateConnectionCont);
     privateRouter.delete('/connections/:id', dependencies.controllerConnectionSoftDelete.softDeleteConnectionCont);
     privateRouter.post('/connections/:id/restore', dependencies.controllerConnectionRestore.restoreConnectionCont);
+
+    // github source routes
+    privateRouter.post('/github-sources', validateBody(CreateGithubSourceBodySchema), dependencies.controllerGithubSourceCreate.createSourceCont);
+    privateRouter.get('/github-sources', dependencies.controllerGithubSourceList.listSourcesCont);
+    privateRouter.delete('/github-sources/:id', dependencies.controllerGithubSourceDelete.deleteSourceCont);
+
+    // subscription routes
+    privateRouter.post('/subscriptions', validateBody(CreateSubscriptionBodySchema), dependencies.controllerSubscriptionCreate.createSubscriptionCont);
+    privateRouter.get('/subscriptions', dependencies.controllerSubscriptionList.listSubscriptionsCont);
+    privateRouter.delete('/subscriptions/:id', dependencies.controllerSubscriptionDelete.deleteSubscriptionCont);
 
     app.use(errorsMiddleware());
 

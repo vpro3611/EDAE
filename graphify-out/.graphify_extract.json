@@ -3926,6 +3926,1173 @@
       "file_type": "code",
       "source_file": "tests/modules/errors/mapper.database.test.ts",
       "source_location": "L1"
+    },
+    {
+      "id": "jest_config",
+      "label": "Jest Configuration",
+      "file_type": "code",
+      "source_file": "jest.config.js"
+    },
+    {
+      "id": "migration_connections",
+      "label": "Migration: Create Connections Table",
+      "file_type": "code",
+      "source_file": "migrations/1776790409980_create-initial-connections-schema.ts"
+    },
+    {
+      "id": "migration_github_subscriptions",
+      "label": "Migration: Create GitHub Subscriptions Table",
+      "file_type": "code",
+      "source_file": "migrations/1777824058668_create-github-subscriptions-table.ts"
+    },
+    {
+      "id": "migration_github_sources",
+      "label": "Migration: Create GitHub Sources Table",
+      "file_type": "code",
+      "source_file": "migrations/1777824058667_create-github-sources-table.ts"
+    },
+    {
+      "id": "migration_is_verified",
+      "label": "Migration: Add is_verified Column",
+      "file_type": "code",
+      "source_file": "migrations/1776866562931_add-column-is-verified.ts"
+    },
+    {
+      "id": "migration_users",
+      "label": "Migration: Create Users Table",
+      "file_type": "code",
+      "source_file": "migrations/1776789704550_create-initial-users-schema.ts"
+    },
+    {
+      "id": "migration_pending_email",
+      "label": "Migration: Add pending_email Column",
+      "file_type": "code",
+      "source_file": "migrations/1776872210000_add-pending-email-column.ts"
+    },
+    {
+      "id": "vite_config",
+      "label": "Vite Configuration",
+      "file_type": "code",
+      "source_file": "frontend/vite.config.ts"
+    },
+    {
+      "id": "frontend_main",
+      "label": "Frontend Entry Point",
+      "file_type": "code",
+      "source_file": "frontend/src/main.ts"
+    },
+    {
+      "id": "frontend_app",
+      "label": "App Component",
+      "file_type": "code",
+      "source_file": "frontend/src/App.vue"
+    },
+    {
+      "id": "frontend_store_auth",
+      "label": "Auth Pinia Store",
+      "file_type": "code",
+      "source_file": "frontend/src/stores/auth.ts"
+    },
+    {
+      "id": "frontend_types",
+      "label": "Frontend Type Definitions",
+      "file_type": "code",
+      "source_file": "frontend/src/types/index.ts"
+    },
+    {
+      "id": "frontend_api_client",
+      "label": "API Client Utility",
+      "file_type": "code",
+      "source_file": "frontend/src/api/client.ts"
+    },
+    {
+      "id": "frontend_api_user",
+      "label": "User API Service",
+      "file_type": "code",
+      "source_file": "frontend/src/api/user.ts"
+    },
+    {
+      "id": "frontend_api_connections",
+      "label": "Connections API Service",
+      "file_type": "code",
+      "source_file": "frontend/src/api/connections.ts"
+    },
+    {
+      "id": "frontend_api_auth",
+      "label": "Auth API Service",
+      "file_type": "code",
+      "source_file": "frontend/src/api/auth.ts"
+    },
+    {
+      "id": "frontend_view_register",
+      "label": "Register View",
+      "file_type": "code",
+      "source_file": "frontend/src/views/RegisterView.vue"
+    },
+    {
+      "id": "frontend_view_confirm",
+      "label": "Confirm Registration View",
+      "file_type": "code",
+      "source_file": "frontend/src/views/ConfirmView.vue"
+    },
+    {
+      "id": "frontend_view_dashboard",
+      "label": "Dashboard View",
+      "file_type": "code",
+      "source_file": "frontend/src/views/DashboardView.vue"
+    },
+    {
+      "id": "frontend_view_login",
+      "label": "Login View",
+      "file_type": "code",
+      "source_file": "frontend/src/views/LoginView.vue"
+    },
+    {
+      "id": "frontend_router",
+      "label": "Frontend Router",
+      "file_type": "code",
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "id": "frontend_component_otp",
+      "label": "OTP Input Component",
+      "file_type": "code",
+      "source_file": "frontend/src/components/OtpInput.vue"
+    },
+    {
+      "id": "authlayout_authlayout",
+      "label": "AuthLayout",
+      "file_type": "code",
+      "source_file": "frontend/src/components/AuthLayout.vue",
+      "source_location": null
+    },
+    {
+      "id": "connectionstab_connectionstab",
+      "label": "ConnectionsTab",
+      "file_type": "code",
+      "source_file": "frontend/src/components/ConnectionsTab.vue",
+      "source_location": null
+    },
+    {
+      "id": "redis_redis",
+      "label": "REDIS",
+      "file_type": "code",
+      "source_file": "src/redis.ts",
+      "source_location": null
+    },
+    {
+      "id": "app_createapp",
+      "label": "createApp",
+      "file_type": "code",
+      "source_file": "src/app.ts",
+      "source_location": null
+    },
+    {
+      "id": "index_main",
+      "label": "main",
+      "file_type": "code",
+      "source_file": "src/index.ts",
+      "source_location": null
+    },
+    {
+      "id": "database_pool",
+      "label": "pool",
+      "file_type": "code",
+      "source_file": "src/database.ts",
+      "source_location": null
+    },
+    {
+      "id": "express_declare_global_request",
+      "label": "Express Request Augmentation",
+      "file_type": "code",
+      "source_file": "src/express.declare_global.ts",
+      "source_location": null
+    },
+    {
+      "id": "api_limiter_predefinedpubliclimiters",
+      "label": "preDefinedPublicLimiters",
+      "file_type": "code",
+      "source_file": "src/api_limiter.ts",
+      "source_location": null
+    },
+    {
+      "id": "api_limiter_constructmiddlewarewrapper",
+      "label": "constructMiddlewareWrapper",
+      "file_type": "code",
+      "source_file": "src/api_limiter.ts",
+      "source_location": null
+    },
+    {
+      "id": "server_startserver",
+      "label": "startServer",
+      "file_type": "code",
+      "source_file": "src/server.ts",
+      "source_location": null
+    },
+    {
+      "id": "container_createdepscontainer",
+      "label": "createDepsContainer",
+      "file_type": "code",
+      "source_file": "src/container.ts",
+      "source_location": null
+    },
+    {
+      "id": "github_poller_githubpollerservice",
+      "label": "GithubPollerService",
+      "file_type": "code",
+      "source_file": "src/workers/github.poller.ts",
+      "source_location": null
+    },
+    {
+      "id": "github_poll_worker_githubpollworker",
+      "label": "GithubPollWorker",
+      "file_type": "code",
+      "source_file": "src/workers/github.poll.worker.ts",
+      "source_location": null
+    },
+    {
+      "id": "worker_bootstrap_bootstrapworkers",
+      "label": "bootstrapWorkers",
+      "file_type": "code",
+      "source_file": "src/workers/worker.bootstrap.ts",
+      "source_location": null
+    },
+    {
+      "id": "auth_service_authentificationservice",
+      "label": "AuthentificationService",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/auth_service.ts",
+      "source_location": null
+    },
+    {
+      "id": "extractor_extract_user_id_useridextractor",
+      "label": "UserIdExtractor",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/extractor.extract_user_id.ts",
+      "source_location": null
+    },
+    {
+      "id": "jwt_token_service_interface_jwttokenserviceinterface",
+      "label": "JwtTokenServiceInterface",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/jwt/interfaces/jwt.token_service.interface.ts",
+      "source_location": null
+    },
+    {
+      "id": "jwt_token_service_jwttokenservice",
+      "label": "JwtTokenService",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/jwt/service/jwt.token_service.ts",
+      "source_location": null
+    },
+    {
+      "id": "connection_credentials_connectioncredentials",
+      "label": "ConnectionCredentials",
+      "file_type": "code",
+      "source_file": "src/modules/connection/connection.credentials.ts",
+      "source_location": null
+    },
+    {
+      "id": "connection_connection",
+      "label": "Connection",
+      "file_type": "code",
+      "source_file": "src/modules/connection/entity/connection.ts",
+      "source_location": null
+    },
+    {
+      "id": "interface_repository_connectionreporeaderinterface",
+      "label": "ConnectionRepoReaderInterface",
+      "file_type": "code",
+      "source_file": "src/modules/connection/interfaces/interface.repository.ts",
+      "source_location": null
+    },
+    {
+      "id": "connection_dto_mapper",
+      "label": "ConnectionDtoMapper",
+      "file_type": "code",
+      "source_file": "src/modules/connection/dto/connection.dto.mapper.ts"
+    },
+    {
+      "id": "connection_dto",
+      "label": "ConnectionDto",
+      "file_type": "code",
+      "source_file": "src/modules/connection/dto/connection.dto.ts"
+    },
+    {
+      "id": "connection_create_usecase",
+      "label": "ConnectionCreateUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/connection/usecases/connection.create.usecase.ts"
+    },
+    {
+      "id": "connection_list_active_usecase",
+      "label": "ConnectionListActiveUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/connection/usecases/connection.list_active.usecase.ts"
+    },
+    {
+      "id": "connection_soft_delete_usecase",
+      "label": "ConnectionSoftDeleteUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/connection/usecases/connection.soft_delete.usecase.ts"
+    },
+    {
+      "id": "repository_connection_reader",
+      "label": "RepositoryConnectionReader",
+      "file_type": "code",
+      "source_file": "src/modules/connection/repository/repository.connection.reader.ts"
+    },
+    {
+      "id": "repository_connection_writer",
+      "label": "RepositoryConnectionWriter",
+      "file_type": "code",
+      "source_file": "src/modules/connection/repository/repository.connection.writer.ts"
+    },
+    {
+      "id": "tx_service_connection_create",
+      "label": "TxServiceConnectionCreate",
+      "file_type": "code",
+      "source_file": "src/modules/connection/transactional_services/tx_service.connection.create.ts"
+    },
+    {
+      "id": "controller_connection_create",
+      "label": "ControllerConnectionCreate",
+      "file_type": "code",
+      "source_file": "src/modules/connection/controllers/controller.connection.create.ts"
+    },
+    {
+      "id": "handle_database_error",
+      "label": "handleDatabaseError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/mapper.database.ts"
+    },
+    {
+      "id": "database_error",
+      "label": "DatabaseError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/errors.database.ts"
+    },
+    {
+      "id": "throw_database_error",
+      "label": "throwDatabaseError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/errors.database.ts"
+    },
+    {
+      "id": "app_error",
+      "label": "AppError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/errors.global.ts"
+    },
+    {
+      "id": "throw_app_error",
+      "label": "throwAppError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/errors.global.ts"
+    },
+    {
+      "id": "github_source",
+      "label": "GithubSource",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/entity/github_source.ts"
+    },
+    {
+      "id": "github_source_repo_reader_interface",
+      "label": "GithubSourceRepoReaderInterface",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/interfaces/interface.repository.ts"
+    },
+    {
+      "id": "github_source_repo_writer_interface",
+      "label": "GithubSourceRepoWriterInterface",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/interfaces/interface.repository.ts"
+    },
+    {
+      "id": "github_source_dto",
+      "label": "GithubSourceDto",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/dto/github_source.dto.ts"
+    },
+    {
+      "id": "github_source_create_usecase",
+      "label": "GithubSourceCreateUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/usecases/github_source.create.usecase.ts"
+    },
+    {
+      "id": "repository_github_source_reader",
+      "label": "RepositoryGithubSourceReader",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/repository/repository.github_source.reader.ts"
+    },
+    {
+      "id": "repository_github_source_writer",
+      "label": "RepositoryGithubSourceWriter",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/repository/repository.github_source.writer.ts"
+    },
+    {
+      "id": "tx_service_github_source_create",
+      "label": "TxServiceGithubSourceCreate",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/transactional_services/tx_service.github_source.create.ts"
+    },
+    {
+      "id": "controller_github_source_create",
+      "label": "ControllerGithubSourceCreate",
+      "file_type": "code",
+      "source_file": "src/modules/github_source/controllers/controller.github_source.create.ts"
+    },
+    {
+      "id": "transaction_manager_interface",
+      "label": "TransactionManagerInterface",
+      "file_type": "code",
+      "source_file": "src/modules/infra/transaction_manager/transaction_manager.interface.ts"
+    },
+    {
+      "id": "transaction_manager",
+      "label": "TransactionManager",
+      "file_type": "code",
+      "source_file": "src/modules/infra/transaction_manager/transaction_manager.implementation.ts"
+    },
+    {
+      "id": "infra_email_sender_interface",
+      "label": "InfraEmailSenderInterface",
+      "file_type": "code",
+      "source_file": "src/modules/infra/email/infra.email_sender.interface.ts"
+    },
+    {
+      "id": "infra_email_nodemailer_implementation_infraemailnodemailerimplementation",
+      "label": "InfraEmailNodemailerImplementation",
+      "file_type": "code",
+      "source_file": "src/modules/infra/email/infra.email_nodemailer.implementation.ts"
+    },
+    {
+      "id": "infra_encryption_interface_infraencryptioninterface",
+      "label": "InfraEncryptionInterface",
+      "file_type": "code",
+      "source_file": "src/modules/infra/encryption/infra.encryption.interface.ts"
+    },
+    {
+      "id": "infra_encryption_aes_implementation_infracryptoaesimplementation",
+      "label": "InfraCryptoAesImplementation",
+      "file_type": "code",
+      "source_file": "src/modules/infra/encryption/infra.encryption_aes.implementation.ts"
+    },
+    {
+      "id": "infra_pasword_bcrypt_implementation_infrapasswordbcryptimplementation",
+      "label": "InfraPasswordBcryptImplementation",
+      "file_type": "code",
+      "source_file": "src/modules/infra/password/infra.pasword_bcrypt.implementation.ts"
+    },
+    {
+      "id": "middleware_validators_validatebody",
+      "label": "validateBody",
+      "file_type": "code",
+      "source_file": "src/modules/middlewares/middleware.validators.ts"
+    },
+    {
+      "id": "middleware_errors_errorsmiddleware",
+      "label": "errorsMiddleware",
+      "file_type": "code",
+      "source_file": "src/modules/middlewares/middleware.errors.ts"
+    },
+    {
+      "id": "middleware_auth_authmiddleware",
+      "label": "authMiddleware",
+      "file_type": "code",
+      "source_file": "src/modules/middlewares/middleware.auth.ts"
+    },
+    {
+      "id": "notification_dispatcher_notificationdispatcher",
+      "label": "NotificationDispatcher",
+      "file_type": "code",
+      "source_file": "src/modules/notification/notification.dispatcher.ts"
+    },
+    {
+      "id": "notification_template_rendertemplate",
+      "label": "renderTemplate",
+      "file_type": "code",
+      "source_file": "src/modules/notification/notification.template.ts"
+    },
+    {
+      "id": "subscription_event_types_subscription_event_types",
+      "label": "SUBSCRIPTION_EVENT_TYPES",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/subscription.event_types.ts"
+    },
+    {
+      "id": "subscription_worker_types_subscriptionwithsource",
+      "label": "SubscriptionWithSource",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/subscription.worker_types.ts"
+    },
+    {
+      "id": "subscription_entity_subscription_subscription",
+      "label": "Subscription",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/entity/subscription.ts"
+    },
+    {
+      "id": "subscription_interfaces_interface_repository_subscriptionreporeaderinterface",
+      "label": "SubscriptionRepoReaderInterface",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/interfaces/interface.repository.ts"
+    },
+    {
+      "id": "subscription_interfaces_interface_repository_subscriptionrepowriterinterface",
+      "label": "SubscriptionRepoWriterInterface",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/interfaces/interface.repository.ts"
+    },
+    {
+      "id": "subscription_dto_subscription_subscriptiondto",
+      "label": "SubscriptionDto",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/dto/subscription.dto.ts"
+    },
+    {
+      "id": "subscription_usecases_subscription_create_usecase_subscriptioncreateusecase",
+      "label": "SubscriptionCreateUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/usecases/subscription.create.usecase.ts"
+    },
+    {
+      "id": "subscription_usecases_subscription_list_usecase_subscriptionlistusecase",
+      "label": "SubscriptionListUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/usecases/subscription.list.usecase.ts"
+    },
+    {
+      "id": "subscription_repository_repository_subscription_reader_repositorysubscriptionreader",
+      "label": "RepositorySubscriptionReader",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/repository/repository.subscription.reader.ts"
+    },
+    {
+      "id": "subscription_transactional_services_tx_service_subscription_create_txservicesubscriptioncreate",
+      "label": "TxServiceSubscriptionCreate",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/transactional_services/tx_service.subscription.create.ts"
+    },
+    {
+      "id": "subscription_controllers_controller_subscription_create_controllersubscriptioncreate",
+      "label": "ControllerSubscriptionCreate",
+      "file_type": "code",
+      "source_file": "src/modules/subscription/controllers/controller.subscription.create.ts"
+    },
+    {
+      "id": "token_entity_token_otptoken",
+      "label": "OtpToken",
+      "file_type": "code",
+      "source_file": "src/modules/token/entity/token.ts"
+    },
+    {
+      "id": "token_entity_token_tokenpurpose",
+      "label": "TokenPurpose",
+      "file_type": "code",
+      "source_file": "src/modules/token/entity/token.ts"
+    },
+    {
+      "id": "token_interfaces_interface_repository_tokenrepowriterinterface",
+      "label": "TokenRepoWriterInterface",
+      "file_type": "code",
+      "source_file": "src/modules/token/interfaces/interface.repository.ts"
+    },
+    {
+      "id": "token_usecases_token_create_otp_usecase_createotpusecase",
+      "label": "CreateOtpUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/token/usecases/token.create_otp.usecase.ts"
+    },
+    {
+      "id": "token_verify_otp_usecase_verifyotpusecase",
+      "label": "VerifyOtpUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/token/usecases/token.verify_otp.usecase.ts",
+      "source_location": {
+        "line": 5,
+        "column": 13
+      }
+    },
+    {
+      "id": "repository_refresh_token_postgres_postgresrefreshtokenrepository",
+      "label": "PostgresRefreshTokenRepository",
+      "file_type": "code",
+      "source_file": "src/modules/token/repository/repository.refresh_token.postgres.ts",
+      "source_location": {
+        "line": 6,
+        "column": 13
+      }
+    },
+    {
+      "id": "user_entity_user",
+      "label": "User",
+      "file_type": "code",
+      "source_file": "src/modules/user/entity/user.entity.ts",
+      "source_location": {
+        "line": 1,
+        "column": 13
+      }
+    },
+    {
+      "id": "user_repository_interface_iuserrepository",
+      "label": "IUserRepository",
+      "file_type": "code",
+      "source_file": "src/modules/user/interfaces/user.repository.interface.ts",
+      "source_location": {
+        "line": 3,
+        "column": 17
+      }
+    },
+    {
+      "id": "user_dto_usercreate_dto",
+      "label": "UserCreate_DTO",
+      "file_type": "code",
+      "source_file": "src/modules/user/dto/user.dto.ts",
+      "source_location": {
+        "line": 1,
+        "column": 13
+      }
+    },
+    {
+      "id": "user_create_usecase_createuserusecase",
+      "label": "CreateUserUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/user/usecases/user.create.usecase.ts",
+      "source_location": {
+        "line": 6,
+        "column": 13
+      }
+    },
+    {
+      "id": "user_get_usecase_getuserusecase",
+      "label": "GetUserUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/user/usecases/user.get.usecase.ts",
+      "source_location": {
+        "line": 5,
+        "column": 13
+      }
+    },
+    {
+      "id": "user_update_usecase_updateuserusecase",
+      "label": "UpdateUserUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/user/usecases/user.update.usecase.ts",
+      "source_location": {
+        "line": 6,
+        "column": 13
+      }
+    },
+    {
+      "id": "user_delete_usecase_deleteuserusecase",
+      "label": "DeleteUserUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/user/usecases/user.delete.usecase.ts",
+      "source_location": {
+        "line": 5,
+        "column": 13
+      }
+    },
+    {
+      "id": "user_repository_postgres_postgresuserrepository",
+      "label": "PostgresUserRepository",
+      "file_type": "code",
+      "source_file": "src/modules/user/repository/user.repository.postgres.ts",
+      "source_location": {
+        "line": 7,
+        "column": 13
+      }
+    },
+    {
+      "id": "tx_service_request_password_reset_requestpasswordresetservice",
+      "label": "RequestPasswordResetService",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts",
+      "source_location": {
+        "line": 7,
+        "column": 13
+      }
+    },
+    {
+      "id": "tx_service_confirm_password_reset_confirmpasswordresetservice",
+      "label": "ConfirmPasswordResetService",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.confirm_password_reset.ts",
+      "source_location": {
+        "line": 7,
+        "column": 13
+      }
+    },
+    {
+      "id": "tx_service_request_email_change_requestemailchangeservice",
+      "label": "RequestEmailChangeService",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.request_email_change.ts",
+      "source_location": {
+        "line": 7,
+        "column": 13
+      }
+    },
+    {
+      "id": "tx_service_confirm_email_change_confirmemailchangeservice",
+      "label": "ConfirmEmailChangeService",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.confirm_email_change.ts",
+      "source_location": {
+        "line": 7,
+        "column": 13
+      }
+    },
+    {
+      "id": "tx_service_request_account_deletion_requestaccountdeletionservice",
+      "label": "RequestAccountDeletionService",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.request_account_deletion.ts",
+      "source_location": {
+        "line": 7,
+        "column": 13
+      }
+    },
+    {
+      "id": "tx_service_confirm_account_deletion_confirmaccountdeletionservice",
+      "label": "ConfirmAccountDeletionService",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.confirm_account_deletion.ts",
+      "source_location": {
+        "line": 7,
+        "column": 13
+      }
+    },
+    {
+      "id": "user_controllers_usercontroller",
+      "label": "UserController",
+      "file_type": "code",
+      "source_file": "src/modules/user/controllers/user.controllers.ts",
+      "source_location": {
+        "line": 15,
+        "column": 13
+      }
+    },
+    {
+      "id": "api_limiter_test",
+      "label": "ApiLimiter Test Suite",
+      "file_type": "code",
+      "source_file": "tests/api_limiter.test.ts",
+      "source_location": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "id": "auth_service_test",
+      "label": "AuthService Test Suite",
+      "file_type": "code",
+      "source_file": "tests/modules/authentification/auth_service.test.ts",
+      "source_location": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "id": "auth_controllers_e2e_test",
+      "label": "AuthControllers E2E Test Suite",
+      "file_type": "code",
+      "source_file": "tests/modules/authentification/controllers/auth.controllers.e2e.test.ts",
+      "source_location": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "id": "entity_connection_test",
+      "label": "Connection Entity Test Suite",
+      "file_type": "code",
+      "source_file": "tests/modules/connection/entity/entity.connection.test.ts",
+      "source_location": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "id": "repository_connection_postgres_test",
+      "label": "PostgresConnectionRepository Test Suite",
+      "file_type": "code",
+      "source_file": "tests/modules/connection/repository/repository.connection.postgres.test.ts",
+      "source_location": {
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "file_type": "code",
+      "id": "controller_connection_e2e_test_createapp",
+      "label": "Connection E2E App Creation",
+      "source_file": "tests/modules/connection/controllers/controller.connection.e2e.test.ts"
+    },
+    {
+      "file_type": "code",
+      "id": "controller_connection_e2e_test_buildcontainer",
+      "label": "Connection E2E Container Builder",
+      "source_file": "tests/modules/connection/controllers/controller.connection.e2e.test.ts"
+    },
+    {
+      "file_type": "code",
+      "id": "mapper_database_test_handledatabaseerror",
+      "label": "Database Error Mapper Tests",
+      "source_file": "tests/modules/errors/mapper.database.test.ts"
+    },
+    {
+      "file_type": "code",
+      "id": "github_source_create_usecase_test_execute",
+      "label": "GithubSourceCreateUseCase Execution Tests",
+      "source_file": "tests/modules/github_source/usecases/github_source.create.usecase.test.ts"
+    },
+    {
+      "file_type": "code",
+      "id": "middleware_errors_test_errorsmiddleware",
+      "label": "Errors Middleware Tests",
+      "source_file": "tests/modules/middlewares/middleware.errors.test.ts"
+    },
+    {
+      "file_type": "code",
+      "id": "subscription_create_usecase_test_execute",
+      "label": "SubscriptionCreateUseCase Execution Tests",
+      "source_file": "tests/modules/subscription/usecases/subscription.create.usecase.test.ts"
+    },
+    {
+      "file_type": "code",
+      "id": "token_create_otp_usecase_test_execute",
+      "label": "CreateOtpUseCase Execution Tests",
+      "source_file": "tests/modules/token/usecases/token.create_otp.usecase.test.ts"
+    },
+    {
+      "file_type": "code",
+      "id": "user_controllers_e2e_test_buildcontainer",
+      "label": "User E2E Container Builder",
+      "source_file": "tests/modules/user/controllers/user.controllers.e2e.test.ts"
+    },
+    {
+      "id": "errors_database_databaseerror",
+      "label": "DatabaseError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/errors.database.ts"
+    },
+    {
+      "id": "errors_database_throwdatabaseerror",
+      "label": "throwDatabaseError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/errors.database.ts"
+    },
+    {
+      "id": "errors_global_apperror",
+      "label": "AppError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/errors.global.ts"
+    },
+    {
+      "id": "errors_global_throwapperror",
+      "label": "throwAppError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/errors.global.ts"
+    },
+    {
+      "id": "mapper_database_handledatabaseerror",
+      "label": "handleDatabaseError",
+      "file_type": "code",
+      "source_file": "src/modules/errors/mapper.database.ts"
+    },
+    {
+      "id": "tx_service_confirm_email_change_txserviceconfirmemailchange",
+      "label": "TxServiceConfirmEmailChange",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.confirm_email_change.ts"
+    },
+    {
+      "id": "tx_service_request_account_deletion_txservicerequestaccountdeletion",
+      "label": "TxServiceRequestAccountDeletion",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.request_account_deletion.ts"
+    },
+    {
+      "id": "repository_user_reader_repositoryuserreader",
+      "label": "RepositoryUserReader",
+      "file_type": "code",
+      "source_file": "src/modules/user/repository/repository.user.reader.ts"
+    },
+    {
+      "id": "repository_user_writer_repositoryuserwriter",
+      "label": "RepositoryUserWriter",
+      "file_type": "code",
+      "source_file": "src/modules/user/repository/repository.user.writer.ts"
+    },
+    {
+      "id": "user_update_name_usecase_userupdatenameusecase",
+      "label": "UserUpdateNameUseCase",
+      "file_type": "code",
+      "source_file": "src/modules/user/usecases/user.update_name.usecase.ts"
+    },
+    {
+      "id": "prettify_js",
+      "label": "prettify.js",
+      "file_type": "document",
+      "source_file": "coverage/lcov-report/prettify.js"
+    },
+    {
+      "id": "base_css",
+      "label": "base.css",
+      "file_type": "document",
+      "source_file": "coverage/lcov-report/base.css"
+    },
+    {
+      "id": "index_html",
+      "label": "index.html",
+      "file_type": "document",
+      "source_file": "coverage/lcov-report/index.html"
+    },
+    {
+      "id": "block_navigation_js",
+      "label": "block-navigation.js",
+      "file_type": "document",
+      "source_file": "coverage/lcov-report/block-navigation.js"
+    },
+    {
+      "id": "sorter_js",
+      "label": "sorter.js",
+      "file_type": "document",
+      "source_file": "coverage/lcov-report/sorter.js"
+    },
+    {
+      "id": "tx_service_request_password_reset",
+      "label": "TxServiceRequestPasswordReset",
+      "file_type": "code",
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "id": "connection_entity",
+      "label": "Connection",
+      "file_type": "code",
+      "source_file": "src/modules/connection/entity/connection.ts"
+    },
+    {
+      "id": "authentification_service",
+      "label": "AuthentificationService",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "id": "jwt_token_service",
+      "label": "JwtTokenService",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/jwt/service/jwt.token_service.ts"
+    },
+    {
+      "id": "user_id_extractor",
+      "label": "UserIdExtractor",
+      "file_type": "code",
+      "source_file": "src/modules/authentification/extractor.extract_user_id.ts"
+    },
+    {
+      "id": "validate_body",
+      "label": "validateBody",
+      "file_type": "code",
+      "source_file": "src/modules/middlewares/middleware.validators.ts",
+      "source_location": {
+        "end": {
+          "column": 2,
+          "line": 13
+        },
+        "start": {
+          "column": 7,
+          "line": 4
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "validate_params",
+      "label": "validateParams",
+      "file_type": "code",
+      "source_file": "src/modules/middlewares/middleware.validators.ts",
+      "source_location": {
+        "end": {
+          "column": 2,
+          "line": 25
+        },
+        "start": {
+          "column": 7,
+          "line": 15
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "errors_middleware",
+      "label": "errorsMiddleware",
+      "file_type": "code",
+      "source_file": "src/modules/middlewares/middleware.errors.ts",
+      "source_location": {
+        "end": {
+          "column": 1,
+          "line": 28
+        },
+        "start": {
+          "column": 13,
+          "line": 7
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "auth_middleware",
+      "label": "authMiddleware",
+      "file_type": "code",
+      "source_file": "src/modules/middlewares/middleware.auth.ts",
+      "source_location": {
+        "end": {
+          "column": 1,
+          "line": 26
+        },
+        "start": {
+          "column": 13,
+          "line": 6
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "infra_crypto_aes_implementation",
+      "label": "InfraCryptoAesImplementation",
+      "file_type": "code",
+      "source_file": "src/modules/infra/encryption/infra.encryption_aes.implementation.ts",
+      "source_location": {
+        "end": {
+          "column": 1,
+          "line": 35
+        },
+        "start": {
+          "column": 13,
+          "line": 4
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "infra_password_bcrypt_implementation",
+      "label": "InfraPasswordBcryptImplementation",
+      "file_type": "code",
+      "source_file": "src/modules/infra/password/infra.pasword_bcrypt.implementation.ts",
+      "source_location": {
+        "end": {
+          "column": 1,
+          "line": 24
+        },
+        "start": {
+          "column": 13,
+          "line": 4
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "infra_email_nodemailer_implementation",
+      "label": "InfraEmailNodemailerImplementation",
+      "file_type": "code",
+      "source_file": "src/modules/infra/email/infra.email_nodemailer.implementation.ts",
+      "source_location": {
+        "end": {
+          "column": 1,
+          "line": 45
+        },
+        "start": {
+          "column": 13,
+          "line": 4
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "github_poll_worker",
+      "label": "GithubPollWorker",
+      "file_type": "code",
+      "source_file": "src/workers/github.poll.worker.ts",
+      "source_location": {
+        "end": {
+          "column": 1,
+          "line": 78
+        },
+        "start": {
+          "column": 13,
+          "line": 12
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "github_poller_service",
+      "label": "GithubPollerService",
+      "file_type": "code",
+      "source_file": "src/workers/github.poller.ts",
+      "source_location": {
+        "end": {
+          "column": 1,
+          "line": 240
+        },
+        "start": {
+          "column": 13,
+          "line": 10
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "bootstrap_workers",
+      "label": "bootstrapWorkers",
+      "file_type": "code",
+      "source_file": "src/workers/worker.bootstrap.ts",
+      "source_location": {
+        "end": {
+          "column": 1,
+          "line": 61
+        },
+        "start": {
+          "column": 16,
+          "line": 12
+        }
+      },
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
     }
   ],
   "edges": [
@@ -15132,9 +16299,1308 @@
       "source_file": "src/modules/errors/mapper.database.ts",
       "source_location": "L36",
       "weight": 1.0
+    },
+    {
+      "source": "migration_connections",
+      "target": "migration_users",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "migrations/1776790409980_create-initial-connections-schema.ts"
+    },
+    {
+      "source": "migration_github_subscriptions",
+      "target": "migration_github_sources",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "migrations/1777824058668_create-github-subscriptions-table.ts"
+    },
+    {
+      "source": "migration_github_subscriptions",
+      "target": "migration_connections",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "migrations/1777824058668_create-github-subscriptions-table.ts"
+    },
+    {
+      "source": "migration_github_sources",
+      "target": "migration_users",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "migrations/1777824058667_create-github-sources-table.ts"
+    },
+    {
+      "source": "frontend_main",
+      "target": "frontend_app",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/main.ts"
+    },
+    {
+      "source": "frontend_main",
+      "target": "frontend_router",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/main.ts"
+    },
+    {
+      "source": "frontend_app",
+      "target": "frontend_router",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/App.vue"
+    },
+    {
+      "source": "frontend_store_auth",
+      "target": "frontend_api_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/stores/auth.ts"
+    },
+    {
+      "source": "frontend_store_auth",
+      "target": "frontend_types",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/stores/auth.ts"
+    },
+    {
+      "source": "frontend_api_user",
+      "target": "frontend_api_client",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/user.ts"
+    },
+    {
+      "source": "frontend_api_user",
+      "target": "frontend_types",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/user.ts"
+    },
+    {
+      "source": "frontend_api_connections",
+      "target": "frontend_api_client",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/connections.ts"
+    },
+    {
+      "source": "frontend_api_connections",
+      "target": "frontend_types",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/connections.ts"
+    },
+    {
+      "source": "frontend_api_auth",
+      "target": "frontend_api_client",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/auth.ts"
+    },
+    {
+      "source": "frontend_api_auth",
+      "target": "frontend_types",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/api/auth.ts"
+    },
+    {
+      "source": "frontend_view_register",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/RegisterView.vue"
+    },
+    {
+      "source": "frontend_view_confirm",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/ConfirmView.vue"
+    },
+    {
+      "source": "frontend_view_confirm",
+      "target": "frontend_component_otp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/ConfirmView.vue"
+    },
+    {
+      "source": "frontend_view_dashboard",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/DashboardView.vue"
+    },
+    {
+      "source": "frontend_view_dashboard",
+      "target": "frontend_api_user",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/DashboardView.vue"
+    },
+    {
+      "source": "frontend_view_dashboard",
+      "target": "frontend_component_otp",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/DashboardView.vue"
+    },
+    {
+      "source": "frontend_view_login",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/views/LoginView.vue"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_store_auth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_view_login",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_view_register",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_view_confirm",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "frontend_router",
+      "target": "frontend_view_dashboard",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "frontend/src/router/index.ts"
+    },
+    {
+      "source": "index_main",
+      "target": "server_startserver",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/index.ts"
+    },
+    {
+      "source": "server_startserver",
+      "target": "container_createdepscontainer",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/server.ts"
+    },
+    {
+      "source": "server_startserver",
+      "target": "app_createapp",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/server.ts"
+    },
+    {
+      "source": "server_startserver",
+      "target": "worker_bootstrap_bootstrapworkers",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/server.ts"
+    },
+    {
+      "source": "app_createapp",
+      "target": "api_limiter_predefinedpubliclimiters",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app.ts"
+    },
+    {
+      "source": "app_createapp",
+      "target": "api_limiter_constructmiddlewarewrapper",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app.ts"
+    },
+    {
+      "source": "worker_bootstrap_bootstrapworkers",
+      "target": "github_poller_githubpollerservice",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/worker.bootstrap.ts"
+    },
+    {
+      "source": "worker_bootstrap_bootstrapworkers",
+      "target": "github_poll_worker_githubpollworker",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/worker.bootstrap.ts"
+    },
+    {
+      "source": "github_poll_worker_githubpollworker",
+      "target": "github_poller_githubpollerservice",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/github.poll.worker.ts"
+    },
+    {
+      "source": "jwt_token_service_jwttokenservice",
+      "target": "jwt_token_service_interface_jwttokenserviceinterface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/jwt/service/jwt.token_service.ts"
+    },
+    {
+      "source": "auth_service_authentificationservice",
+      "target": "jwt_token_service_interface_jwttokenserviceinterface",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "connection_connection",
+      "target": "connection_credentials_connectioncredentials",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/entity/connection.ts"
+    },
+    {
+      "source": "interface_repository_connectionreporeaderinterface",
+      "target": "connection_connection",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/interfaces/interface.repository.ts"
+    },
+    {
+      "source": "api_limiter_constructmiddlewarewrapper",
+      "target": "redis_redis",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/api_limiter.ts"
+    },
+    {
+      "source": "container_createdepscontainer",
+      "target": "database_pool",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/container.ts"
+    },
+    {
+      "source": "connectionstab_connectionstab",
+      "target": "connection_connection",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "frontend/src/components/ConnectionsTab.vue"
+    },
+    {
+      "source": "connection_create_usecase",
+      "target": "connection_dto_mapper",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/usecases/connection.create.usecase.ts"
+    },
+    {
+      "source": "connection_list_active_usecase",
+      "target": "connection_dto_mapper",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/usecases/connection.list_active.usecase.ts"
+    },
+    {
+      "source": "connection_soft_delete_usecase",
+      "target": "throw_app_error",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/usecases/connection.soft_delete.usecase.ts"
+    },
+    {
+      "source": "repository_connection_reader",
+      "target": "handle_database_error",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/repository/repository.connection.reader.ts"
+    },
+    {
+      "source": "repository_connection_writer",
+      "target": "handle_database_error",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/repository/repository.connection.writer.ts"
+    },
+    {
+      "source": "tx_service_connection_create",
+      "target": "transaction_manager_interface",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/transactional_services/tx_service.connection.create.ts"
+    },
+    {
+      "source": "controller_connection_create",
+      "target": "tx_service_connection_create",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/controllers/controller.connection.create.ts"
+    },
+    {
+      "source": "handle_database_error",
+      "target": "throw_database_error",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/errors/mapper.database.ts"
+    },
+    {
+      "source": "throw_database_error",
+      "target": "database_error",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/errors/errors.database.ts"
+    },
+    {
+      "source": "github_source_create_usecase",
+      "target": "github_source_repo_writer_interface",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/github_source/usecases/github_source.create.usecase.ts"
+    },
+    {
+      "source": "repository_github_source_reader",
+      "target": "github_source_repo_reader_interface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/github_source/repository/repository.github_source.reader.ts"
+    },
+    {
+      "source": "repository_github_source_writer",
+      "target": "github_source_repo_writer_interface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/github_source/repository/repository.github_source.writer.ts"
+    },
+    {
+      "source": "tx_service_github_source_create",
+      "target": "transaction_manager_interface",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/github_source/transactional_services/tx_service.github_source.create.ts"
+    },
+    {
+      "source": "controller_github_source_create",
+      "target": "tx_service_github_source_create",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/github_source/controllers/controller.github_source.create.ts"
+    },
+    {
+      "source": "transaction_manager",
+      "target": "transaction_manager_interface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/infra/transaction_manager/transaction_manager.implementation.ts"
+    },
+    {
+      "source": "transaction_manager",
+      "target": "throw_app_error",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/infra/transaction_manager/transaction_manager.implementation.ts"
+    },
+    {
+      "source": "infra_encryption_aes_implementation_infracryptoaesimplementation",
+      "target": "infra_encryption_interface_infraencryptioninterface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/infra/encryption/infra.encryption_aes.implementation.ts"
+    },
+    {
+      "source": "notification_dispatcher_notificationdispatcher",
+      "target": "infra_email_nodemailer_implementation_infraemailnodemailerimplementation",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/modules/notification/notification.dispatcher.ts"
+    },
+    {
+      "source": "subscription_usecases_subscription_create_usecase_subscriptioncreateusecase",
+      "target": "subscription_interfaces_interface_repository_subscriptionrepowriterinterface",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/subscription/usecases/subscription.create.usecase.ts"
+    },
+    {
+      "source": "subscription_repository_repository_subscription_reader_repositorysubscriptionreader",
+      "target": "subscription_interfaces_interface_repository_subscriptionreporeaderinterface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/subscription/repository/repository.subscription.reader.ts"
+    },
+    {
+      "source": "subscription_repository_repository_subscription_reader_repositorysubscriptionreader",
+      "target": "infra_encryption_interface_infraencryptioninterface",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/subscription/repository/repository.subscription.reader.ts"
+    },
+    {
+      "source": "subscription_transactional_services_tx_service_subscription_create_txservicesubscriptioncreate",
+      "target": "subscription_usecases_subscription_create_usecase_subscriptioncreateusecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/subscription/transactional_services/tx_service.subscription.create.ts"
+    },
+    {
+      "source": "subscription_controllers_controller_subscription_create_controllersubscriptioncreate",
+      "target": "subscription_transactional_services_tx_service_subscription_create_txservicesubscriptioncreate",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/subscription/controllers/controller.subscription.create.ts"
+    },
+    {
+      "source": "token_usecases_token_create_otp_usecase_createotpusecase",
+      "target": "token_interfaces_interface_repository_tokenrepowriterinterface",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/token/usecases/token.create_otp.usecase.ts"
+    },
+    {
+      "source": "token_usecases_token_create_otp_usecase_createotpusecase",
+      "target": "infra_email_nodemailer_implementation_infraemailnodemailerimplementation",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/modules/token/usecases/token.create_otp.usecase.ts"
+    },
+    {
+      "source": "middleware_validators_validatebody",
+      "target": "subscription_controllers_controller_subscription_create_controllersubscriptioncreate",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "src/modules/middlewares/middleware.validators.ts"
+    },
+    {
+      "source": "user_create_usecase_createuserusecase",
+      "target": "user_repository_interface_iuserrepository",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/usecases/user.create.usecase.ts"
+    },
+    {
+      "source": "user_get_usecase_getuserusecase",
+      "target": "user_repository_interface_iuserrepository",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/usecases/user.get.usecase.ts"
+    },
+    {
+      "source": "user_update_usecase_updateuserusecase",
+      "target": "user_repository_interface_iuserrepository",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/usecases/user.update.usecase.ts"
+    },
+    {
+      "source": "user_delete_usecase_deleteuserusecase",
+      "target": "user_repository_interface_iuserrepository",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/usecases/user.delete.usecase.ts"
+    },
+    {
+      "source": "user_repository_postgres_postgresuserrepository",
+      "target": "user_repository_interface_iuserrepository",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/repository/user.repository.postgres.ts"
+    },
+    {
+      "source": "user_repository_postgres_postgresuserrepository",
+      "target": "user_entity_user",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/repository/user.repository.postgres.ts"
+    },
+    {
+      "source": "tx_service_request_password_reset_requestpasswordresetservice",
+      "target": "user_repository_interface_iuserrepository",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "source": "tx_service_confirm_password_reset_confirmpasswordresetservice",
+      "target": "user_repository_interface_iuserrepository",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.confirm_password_reset.ts"
+    },
+    {
+      "source": "user_controllers_usercontroller",
+      "target": "user_create_usecase_createuserusecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/controllers/user.controllers.ts"
+    },
+    {
+      "source": "user_controllers_usercontroller",
+      "target": "user_get_usecase_getuserusecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/controllers/user.controllers.ts"
+    },
+    {
+      "source": "user_controllers_usercontroller",
+      "target": "user_update_usecase_updateuserusecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/controllers/user.controllers.ts"
+    },
+    {
+      "source": "user_controllers_usercontroller",
+      "target": "user_delete_usecase_deleteuserusecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/controllers/user.controllers.ts"
+    },
+    {
+      "source": "user_controllers_usercontroller",
+      "target": "tx_service_request_password_reset_requestpasswordresetservice",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/controllers/user.controllers.ts"
+    },
+    {
+      "source": "user_controllers_usercontroller",
+      "target": "tx_service_confirm_password_reset_confirmpasswordresetservice",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/controllers/user.controllers.ts"
+    },
+    {
+      "source": "auth_service_test",
+      "target": "user_repository_interface_iuserrepository",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "tests/modules/authentification/auth_service.test.ts"
+    },
+    {
+      "source": "auth_controllers_e2e_test",
+      "target": "user_controllers_usercontroller",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "tests/modules/authentification/controllers/auth.controllers.e2e.test.ts"
+    },
+    {
+      "source": "tx_service_request_email_change_requestemailchangeservice",
+      "target": "tx_service_confirm_email_change_confirmemailchangeservice",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_email_change.ts"
+    },
+    {
+      "source": "tx_service_request_account_deletion_requestaccountdeletionservice",
+      "target": "tx_service_confirm_account_deletion_confirmaccountdeletionservice",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_account_deletion.ts"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "controller_connection_e2e_test_createapp",
+      "target": "app_createapp"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "controller_connection_e2e_test_buildcontainer",
+      "target": "controller_connection_create_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "controller_connection_e2e_test_buildcontainer",
+      "target": "controller_connection_list_active_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "controller_connection_e2e_test_buildcontainer",
+      "target": "controller_connection_list_deleted_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "controller_connection_e2e_test_buildcontainer",
+      "target": "controller_connection_update_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "controller_connection_e2e_test_buildcontainer",
+      "target": "controller_connection_soft_delete_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "controller_connection_e2e_test_buildcontainer",
+      "target": "controller_connection_restore_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "mapper_database_test_handledatabaseerror",
+      "target": "mapper_database_handledatabaseerror"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "github_source_create_usecase_test_execute",
+      "target": "github_source_create_usecase_execute"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "middleware_errors_test_errorsmiddleware",
+      "target": "middleware_errors_errorsmiddleware"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "subscription_create_usecase_test_execute",
+      "target": "subscription_create_usecase_execute"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "token_create_otp_usecase_test_execute",
+      "target": "token_create_otp_usecase_execute"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_change_password_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_update_name_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_request_email_change_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_confirm_email_change_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_request_password_reset_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_confirm_password_reset_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_request_account_deletion_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_confirm_account_deletion_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_get_self_profile_create"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "relation": "calls",
+      "source": "user_controllers_e2e_test_buildcontainer",
+      "target": "controller_get_other_profile_create"
+    },
+    {
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "relation": "shares_data_with",
+      "source": "github_source_create_usecase_test_makesource",
+      "target": "github_source_restore"
+    },
+    {
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "relation": "shares_data_with",
+      "source": "subscription_create_usecase_test_makesub",
+      "target": "subscription_restore"
+    },
+    {
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "relation": "conceptually_related_to",
+      "source": "mapper_database_test_handledatabaseerror",
+      "target": "middleware_errors_test_errorsmiddleware"
+    },
+    {
+      "source": "mapper_database_handledatabaseerror",
+      "target": "errors_database_throwdatabaseerror",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/errors/mapper.database.ts"
+    },
+    {
+      "source": "repository_user_reader_repositoryuserreader",
+      "target": "mapper_database_handledatabaseerror",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/repository/repository.user.reader.ts"
+    },
+    {
+      "source": "repository_user_writer_repositoryuserwriter",
+      "target": "mapper_database_handledatabaseerror",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/repository/repository.user.writer.ts"
+    },
+    {
+      "source": "tx_service_confirm_email_change_txserviceconfirmemailchange",
+      "target": "repository_user_writer_repositoryuserwriter",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.confirm_email_change.ts"
+    },
+    {
+      "source": "user_update_name_usecase_userupdatenameusecase",
+      "target": "errors_global_throwapperror",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/usecases/user.update_name.usecase.ts"
+    },
+    {
+      "source": "tx_service_request_password_reset",
+      "target": "repository_user_reader",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "source": "tx_service_request_password_reset",
+      "target": "create_otp_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "source": "tx_service_request_password_reset",
+      "target": "request_password_reset_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "jwt_token_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "jwt_refresh_token_repository",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "repository_user_reader",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "create_otp_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "authentification_service",
+      "target": "confirm_registration_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/authentification/auth_service.ts"
+    },
+    {
+      "source": "repository_connection_reader",
+      "target": "connection_entity",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/repository/repository.connection.reader.ts"
+    },
+    {
+      "source": "connection_create_usecase",
+      "target": "connection_entity",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/usecases/connection.create.usecase.ts"
+    },
+    {
+      "source": "controller_connection_create",
+      "target": "tx_service_connection_create",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/controllers/controller.connection.create.ts"
+    },
+    {
+      "source": "controller_connection_create",
+      "target": "user_id_extractor",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/controllers/controller.connection.create.ts"
+    },
+    {
+      "source": "tx_service_connection_create",
+      "target": "connection_create_usecase",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/connection/transactional_services/tx_service.connection.create.ts"
+    },
+    {
+      "source": "errors_middleware",
+      "target": "app_error",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/middlewares/middleware.errors.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "errors_middleware",
+      "target": "database_error",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/middlewares/middleware.errors.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "auth_middleware",
+      "target": "jwt_token_service_interface",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/middlewares/middleware.auth.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "infra_crypto_aes_implementation",
+      "target": "infra_encryption_interface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/infra/encryption/infra.encryption_aes.implementation.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "transaction_manager",
+      "target": "transaction_manager_interface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/infra/transaction_manager/transaction_manager.implementation.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "infra_password_bcrypt_implementation",
+      "target": "infra_password_hasher_interface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/infra/password/infra.pasword_bcrypt.implementation.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "infra_email_nodemailer_implementation",
+      "target": "infra_email_sender_interface",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/infra/email/infra.email_nodemailer.implementation.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "github_poll_worker",
+      "target": "github_poller_service",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/github.poll.worker.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "github_poll_worker",
+      "target": "notification_dispatcher",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/github.poll.worker.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "github_poll_worker",
+      "target": "repository_connection_reader",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/github.poll.worker.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "github_poll_worker",
+      "target": "repository_subscription_writer",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/github.poll.worker.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "bootstrap_workers",
+      "target": "github_poll_worker",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/worker.bootstrap.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "bootstrap_workers",
+      "target": "github_poller_service",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/worker.bootstrap.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "bootstrap_workers",
+      "target": "notification_dispatcher",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/worker.bootstrap.ts",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "bootstrap_workers",
+      "target": "repository_subscription_reader",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/workers/worker.bootstrap.ts",
+      "source_location": null,
+      "weight": 1.0
     }
   ],
-  "hyperedges": [],
+  "hyperedges": [
+    {
+      "id": "auth_system",
+      "label": "Authentication System",
+      "nodes": [
+        "auth_service_authentificationservice",
+        "jwt_token_service_jwttokenservice",
+        "app_createapp"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/app.ts"
+    },
+    {
+      "id": "github_notification_polling",
+      "label": "GitHub Notification Polling",
+      "nodes": [
+        "github_poller_githubpollerservice",
+        "github_poll_worker_githubpollworker",
+        "worker_bootstrap_bootstrapworkers"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/workers/worker.bootstrap.ts"
+    },
+    {
+      "id": "connection_module",
+      "label": "Connection Management Module",
+      "nodes": [
+        "connectionstab_connectionstab",
+        "connection_connection",
+        "interface_repository_connectionreporeaderinterface"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/modules/connection/entity/connection.ts"
+    },
+    {
+      "id": "subscription_creation_flow",
+      "label": "Subscription Creation Flow",
+      "nodes": [
+        "subscription_controllers_controller_subscription_create_controllersubscriptioncreate",
+        "subscription_transactional_services_tx_service_subscription_create_txservicesubscriptioncreate",
+        "subscription_usecases_subscription_create_usecase_subscriptioncreateusecase",
+        "subscription_repository_repository_subscription_reader_repositorysubscriptionreader"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/modules/subscription/controllers/controller.subscription.create.ts"
+    },
+    {
+      "id": "otp_delivery_system",
+      "label": "OTP Delivery System",
+      "nodes": [
+        "token_usecases_token_create_otp_usecase_createotpusecase",
+        "token_entity_token_otptoken",
+        "infra_email_nodemailer_implementation_infraemailnodemailerimplementation"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/modules/token/usecases/token.create_otp.usecase.ts"
+    },
+    {
+      "id": "user_management_flow",
+      "label": "User Management Lifecycle",
+      "nodes": [
+        "user_create_usecase_createuserusecase",
+        "user_get_usecase_getuserusecase",
+        "user_update_usecase_updateuserusecase",
+        "user_delete_usecase_deleteuserusecase",
+        "user_controllers_usercontroller"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/modules/user/controllers/user.controllers.ts"
+    },
+    {
+      "id": "account_security_tx_services",
+      "label": "Account Security Transactional Services",
+      "nodes": [
+        "tx_service_request_password_reset_requestpasswordresetservice",
+        "tx_service_confirm_password_reset_confirmpasswordresetservice",
+        "tx_service_request_email_change_requestemailchangeservice",
+        "tx_service_confirm_email_change_confirmemailchangeservice",
+        "tx_service_request_account_deletion_requestaccountdeletionservice",
+        "tx_service_confirm_account_deletion_confirmaccountdeletionservice"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "src/modules/user/transactional_services/tx_service.request_password_reset.ts"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "id": "connection_module_e2e_tests",
+      "label": "Connection Module E2E Testing Suite",
+      "nodes": [
+        "controller_connection_create_create",
+        "controller_connection_list_active_create",
+        "controller_connection_list_deleted_create",
+        "controller_connection_update_create",
+        "controller_connection_soft_delete_create",
+        "controller_connection_restore_create"
+      ],
+      "relation": "participate_in",
+      "source_file": "tests/modules/connection/controllers/controller.connection.e2e.test.ts"
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1,
+      "id": "user_module_e2e_tests",
+      "label": "User Module E2E Testing Suite",
+      "nodes": [
+        "controller_change_password_create",
+        "controller_update_name_create",
+        "controller_request_email_change_create",
+        "controller_confirm_email_change_create",
+        "controller_request_password_reset_create",
+        "controller_confirm_password_reset_create",
+        "controller_request_account_deletion_create",
+        "controller_confirm_account_deletion_create",
+        "controller_get_self_profile_create",
+        "controller_get_other_profile_create"
+      ],
+      "relation": "participate_in",
+      "source_file": "tests/modules/user/controllers/user.controllers.e2e.test.ts"
+    }
+  ],
   "input_tokens": 0,
   "output_tokens": 0
 }

@@ -15,6 +15,7 @@ coverage/
 frontend/node_modules
 frontend/dist
 
+AGENTS.md
 
 # keep graph outputs, skip heavy/local-only files
 

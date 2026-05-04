@@ -86,6 +86,12 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
         controllerConnectionUpdate: ControllerConnectionUpdate.create(mockUpdateSvc(), extractor),
         controllerConnectionSoftDelete: ControllerConnectionSoftDelete.create(mockSoftDeleteSvc(), extractor),
         controllerConnectionRestore: ControllerConnectionRestore.create(mockRestoreSvc(), extractor),
+        controllerGithubSourceCreate: { createSourceCont: jest.fn() } as any,
+        controllerGithubSourceList: { listSourcesCont: jest.fn() } as any,
+        controllerGithubSourceDelete: { deleteSourceCont: jest.fn() } as any,
+        controllerSubscriptionCreate: { createSubscriptionCont: jest.fn() } as any,
+        controllerSubscriptionList: { listSubscriptionsCont: jest.fn() } as any,
+        controllerSubscriptionDelete: { deleteSubscriptionCont: jest.fn() } as any,
         ...overrides,
     } as DepsContainer;
 }
