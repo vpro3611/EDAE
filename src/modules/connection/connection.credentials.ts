@@ -6,7 +6,9 @@ export type TelegramCredentials = {
 
 export type SlackCredentials = {
     provider: 'slack';
-    webhook_url: string;
+    webhook_url?: string;
+    bot_token?: string;
+    channel_id?: string;
 };
 
 export type EmailCredentials = {
