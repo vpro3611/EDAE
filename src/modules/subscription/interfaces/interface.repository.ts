@@ -15,6 +15,7 @@ export interface SubscriptionRepoWriterInterface {
         connection_id: string;
         message_template: string;
         config: Record<string, unknown>;
+        initial_last_seen?: Record<string, unknown>;
     }): Promise<Subscription>;
     deleteSubscription(id: string): Promise<void>;
     updateLastSeen(id: string, lastSeen: Record<string, unknown>): Promise<void>;

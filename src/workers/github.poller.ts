@@ -7,7 +7,7 @@ export type PollResult = {
     events: TemplateVars[];
 };
 
-const BOOTSTRAP_MARKER = '__bootstrapped';
+export const BOOTSTRAP_MARKER = '__bootstrapped';
 
 export class GithubPollerService {
     static create(): GithubPollerService {
