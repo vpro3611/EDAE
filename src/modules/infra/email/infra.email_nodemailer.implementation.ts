@@ -44,4 +44,11 @@ export class InfraEmailNodemailerImplementation implements InfraEmailSenderInter
     async sendNotification(to: string, subject: string, body: string): Promise<void> {
         await this.send(to, subject, body);
     }
+
+    async sendNotificationWithAttachment(to: string, subject: string, body: string, attachment: Buffer, filename: string): Promise<void> {
+        await this.transporter.sendMail({
+            from: this.user, to, subject, text: body,
+            attachments: [{ filename, content: attachment }],
+        });
+    }
 }
