@@ -23,6 +23,7 @@ describe('CreateOtpUseCase Unit Tests', () => {
             sendEmailChangeOtp: jest.fn().mockResolvedValue(undefined),
             sendAccountDeletionOtp: jest.fn().mockResolvedValue(undefined),
             sendNotification: jest.fn().mockResolvedValue(undefined),
+            sendNotificationWithAttachment: jest.fn().mockResolvedValue(undefined),
         };
         useCase = new CreateOtpUseCase(mockTokenWriter, mockEmailSender);
     });

@@ -84,6 +84,10 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
         controllerSubscriptionCreate: { createSubscriptionCont: jest.fn() } as any,
         controllerSubscriptionList: { listSubscriptionsCont: jest.fn() } as any,
         controllerSubscriptionDelete: { deleteSubscriptionCont: jest.fn() } as any,
+        controllerReportConfigCreate: { createReportConfigCont: jest.fn() } as any,
+        controllerReportConfigList: { listReportConfigsCont: jest.fn() } as any,
+        controllerReportConfigDelete: { deleteReportConfigCont: jest.fn() } as any,
+        controllerReportGenerate: { generateReportCont: jest.fn() } as any,
         ...overrides,
     } as DepsContainer;
 }

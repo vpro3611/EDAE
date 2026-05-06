@@ -7,7 +7,7 @@ export type PollResult = {
     events: TemplateVars[];
 };
 
-const BOOTSTRAP_MARKER = '__bootstrapped';
+export const BOOTSTRAP_MARKER = '__bootstrapped';
 
 export class GithubPollerService {
     static create(): GithubPollerService {
@@ -302,7 +302,7 @@ export class GithubPollerService {
 
         if (seenStars === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
 
-        if (seenStars < milestone && stars >= milestone) {
+        if (seenStars !== undefined && seenStars < milestone && stars >= milestone) {
             return {
                 initialized: false,
                 newLastSeen,
@@ -329,7 +329,7 @@ export class GithubPollerService {
 
         if (seenForks === undefined && !this.isBootstrapped(lastSeen)) return { initialized: true, newLastSeen, events: [] };
 
-        if (seenForks < milestone && forks >= milestone) {
+        if (seenForks !== undefined && seenForks < milestone && forks >= milestone) {
             return {
                 initialized: false,
                 newLastSeen,

@@ -66,16 +66,32 @@
           </div>
         </template>
 
-        <div v-if="createProvider === 'slack'" class="float-field" :class="{ active: createWebhookFocused || createWebhook }">
-          <input
-            id="createWebhook"
-            v-model="createWebhook"
-            type="url"
-            @focus="createWebhookFocused = true"
-            @blur="createWebhookFocused = false"
-          />
-          <label for="createWebhook">Webhook URL</label>
-        </div>
+        <template v-if="createProvider === 'slack'">
+          <div class="provider-select">
+            <span class="field-label">Auth method</span>
+            <div class="provider-btns">
+              <button type="button" class="provider-btn" :class="{ active: createSlackMode === 'webhook' }" @click="createSlackMode = 'webhook'">Webhook</button>
+              <button type="button" class="provider-btn" :class="{ active: createSlackMode === 'bot' }" @click="createSlackMode = 'bot'">Bot Token</button>
+            </div>
+          </div>
+          <div v-if="createSlackMode === 'webhook'" class="float-field" :class="{ active: createWebhookFocused || createWebhook }">
+            <input id="createWebhook" v-model="createWebhook" type="url"
+              @focus="createWebhookFocused = true" @blur="createWebhookFocused = false" />
+            <label for="createWebhook">Webhook URL</label>
+          </div>
+          <template v-else>
+            <div class="float-field" :class="{ active: createSlackBotTokenFocused || createSlackBotToken }">
+              <input id="createSlackBotToken" v-model="createSlackBotToken" type="text"
+                @focus="createSlackBotTokenFocused = true" @blur="createSlackBotTokenFocused = false" />
+              <label for="createSlackBotToken">Bot token (xoxb-…)</label>
+            </div>
+            <div class="float-field" :class="{ active: createSlackChannelIdFocused || createSlackChannelId }">
+              <input id="createSlackChannelId" v-model="createSlackChannelId" type="text"
+                @focus="createSlackChannelIdFocused = true" @blur="createSlackChannelIdFocused = false" />
+              <label for="createSlackChannelId">Channel ID</label>
+            </div>
+          </template>
+        </template>
 
         <div v-if="createProvider === 'email'" class="float-field" :class="{ active: createAddressFocused || createAddress }">
           <input
@@ -145,11 +161,32 @@
             </div>
           </template>
 
-          <div v-if="conn.provider === 'slack'" class="float-field" :class="{ active: editWebhookFocused || editWebhook }">
-            <input :id="`editWebhook-${conn.id}`" v-model="editWebhook" type="url"
-              @focus="editWebhookFocused = true" @blur="editWebhookFocused = false" />
-            <label :for="`editWebhook-${conn.id}`">Webhook URL</label>
-          </div>
+          <template v-if="conn.provider === 'slack'">
+            <div class="provider-select">
+              <span class="field-label">Auth method</span>
+              <div class="provider-btns">
+                <button type="button" class="provider-btn" :class="{ active: editSlackMode === 'webhook' }" @click="editSlackMode = 'webhook'">Webhook</button>
+                <button type="button" class="provider-btn" :class="{ active: editSlackMode === 'bot' }" @click="editSlackMode = 'bot'">Bot Token</button>
+              </div>
+            </div>
+            <div v-if="editSlackMode === 'webhook'" class="float-field" :class="{ active: editWebhookFocused || editWebhook }">
+              <input :id="`editWebhook-${conn.id}`" v-model="editWebhook" type="url"
+                @focus="editWebhookFocused = true" @blur="editWebhookFocused = false" />
+              <label :for="`editWebhook-${conn.id}`">Webhook URL</label>
+            </div>
+            <template v-else>
+              <div class="float-field" :class="{ active: editSlackBotTokenFocused || editSlackBotToken }">
+                <input :id="`editSlackBotToken-${conn.id}`" v-model="editSlackBotToken" type="text"
+                  @focus="editSlackBotTokenFocused = true" @blur="editSlackBotTokenFocused = false" />
+                <label :for="`editSlackBotToken-${conn.id}`">Bot token (xoxb-…)</label>
+              </div>
+              <div class="float-field" :class="{ active: editSlackChannelIdFocused || editSlackChannelId }">
+                <input :id="`editSlackChannelId-${conn.id}`" v-model="editSlackChannelId" type="text"
+                  @focus="editSlackChannelIdFocused = true" @blur="editSlackChannelIdFocused = false" />
+                <label :for="`editSlackChannelId-${conn.id}`">Channel ID</label>
+              </div>
+            </template>
+          </template>
 
           <div v-if="conn.provider === 'email'" class="float-field" :class="{ active: editAddressFocused || editAddress }">
             <input :id="`editAddress-${conn.id}`" v-model="editAddress" type="email"
@@ -244,6 +281,11 @@ const createChatId = ref('')
 const createChatIdFocused = ref(false)
 const createWebhook = ref('')
 const createWebhookFocused = ref(false)
+const createSlackMode = ref<'webhook' | 'bot'>('webhook')
+const createSlackBotToken = ref('')
+const createSlackBotTokenFocused = ref(false)
+const createSlackChannelId = ref('')
+const createSlackChannelIdFocused = ref(false)
 const createAddress = ref('')
 const createAddressFocused = ref(false)
 const createLoading = ref(false)
@@ -256,6 +298,9 @@ function resetCreateForm() {
   createBotToken.value = ''
   createChatId.value = ''
   createWebhook.value = ''
+  createSlackMode.value = 'webhook'
+  createSlackBotToken.value = ''
+  createSlackChannelId.value = ''
   createAddress.value = ''
   createError.value = ''
 }
@@ -266,8 +311,13 @@ function buildCreateCredentials(): ConnectionCredentials | null {
     return { provider: 'telegram', bot_token: createBotToken.value, chat_id: createChatId.value }
   }
   if (createProvider.value === 'slack') {
-    if (!createWebhook.value) return null
-    return { provider: 'slack', webhook_url: createWebhook.value }
+    if (createSlackMode.value === 'webhook') {
+      if (!createWebhook.value) return null
+      return { provider: 'slack', webhook_url: createWebhook.value }
+    } else {
+      if (!createSlackBotToken.value || !createSlackChannelId.value) return null
+      return { provider: 'slack', bot_token: createSlackBotToken.value, channel_id: createSlackChannelId.value }
+    }
   }
   if (!createAddress.value) return null
   return { provider: 'email', address: createAddress.value }
@@ -300,6 +350,11 @@ const editChatId = ref('')
 const editChatIdFocused = ref(false)
 const editWebhook = ref('')
 const editWebhookFocused = ref(false)
+const editSlackMode = ref<'webhook' | 'bot'>('webhook')
+const editSlackBotToken = ref('')
+const editSlackBotTokenFocused = ref(false)
+const editSlackChannelId = ref('')
+const editSlackChannelIdFocused = ref(false)
 const editAddress = ref('')
 const editAddressFocused = ref(false)
 const editLoading = ref(false)
@@ -311,6 +366,9 @@ function openEdit(conn: ConnectionDto) {
   editBotToken.value = ''
   editChatId.value = ''
   editWebhook.value = ''
+  editSlackMode.value = 'webhook'
+  editSlackBotToken.value = ''
+  editSlackChannelId.value = ''
   editAddress.value = ''
   editError.value = ''
   const creds = conn.credentials
@@ -318,7 +376,15 @@ function openEdit(conn: ConnectionDto) {
     editBotToken.value = (creds as TelegramCredentials).bot_token
     editChatId.value = (creds as TelegramCredentials).chat_id
   } else if (creds.provider === 'slack') {
-    editWebhook.value = (creds as SlackCredentials).webhook_url
+    const sc = creds as SlackCredentials
+    if (sc.bot_token) {
+      editSlackMode.value = 'bot'
+      editSlackBotToken.value = sc.bot_token
+      editSlackChannelId.value = sc.channel_id ?? ''
+    } else {
+      editSlackMode.value = 'webhook'
+      editWebhook.value = sc.webhook_url ?? ''
+    }
   } else {
     editAddress.value = (creds as EmailCredentials).address
   }
@@ -326,7 +392,10 @@ function openEdit(conn: ConnectionDto) {
 
 function buildEditCredentials(provider: string): ConnectionCredentials {
   if (provider === 'telegram') return { provider: 'telegram', bot_token: editBotToken.value, chat_id: editChatId.value }
-  if (provider === 'slack') return { provider: 'slack', webhook_url: editWebhook.value }
+  if (provider === 'slack') {
+    if (editSlackMode.value === 'bot') return { provider: 'slack', bot_token: editSlackBotToken.value, channel_id: editSlackChannelId.value }
+    return { provider: 'slack', webhook_url: editWebhook.value }
+  }
   return { provider: 'email', address: editAddress.value }
 }
 
@@ -349,7 +418,12 @@ async function handleEdit(conn: ConnectionDto) {
       credentialsChanged = editBotToken.value !== (origCreds as TelegramCredentials).bot_token
         || editChatId.value !== (origCreds as TelegramCredentials).chat_id
     } else if (origCreds.provider === 'slack') {
-      credentialsChanged = editWebhook.value !== (origCreds as SlackCredentials).webhook_url
+      const sc = origCreds as SlackCredentials
+      if (editSlackMode.value === 'bot') {
+        credentialsChanged = editSlackBotToken.value !== (sc.bot_token ?? '') || editSlackChannelId.value !== (sc.channel_id ?? '')
+      } else {
+        credentialsChanged = editWebhook.value !== (sc.webhook_url ?? '')
+      }
     } else {
       credentialsChanged = editAddress.value !== (origCreds as EmailCredentials).address
     }

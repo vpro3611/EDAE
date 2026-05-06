@@ -6,6 +6,7 @@ import { NotificationDispatcher } from '../modules/notification/notification.dis
 import { RepositorySubscriptionReader } from '../modules/subscription/repository/repository.subscription.reader';
 import { InfraEncryptionInterface } from '../modules/infra/encryption/infra.encryption.interface';
 import { InfraEmailSenderInterface } from '../modules/infra/email/infra.email_sender.interface';
+import { bootstrapReportWorker } from './report.worker';
 
 const QUEUE_NAME = 'github-poll';
 const JOB_KEY = 'github-poll-tick';
@@ -76,4 +77,6 @@ export async function bootstrapWorkers(
     worker.on('error', (err) => console.error('[WorkerBootstrap] Worker error:', err));
 
     console.log(`[WorkerBootstrap] GitHub poll worker started - interval ${pollIntervalMs / 1000}s`);
+
+    await bootstrapReportWorker(db, encryption, emailSender);
 }

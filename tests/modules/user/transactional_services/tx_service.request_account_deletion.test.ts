@@ -29,6 +29,7 @@ describe("TxServiceRequestAccountDeletion", () => {
       sendEmailChangeOtp: jest.fn(),
       sendAccountDeletionOtp: jest.fn(),
       sendNotification: jest.fn(),
+            sendNotificationWithAttachment: jest.fn(),
     };
     executeMock = jest.fn().mockResolvedValue(undefined);
     (CreateOtpUseCase.create as jest.Mock).mockReturnValue({ execute: jest.fn() });

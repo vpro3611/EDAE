@@ -7,6 +7,16 @@ import { Subscription } from '../../../../src/modules/subscription/entity/subscr
 import { AppError } from '../../../../src/modules/errors/errors.global';
 import { SubscriptionEventType } from '../../../../src/modules/subscription/subscription.event_types';
 
+jest.mock('@octokit/rest', () => ({
+    Octokit: jest.fn().mockImplementation(() => ({
+        repos: {
+            get: jest.fn().mockResolvedValue({
+                data: { stargazers_count: 5, forks_count: 2 },
+            }),
+        },
+    })),
+}));
+
 const NOW = new Date('2024-01-01T00:00:00.000Z');
 const LATER = new Date('2024-06-01T00:00:00.000Z');
 const EVENT_TYPE: SubscriptionEventType = 'new_release';
@@ -137,5 +147,64 @@ describe('SubscriptionCreateUseCase', () => {
         ).rejects.toBeInstanceOf(AppError);
 
         expect(writer.createSubscription).not.toHaveBeenCalled();
+    });
+
+    describe('milestone baseline seeding', () => {
+        function makeSourceWithToken(userId = 'user-1'): GithubSource {
+            return GithubSource.restore('src-1', userId, 'octocat', 'hello-world', 'token', NOW, LATER);
+        }
+        function makeMilleSub(eventType: SubscriptionEventType): Subscription {
+            return Subscription.restore('sub-1', 'src-1', eventType, 'conn-1', 'tmpl', {}, {}, true, NOW, LATER);
+        }
+
+        it('seeds initial_last_seen with current star count for star_milestone', async () => {
+            sourceReader.getSourceById.mockResolvedValue(makeSourceWithToken());
+            writer.createSubscription.mockResolvedValue(makeMilleSub('star_milestone'));
+
+            await useCase.execute('user-1', 'src-1', 'star_milestone', 'conn-1', 'tmpl', { milestone: 10 });
+
+            expect(writer.createSubscription).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    initial_last_seen: { stars: 5, __bootstrapped: true },
+                }),
+            );
+        });
+
+        it('seeds initial_last_seen with current fork count for fork_milestone', async () => {
+            sourceReader.getSourceById.mockResolvedValue(makeSourceWithToken());
+            writer.createSubscription.mockResolvedValue(makeMilleSub('fork_milestone'));
+
+            await useCase.execute('user-1', 'src-1', 'fork_milestone', 'conn-1', 'tmpl', { milestone: 5 });
+
+            expect(writer.createSubscription).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    initial_last_seen: { forks: 2, __bootstrapped: true },
+                }),
+            );
+        });
+
+        it('creates subscription without initial_last_seen when GitHub API fails', async () => {
+            const { Octokit } = require('@octokit/rest');
+            Octokit.mockImplementationOnce(() => ({
+                repos: { get: jest.fn().mockRejectedValue(new Error('network error')) },
+            }));
+            sourceReader.getSourceById.mockResolvedValue(makeSourceWithToken());
+            writer.createSubscription.mockResolvedValue(makeMilleSub('star_milestone'));
+
+            await useCase.execute('user-1', 'src-1', 'star_milestone', 'conn-1', 'tmpl', { milestone: 10 });
+
+            const call = writer.createSubscription.mock.calls[0][0];
+            expect(call.initial_last_seen).toBeUndefined();
+        });
+
+        it('does not seed initial_last_seen for non-milestone event types', async () => {
+            sourceReader.getSourceById.mockResolvedValue(makeSource('user-1'));
+            writer.createSubscription.mockResolvedValue(makeSub());
+
+            await useCase.execute('user-1', 'src-1', 'new_commit', 'conn-1', 'Hello {{repo}}', {});
+
+            const call = writer.createSubscription.mock.calls[0][0];
+            expect(call.initial_last_seen).toBeUndefined();
+        });
     });
 });

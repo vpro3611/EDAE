@@ -29,11 +29,18 @@ export class ConnectionValidator {
                     throwAppError('chat_id is required.', 400, `${this.moduleName}.validateCredentials`);
                 }
                 break;
-            case 'slack':
-                if (!this.urlPattern.test(creds.webhook_url)) {
-                    throwAppError('webhook_url must be a valid URL.', 400, `${this.moduleName}.validateCredentials`);
+            case 'slack': {
+                const hasWebhook = !!creds.webhook_url?.trim() && this.urlPattern.test(creds.webhook_url!);
+                const hasBotToken = !!creds.bot_token?.trim() && !!creds.channel_id?.trim();
+                if (!hasWebhook && !hasBotToken) {
+                    throwAppError(
+                        'Slack credentials must include a valid webhook_url or both bot_token and channel_id.',
+                        400,
+                        `${this.moduleName}.validateCredentials`,
+                    );
                 }
                 break;
+            }
             case 'email':
                 if (!this.emailPattern.test(creds.address)) {
                     throwAppError('address must be a valid email address.', 400, `${this.moduleName}.validateCredentials`);
