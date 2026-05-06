@@ -22,6 +22,8 @@ import { CreateConnectionBodySchema } from './modules/connection/controllers/con
 import { UpdateConnectionBodySchema } from './modules/connection/controllers/controller.connection.update';
 import { CreateGithubSourceBodySchema } from './modules/github_source/controllers/controller.github_source.create';
 import { CreateSubscriptionBodySchema } from './modules/subscription/controllers/controller.subscription.create';
+import { CreateReportConfigBodySchema } from './modules/report/controllers/controller.report_config.create';
+import { GenerateReportBodySchema } from './modules/report/controllers/controller.report.generate';
 
 // middlewares
 import {errorsMiddleware} from "./modules/middlewares/middleware.errors";
@@ -132,6 +134,12 @@ export function createApp(dependencies: DepsContainer): Express {
     privateRouter.post('/subscriptions', validateBody(CreateSubscriptionBodySchema), dependencies.controllerSubscriptionCreate.createSubscriptionCont);
     privateRouter.get('/subscriptions', dependencies.controllerSubscriptionList.listSubscriptionsCont);
     privateRouter.delete('/subscriptions/:id', dependencies.controllerSubscriptionDelete.deleteSubscriptionCont);
+
+    // report routes
+    privateRouter.post('/report-configs', validateBody(CreateReportConfigBodySchema), dependencies.controllerReportConfigCreate.createReportConfigCont);
+    privateRouter.get('/report-configs', dependencies.controllerReportConfigList.listReportConfigsCont);
+    privateRouter.delete('/report-configs/:id', dependencies.controllerReportConfigDelete.deleteReportConfigCont);
+    privateRouter.post('/reports/generate', validateBody(GenerateReportBodySchema), dependencies.controllerReportGenerate.generateReportCont);
 
     app.use(errorsMiddleware());
 

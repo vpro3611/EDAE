@@ -77,6 +77,22 @@ import { TxServiceSubscriptionDelete } from './modules/subscription/transactiona
 import { ControllerSubscriptionCreate } from './modules/subscription/controllers/controller.subscription.create';
 import { ControllerSubscriptionList } from './modules/subscription/controllers/controller.subscription.list';
 import { ControllerSubscriptionDelete } from './modules/subscription/controllers/controller.subscription.delete';
+import { ReportConfigDtoMapper } from './modules/report/dto/report_config.dto.mapper';
+import { TxServiceReportConfigCreate } from './modules/report/transactional_services/tx_service.report_config.create';
+import { TxServiceReportConfigList } from './modules/report/transactional_services/tx_service.report_config.list';
+import { TxServiceReportConfigDelete } from './modules/report/transactional_services/tx_service.report_config.delete';
+import { RepositoryReportConfigReader } from './modules/report/repository/repository.report_config.reader';
+import { RepositoryReportConfigWriter } from './modules/report/repository/repository.report_config.writer';
+import { RepositoryGithubSourceReader } from './modules/github_source/repository/repository.github_source.reader';
+import { RepositoryConnectionReader } from './modules/connection/repository/repository.connection.reader';
+import { FetchGithubActivityUseCase } from './modules/report/usecases/fetch_github_activity.usecase';
+import { PdfService } from './modules/report/pdf/pdf.service';
+import { NotificationDispatcher } from './modules/notification/notification.dispatcher';
+import { GenerateReportService } from './modules/report/generate_report.service';
+import { ControllerReportConfigCreate } from './modules/report/controllers/controller.report_config.create';
+import { ControllerReportConfigList } from './modules/report/controllers/controller.report_config.list';
+import { ControllerReportConfigDelete } from './modules/report/controllers/controller.report_config.delete';
+import { ControllerReportGenerate } from './modules/report/controllers/controller.report.generate';
 
 export function createDepsContainer() {
     const userRepoReader = RepositoryUserReader.create(pool);
@@ -131,6 +147,29 @@ export function createDepsContainer() {
     const controllerSubscriptionCreate = ControllerSubscriptionCreate.create(txSubscriptionCreate, userIdExtractor);
     const controllerSubscriptionList = ControllerSubscriptionList.create(txSubscriptionList, userIdExtractor);
     const controllerSubscriptionDelete = ControllerSubscriptionDelete.create(txSubscriptionDelete, userIdExtractor);
+
+    // report module
+    const reportConfigDtoMapper = ReportConfigDtoMapper.create();
+    const txReportConfigCreate = TxServiceReportConfigCreate.create(txManager, encryption, reportConfigDtoMapper);
+    const txReportConfigList = TxServiceReportConfigList.create(txManager, reportConfigDtoMapper);
+    const txReportConfigDelete = TxServiceReportConfigDelete.create(txManager);
+
+    const reportConfigReader = RepositoryReportConfigReader.create(pool);
+    const reportConfigWriter = RepositoryReportConfigWriter.create(pool);
+    const githubSourceReader = RepositoryGithubSourceReader.create(pool, encryption);
+    const connectionReaderDirect = RepositoryConnectionReader.create(pool, encryption);
+    const fetchActivityUseCase = FetchGithubActivityUseCase.create(githubSourceReader);
+    const pdfService = PdfService.create();
+    const notificationDispatcher = NotificationDispatcher.create(emailSender);
+    const generateReportService = GenerateReportService.create(
+        reportConfigReader, reportConfigWriter, connectionReaderDirect,
+        fetchActivityUseCase, pdfService, notificationDispatcher,
+    );
+
+    const controllerReportConfigCreate = ControllerReportConfigCreate.create(txReportConfigCreate, userIdExtractor);
+    const controllerReportConfigList = ControllerReportConfigList.create(txReportConfigList, userIdExtractor);
+    const controllerReportConfigDelete = ControllerReportConfigDelete.create(txReportConfigDelete, userIdExtractor);
+    const controllerReportGenerate = ControllerReportGenerate.create(generateReportService, userIdExtractor);
 
     const createOtpUseCase = CreateOtpUseCase.create(tokenRepoWriter, emailSender);
     const verifyOtpUseCase = VerifyOtpUseCase.create(tokenRepoReader, tokenRepoWriter);
@@ -239,6 +278,11 @@ export function createDepsContainer() {
         controllerSubscriptionCreate,
         controllerSubscriptionList,
         controllerSubscriptionDelete,
+
+        controllerReportConfigCreate,
+        controllerReportConfigList,
+        controllerReportConfigDelete,
+        controllerReportGenerate,
 
         emailSender,
         encryption,
