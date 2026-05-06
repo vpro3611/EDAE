@@ -7,6 +7,7 @@ import { SubscriptionCreateUseCase } from '../../../../src/modules/subscription/
 import { AppError } from '../../../../src/modules/errors/errors.global';
 import { SubscriptionEventType } from '../../../../src/modules/subscription/subscription.event_types';
 
+jest.mock('@octokit/rest', () => ({ Octokit: jest.fn() }));
 jest.mock('../../../../src/modules/github_source/repository/repository.github_source.reader');
 jest.mock('../../../../src/modules/subscription/repository/repository.subscription.writer');
 jest.mock('../../../../src/modules/subscription/usecases/subscription.create.usecase');
