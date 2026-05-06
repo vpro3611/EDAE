@@ -124,10 +124,18 @@
             <label for="subWf">Workflow name or ID</label>
           </div>
 
-          <div v-if="subEventType === 'star_milestone' || subEventType === 'fork_milestone'" class="float-field" :class="{ active: msFocused || subMilestone }">
-            <input id="subMs" v-model="subMilestone" type="number" min="1"
-              @focus="msFocused = true" @blur="msFocused = false" />
-            <label for="subMs">{{ subEventType === 'star_milestone' ? 'Star' : 'Fork' }} count milestone</label>
+          <div v-if="subEventType === 'star_milestone' || subEventType === 'fork_milestone'">
+            <div class="float-field" :class="{ active: msFocused || subMilestone }">
+              <input id="subMs" v-model="subMilestone" type="number" min="1"
+                :placeholder="subEventType === 'star_milestone' ? '100' : '10'"
+                @focus="msFocused = true" @blur="msFocused = false" />
+              <label for="subMs">Notify when {{ subEventType === 'star_milestone' ? 'stars' : 'forks' }} reach</label>
+            </div>
+            <div class="field-hint">
+              You will receive a notification once the repository crosses this
+              {{ subEventType === 'star_milestone' ? 'star' : 'fork' }} count.
+              Default: {{ subEventType === 'star_milestone' ? '100' : '10' }}.
+            </div>
           </div>
 
           <div v-if="subError" class="inline-error">{{ subError }}</div>
@@ -184,17 +192,17 @@ const EVENT_TYPES: { value: SubscriptionEventType; label: string }[] = [
 ]
 
 const TEMPLATES: Record<SubscriptionEventType, string> = {
-  new_release:        '🚀 New Release: {{name}} published for {{repo}}! View at: {{url}}',
-  new_commit:         '✨ New Commit: {{sha}} by {{author}} in {{repo}}. Message: "{{message}}". View at: {{url}}',
-  new_branch:         '🌿 New Branch: {{branch}} created in {{repo}}.',
-  new_tag:            '🏷️ New Tag: {{tag}} pushed to {{repo}}.',
-  issue_opened:       '🚩 Issue Opened: #{{number}} - "{{title}}" in {{repo}}. View at: {{url}}',
-  issue_closed:       '✅ Issue Closed: #{{number}} - "{{title}}" in {{repo}}. View at: {{url}}',
-  pr_opened:          '📬 PR Opened: #{{number}} - "{{title}}" in {{repo}}. View at: {{url}}',
-  pr_merged:          '🎉 PR Merged: #{{number}} - "{{title}}" in {{repo}}. View at: {{url}}',
-  workflow_completed: '⚙️ Workflow Completed: {{workflow}} in {{repo}} — status: {{conclusion}}. View at: {{url}}',
-  star_milestone:     '⭐ Star Milestone: {{repo}} reached {{stars}} stars!',
-  fork_milestone:     '🍴 Fork Milestone: {{repo}} reached {{forks}} forks!',
+  new_release:        '[Release] {{repo}}\nVersion: {{name}} ({{tag_name}}) has been published.\n{{url}}',
+  new_commit:         '[Commit] {{repo}}\nCommit {{sha}} by {{author}}\n"{{message}}"\n{{url}}',
+  new_branch:         '[Branch] {{repo}}\nNew branch created: {{branch}}',
+  new_tag:            '[Tag] {{repo}}\nNew tag pushed: {{tag}}',
+  issue_opened:       '[Issue Opened] {{repo}}\n#{{number}}: {{title}}\n{{url}}',
+  issue_closed:       '[Issue Closed] {{repo}}\n#{{number}}: {{title}}\n{{url}}',
+  pr_opened:          '[PR Opened] {{repo}}\n#{{number}}: {{title}}\n{{url}}',
+  pr_merged:          '[PR Merged] {{repo}}\n#{{number}}: {{title}}\n{{url}}',
+  workflow_completed: '[Workflow] {{repo}}\n{{workflow}} completed — conclusion: {{conclusion}}\n{{url}}',
+  star_milestone:     '[Star Milestone] {{repo}} reached {{stars}} stars (milestone: {{milestone}})',
+  fork_milestone:     '[Fork Milestone] {{repo}} reached {{forks}} forks (milestone: {{milestone}})',
 }
 
 function formatDate(iso?: string): string {
@@ -424,6 +432,7 @@ onMounted(async () => {
 .float-field:focus-within { border-bottom-color: var(--accent); }
 
 .field-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.field-hint { font-size: 11px; color: var(--text-2); margin-top: 6px; line-height: 1.5; }
 
 .inline-error { font-size: 12px; color: var(--error); padding: 6px 10px; background: rgba(224,96,96,0.08); border-radius: 3px; animation: shake 0.3s ease; }
 .inline-actions { display: flex; gap: 10px; justify-content: flex-end; }
