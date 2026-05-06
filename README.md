@@ -1,1 +1,1 @@
-Event driven notification platform working with github
+Event driven notification platform working with github.
