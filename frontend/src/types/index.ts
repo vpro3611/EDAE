@@ -24,9 +24,23 @@ export interface MessageResponse {
 }
 
 export type TelegramCredentials = { provider: 'telegram'; bot_token: string; chat_id: string }
-export type SlackCredentials    = { provider: 'slack'; webhook_url: string }
+export type SlackCredentials    = { provider: 'slack'; webhook_url?: string; bot_token?: string; channel_id?: string }
 export type EmailCredentials    = { provider: 'email'; address: string }
 export type ConnectionCredentials = TelegramCredentials | SlackCredentials | EmailCredentials
+
+export type ReportFrequency = 'daily' | 'weekly' | 'monthly'
+
+export interface ReportConfigDto {
+  id: string
+  user_id: string
+  connection_id: string
+  frequency: ReportFrequency
+  schedule_day: number
+  is_active: boolean
+  last_sent_at: string | null
+  created_at: string
+  updated_at: string
+}
 
 export interface ConnectionDto {
   id: string
