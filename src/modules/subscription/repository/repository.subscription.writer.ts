@@ -34,13 +34,15 @@ export class RepositorySubscriptionWriter implements SubscriptionRepoWriterInter
         connection_id: string;
         message_template: string;
         config: Record<string, unknown>;
+        initial_last_seen?: Record<string, unknown>;
     }): Promise<Subscription> {
         try {
+            const lastSeen = JSON.stringify(data.initial_last_seen ?? {});
             const result = await this.db.query(
                 `INSERT INTO github_subscriptions
-                    (github_source_id, event_type, connection_id, message_template, config)
-                 VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-                [data.github_source_id, data.event_type, data.connection_id, data.message_template, JSON.stringify(data.config)],
+                    (github_source_id, event_type, connection_id, message_template, config, last_seen)
+                 VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+                [data.github_source_id, data.event_type, data.connection_id, data.message_template, JSON.stringify(data.config), lastSeen],
             );
             return this.restoreHelper(result.rows[0]);
         } catch (e) {
