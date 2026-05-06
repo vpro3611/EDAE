@@ -2,16 +2,11 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 import { TxServiceConnectionUpdate } from '../transactional_services/tx_service.connection.update';
 import { UserIdExtractor } from '../../authentification/extractor.extract_user_id';
-
-const CredentialsSchema = z.discriminatedUnion('provider', [
-    z.object({ provider: z.literal('telegram'), bot_token: z.string().min(1), chat_id: z.string().min(1) }),
-    z.object({ provider: z.literal('slack'), webhook_url: z.string().url() }),
-    z.object({ provider: z.literal('email'), address: z.string().email() }),
-]);
+import { ConnectionCredentialsSchema } from '../connection.credentials.schema';
 
 export const UpdateConnectionBodySchema = z.object({
     name: z.string().min(1).max(100).optional(),
-    credentials: CredentialsSchema.optional(),
+    credentials: ConnectionCredentialsSchema.optional(),
 });
 
 type UpdateConnectionBodyType = z.infer<typeof UpdateConnectionBodySchema>;
