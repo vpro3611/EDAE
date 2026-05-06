@@ -80,6 +80,10 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
         controllerSubscriptionCreate: ControllerSubscriptionCreate.create(mockCreateSvc(), extractor),
         controllerSubscriptionList: ControllerSubscriptionList.create(mockListSvc(), extractor),
         controllerSubscriptionDelete: ControllerSubscriptionDelete.create(mockDeleteSvc(), extractor),
+        controllerReportConfigCreate: { createReportConfigCont: jest.fn() } as any,
+        controllerReportConfigList: { listReportConfigsCont: jest.fn() } as any,
+        controllerReportConfigDelete: { deleteReportConfigCont: jest.fn() } as any,
+        controllerReportGenerate: { generateReportCont: jest.fn() } as any,
         ...overrides,
     } as DepsContainer;
 }
