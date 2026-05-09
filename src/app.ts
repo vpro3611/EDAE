@@ -42,6 +42,7 @@ export function createApp(dependencies: DepsContainer): Express {
         "http://localhost:3000",
         "http://localhost:5173",
         "http://localhost:9000",
+        process.env.FRONTEND_URL!,
     ];
 
     const corsOptions: CorsOptions = {
