@@ -18,7 +18,9 @@ This document is aimed at developers working on or integrating with the EDAE cod
 10. [Error Handling](#10-error-handling)
 11. [Dependency Injection](#11-dependency-injection)
 12. [Testing Strategy](#12-testing-strategy)
-13. [Adding a New Module](#13-adding-a-new-module)
+13. [Docker & Deployment](#13-docker--deployment)
+14. [Environment Variables](#14-environment-variables)
+15. [Adding a New Module](#15-adding-a-new-module)
 
 ---
 
@@ -438,7 +440,102 @@ All classes expose a static `create(...args)` factory instead of `new` — this 
 
 ---
 
-## 13. Adding a New Module
+## 13. Docker & Deployment
+
+### Service topology
+
+```
+┌─────────────┐     :80      ┌───────────────────────────────────┐
+│   Browser   │ ──────────── │  frontend  (nginx:stable-alpine)  │
+└─────────────┘              │  Serves built Vue SPA              │
+                             │  Proxies /pub/* /protected/*       │
+                             └──────────────┬────────────────────┘
+                                            │ http://backend:3000
+                             ┌──────────────▼────────────────────┐
+                             │  backend   (node:20-slim)          │
+                             │  Express API + BullMQ workers      │
+                             └───────────┬───────────┬───────────┘
+                                         │           │
+                          ┌──────────────▼──┐   ┌────▼────────────┐
+                          │  postgres:16     │   │  redis:7        │
+                          │  (primary store) │   │  (rate-limit +  │
+                          └─────────────────┘   │   job queue)    │
+                                                 └─────────────────┘
+```
+
+### Compose services
+
+| Service | Image / Build | Purpose |
+|---------|--------------|---------|
+| `postgres` | `postgres:16-alpine` | Primary data store |
+| `redis` | `redis:7-alpine` | Rate-limit token buckets (via `src/redis.ts`) + BullMQ job queue |
+| `migrate` | build (backend) | One-shot migration runner; completes before `backend` starts |
+| `backend` | build (backend) | HTTP API + GitHub poller + report workers |
+| `frontend` | build (frontend) | Vue SPA compiled by Vite, served by nginx |
+
+The `migrate` service uses `service_completed_successfully` condition so the backend only starts after all migrations are applied.
+
+### Backend Dockerfile internals
+
+The backend image is a two-stage build (`builder` → `runtime`):
+
+- **builder** — installs all deps, compiles TypeScript (`npm run build`), copies the Handlebars report template into `dist/` (TypeScript does not emit non-TS assets).
+- **runtime** — installs apt Chromium system dependencies required by Puppeteer, runs `npm ci` (all deps including devDeps, because `node-pg-migrate` is a devDependency and is needed by the `migrate` service), then copies `dist/` and `migrations/` from the builder.
+
+Puppeteer is already configured with `--no-sandbox` and `--disable-setuid-sandbox` in `pdf.service.ts`, which is required inside Docker containers.
+
+### Frontend Dockerfile internals
+
+Two stages (`builder` → `runtime`):
+
+- **builder** — Node 20 Alpine, installs deps, runs `vite build` to produce a static bundle in `dist/`.
+- **runtime** — `nginx:stable-alpine`; copies the static bundle and the custom `nginx.conf`.
+
+The custom `nginx.conf` in `frontend/nginx.conf`:
+- Serves `index.html` for all unmatched paths (Vue Router SPA fallback).
+- Proxies `/pub/` and `/protected/` to `http://backend:3000`, including cookies (required for refresh token flow).
+
+### Environment file for Docker
+
+Compose reads `.env.docker` (set via `env_file`) for the backend. The `DATABASE_URL` and `REDIS_HOST`/`REDIS_PORT` are injected directly via the `environment` block in `docker-compose.yml` so they always point to the compose-internal hostnames (`postgres`, `redis`), regardless of what is set in `.env.docker`.
+
+Create your file from the template:
+```bash
+cp .env.example .env.docker
+```
+
+`TEST_DATABASE_URL` is **not required** at runtime and should be omitted from `.env.docker`.
+
+### Redis client
+
+`src/redis.ts` reads `REDIS_HOST`, `REDIS_PORT`, and `REDIS_PASSWORD` from the environment. This client is shared between the rate-limit middleware (`api_limiter.ts`) and the BullMQ workers (`worker.bootstrap.ts`).
+
+### CORS
+
+Allowed origins are the localhost dev ports plus `FRONTEND_URL` from the environment (`src/app.ts`). Set `FRONTEND_URL` to your deployed frontend origin (e.g. `http://localhost:80` or `https://app.yourdomain.com`).
+
+---
+
+## 14. Environment Variables
+
+`src/check_env_vars.ts` defines the `envVars` map. On startup (`src/index.ts`), `checkEnvVars(envVars)` iterates this map and throws if any value is falsy — the process exits immediately with a clear error message rather than failing later with a cryptic runtime error.
+
+**What belongs in this file:**
+- All secrets and connection strings that have no safe default.
+- Any variable whose absence would cause silent mis-behaviour.
+
+**What does NOT belong:**
+- Variables with safe defaults (`REDIS_HOST`, `REDIS_PORT`, `GITHUB_POLL_INTERVAL_MS`).
+- Test-only variables (`TEST_DATABASE_URL`) — required in tests but should not be present in production containers.
+
+When adding a new environment variable:
+1. Add it to `src/check_env_vars.ts` if it is required at runtime.
+2. Add it to `.env.example` with a placeholder value and a comment.
+3. Document it in the configuration table in `README.md`.
+
+---
+
+## 15. Adding a New Module
 
 Follow this checklist when adding a new domain module:
 
