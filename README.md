@@ -17,15 +17,43 @@
 
 ##  Getting Started
 
-### Prerequisites
+### Option A — Docker (recommended)
 
-| Tool | Version |
-|------|---------|
-| Node.js | ≥ 20 |
-| PostgreSQL | ≥ 14 |
-| Redis | ≥ 6 |
+The fastest way to run the full stack (backend, frontend, PostgreSQL, Redis).
 
-### Installation
+**Prerequisites:** Docker ≥ 24 and Docker Compose v2.
+
+```bash
+git clone <repo-url>
+cd EDAE
+
+# Create your environment file from the template
+cp .env.example .env.docker
+# Edit .env.docker — fill in POSTGRES_PASSWORD, JWT secrets, SMTP creds, ENCRYPTION_KEY
+```
+
+```bash
+docker compose up --build
+```
+
+That's it. Docker Compose will:
+1. Start PostgreSQL and Redis with health checks.
+2. Run database migrations (`migrate` service) before the backend starts.
+3. Start the backend API on port `3000` (or `BACKEND_PORT`).
+4. Build and serve the Vue frontend via nginx on port `80` (or `FRONTEND_PORT`).
+
+**Useful commands:**
+
+```bash
+docker compose up -d            # start in background
+docker compose logs -f backend  # stream backend logs
+docker compose down             # stop all services
+docker compose down -v          # stop and wipe volumes (destroys DB data)
+```
+
+### Option B — Local development
+
+**Prerequisites:** Node.js ≥ 20, PostgreSQL ≥ 14, Redis ≥ 6.
 
 ```bash
 git clone <repo-url>
@@ -33,54 +61,57 @@ cd EDAE
 npm install
 ```
 
-### Configuration
-
-Copy the example environment file and fill in your values:
+Copy the environment file and fill in your values:
 
 ```bash
 cp .env.example .env
 ```
 
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | PostgreSQL connection string |
-| `TEST_DATABASE_URL` | PostgreSQL connection string used during tests |
-| `PORT` | HTTP server port (default `3000`) |
-| `SMTP_HOST` | SMTP server hostname |
-| `SMTP_PORT` | SMTP server port (e.g. `587`) |
-| `SMTP_USER` | SMTP username / sender address |
-| `SMTP_PASS` | SMTP password or app password |
-| `APP_NAME` | Displayed name in notification emails |
-| `API_URL` | Public base URL of this server |
-| `FRONTEND_URL` | Your frontend origin (used in CORS and email links) |
-| `ACCESS_TOKEN_SECRET` | Secret for signing JWT access tokens |
-| `REFRESH_TOKEN_SECRET` | Secret for signing JWT refresh tokens |
-| `ENCRYPTION_KEY` | 32-byte AES-256 key expressed as 64 hex characters |
-| `REDIS_HOST` | Redis hostname (default `localhost`) |
-| `REDIS_PORT` | Redis port (default `6379`) |
-| `REDIS_PASSWORD` | Redis password (optional) |
-| `GITHUB_POLL_INTERVAL_MS` | How often the GitHub poller runs in ms (default `300000` = 5 min) |
-
-### Database setup
+Run migrations and start the dev server:
 
 ```bash
 npm run migrate
-```
-
-### Running in development
-
-```bash
 npm run dev
 ```
 
-The server starts on the port defined by `PORT` (default `3000`). Background workers (GitHub poller, report scheduler) start automatically alongside the HTTP server.
-
-### Running in production
+The backend starts on `PORT` (default `3000`) with hot-reload. Start the frontend separately:
 
 ```bash
-npm run build
-npm run start
+cd frontend && npm install && npm run dev
 ```
+
+The frontend Vite dev server runs on port `5173` and proxies `/pub` and `/protected` to the backend.
+
+### Configuration reference
+
+Variables marked **required** are validated at startup by `src/check_env_vars.ts` — the server will refuse to start if any are missing.
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `DATABASE_URL` | ✅ | — | PostgreSQL connection string |
+| `NODE_ENV` | ✅ | — | `development` or `production` |
+| `PORT` | ✅ | — | HTTP server port |
+| `APP_NAME` | ✅ | — | Displayed name in notification emails |
+| `SMTP_HOST` | ✅ | — | SMTP server hostname |
+| `SMTP_PORT` | ✅ | — | SMTP port (e.g. `587`) |
+| `SMTP_USER` | ✅ | — | SMTP username / sender address |
+| `SMTP_PASS` | ✅ | — | SMTP password or app password |
+| `API_URL` | ✅ | — | Public base URL of the backend |
+| `FRONTEND_URL` | ✅ | — | Frontend origin (used in CORS and email links) |
+| `ACCESS_TOKEN_SECRET` | ✅ | — | Secret for signing JWT access tokens |
+| `REFRESH_TOKEN_SECRET` | ✅ | — | Secret for signing JWT refresh tokens |
+| `ENCRYPTION_KEY` | ✅ | — | 32-byte AES-256 key as 64 hex chars |
+| `REDIS_HOST` | — | `localhost` | Redis hostname |
+| `REDIS_PORT` | — | `6379` | Redis port |
+| `REDIS_PASSWORD` | — | (none) | Redis password |
+| `GITHUB_POLL_INTERVAL_MS` | — | `300000` | GitHub poll interval in ms |
+| `TEST_DATABASE_URL` | — | — | Used by the test suite only, not at runtime |
+
+> **Generating secrets:**
+> ```bash
+> openssl rand -base64 32   # for ACCESS_TOKEN_SECRET / REFRESH_TOKEN_SECRET
+> openssl rand -hex 32      # for ENCRYPTION_KEY
+> ```
 
 ---
 
