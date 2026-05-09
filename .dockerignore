@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+frontend
+.env
+.env.*
+!.env.example
+*.log
+.git
+.gitignore
+docs
+graph
+graphify-out
+tests
