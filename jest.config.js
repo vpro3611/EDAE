@@ -3,6 +3,7 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/*.test.ts'],
   setupFiles: ['dotenv/config'],
+  maxWorkers: 1,
   coverageThreshold: {
     global: {
       statements: 90,

@@ -58,6 +58,7 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
         controllerLoginEmail: { loginEmailCont: jest.fn() } as any,
         controllerRefresh: { refreshCont: jest.fn() } as any,
         controllerLogout: { logoutCont: jest.fn() } as any,
+        controllerGoogleLogin: { googleLoginCont: jest.fn() } as any,
         controllerChangePassword: { changePasswordCont: jest.fn() } as any,
         controllerUpdateName: { updateNameCont: jest.fn() } as any,
         controllerRequestEmailChange: { requestEmailChangeCont: jest.fn() } as any,
