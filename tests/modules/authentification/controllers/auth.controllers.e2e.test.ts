@@ -14,6 +14,7 @@ import { ControllerRegisterConfirm } from "../../../../src/modules/authentificat
 import { ControllerLoginEmail } from "../../../../src/modules/authentification/controllers/controller.login_email";
 import { ControllerRefresh } from "../../../../src/modules/authentification/controllers/controller.refresh";
 import { ControllerLogout } from "../../../../src/modules/authentification/controllers/controller.logout";
+import { ControllerGoogleLogin } from "../../../../src/modules/authentification/controllers/controller.google_login";
 import { AppError } from "../../../../src/modules/errors/errors.global";
 import { UserDtoForSelf } from "../../../../src/modules/user/dto/user.dto";
 
@@ -38,6 +39,9 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
             user: SELF_DTO, accessToken: "new-access", refreshToken: "new-refresh",
         }),
         logout: jest.fn<Promise<void>, [string]>().mockResolvedValue(undefined),
+        loginGoogle: jest.fn().mockResolvedValue({
+            loggedUser: SELF_DTO, accessToken: "access-token", refreshToken: "refresh-token",
+        }),
     } as any;
 
     const noopCtrl = { getSelfProfileCont: jest.fn(), getOtherProfileCont: jest.fn() } as any;
@@ -50,6 +54,7 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
         controllerLoginEmail: ControllerLoginEmail.create(authService),
         controllerRefresh: ControllerRefresh.create(authService),
         controllerLogout: ControllerLogout.create(authService),
+        controllerGoogleLogin: ControllerGoogleLogin.create(authService),
         controllerGetSelfProfile: noopCtrl,
         controllerGetOtherProfile: noopCtrl,
         controllerChangePassword: noopTxCtrl("changePasswordCont"),
@@ -260,6 +265,49 @@ describe("Auth controllers e2e", () => {
             const res = await request(app).post("/pub/auth/logout");
 
             expect(res.status).toBe(401);
+        });
+    });
+
+    describe("POST /pub/auth/google", () => {
+        it("returns 200 with accessToken and user, sets refreshToken cookie", async () => {
+            const app = createApp(buildContainer());
+
+            const res = await request(app)
+                .post("/pub/auth/google")
+                .send({ code: "google-auth-code" });
+
+            expect(res.status).toBe(200);
+            expect(res.body.accessToken).toBe("access-token");
+            expect(res.body.user.email).toBe("alice@example.com");
+            const setCookie = res.headers["set-cookie"] as unknown as string[];
+            expect(setCookie?.some((c: string) => c.startsWith("refreshToken="))).toBe(true);
+        });
+
+        it("returns 400 when code field is missing", async () => {
+            const app = createApp(buildContainer());
+
+            const res = await request(app)
+                .post("/pub/auth/google")
+                .send({});
+
+            expect(res.status).toBe(400);
+        });
+
+        it("propagates AppError from authService", async () => {
+            const container = buildContainer();
+            (container.controllerGoogleLogin as any) = ControllerGoogleLogin.create({
+                loginGoogle: jest.fn().mockRejectedValue(
+                    new AppError("Invalid Google token: no payload.", 400, "Test")
+                ),
+            } as any);
+            const app = createApp(container);
+
+            const res = await request(app)
+                .post("/pub/auth/google")
+                .send({ code: "bad-code" });
+
+            expect(res.status).toBe(400);
+            expect(res.body.message).toBe("Invalid Google token: no payload.");
         });
     });
 });

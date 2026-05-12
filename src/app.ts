@@ -9,6 +9,7 @@ import {CorsOptions} from "cors";
 import { RegisterRequestBodySchema} from "./modules/authentification/controllers/controller.register_request";
 import { RegisterConfirmRequestBodySchema} from "./modules/authentification/controllers/controller.register_confirm";
 import { LoginEmailRequestBodySchema} from "./modules/authentification/controllers/controller.login_email";
+import { GoogleLoginBodySchema } from "./modules/authentification/controllers/controller.google_login";
 
 // user controllers
 import { ChangePasswordBodySchema} from "./modules/user/controllers/controller.change_password";
@@ -83,6 +84,11 @@ export function createApp(dependencies: DepsContainer): Express {
         validateBody(LoginEmailRequestBodySchema),
         constructMiddlewareWrapper(buckets.loginTokenBucket, 'email+ip', 'rl:login'),
         dependencies.controllerLoginEmail.loginEmailCont
+    );
+    publicRouter.post(
+        "/auth/google",
+        validateBody(GoogleLoginBodySchema),
+        dependencies.controllerGoogleLogin.googleLoginCont
     );
     publicRouter.post(
         "/auth/refresh",

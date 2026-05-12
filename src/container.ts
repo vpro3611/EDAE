@@ -34,6 +34,7 @@ import {ControllerRegisterConfirm} from "./modules/authentification/controllers/
 import {ControllerRefresh} from "./modules/authentification/controllers/controller.refresh";
 import {ControllerLogout} from "./modules/authentification/controllers/controller.logout";
 import {ControllerLoginEmail} from "./modules/authentification/controllers/controller.login_email";
+import {ControllerGoogleLogin} from "./modules/authentification/controllers/controller.google_login";
 import {ControllerChangePassword} from "./modules/user/controllers/controller.change_password";
 import {UserIdExtractor} from "./modules/authentification/extractor.extract_user_id";
 import {ControllerConfirmAccountDeletion} from "./modules/user/controllers/controller.confirm_account_deletion";
@@ -210,6 +211,7 @@ export function createDepsContainer() {
     const controllerRefresh = ControllerRefresh.create(authentificationService);
     const controllerLogout = ControllerLogout.create(authentificationService);
     const controllerLoginEmail = ControllerLoginEmail.create(authentificationService);
+    const controllerGoogleLogin = ControllerGoogleLogin.create(authentificationService);
 
     const controllerChangePassword = ControllerChangePassword.create(txChangePassword, userIdExtractor);
     const controllerConfirmAccountDeletion = ControllerConfirmAccountDeletion.create(txConfirmAccountDeletion, userIdExtractor);
@@ -251,6 +253,7 @@ export function createDepsContainer() {
         controllerRefresh,
         controllerLogout,
         controllerLoginEmail,
+        controllerGoogleLogin,
 
         controllerChangePassword,
         controllerConfirmAccountDeletion,
