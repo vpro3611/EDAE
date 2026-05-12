@@ -156,15 +156,33 @@ Tokens expire and are single-use. Attempting to verify an expired or already-use
 
 ### 4.3 `authentification`
 
-`AuthentificationService` orchestrates the four auth flows:
+`AuthentificationService` orchestrates all auth flows:
 
 | Method | Flow |
 |--------|------|
 | `registerRequest` | Creates user + sends OTP |
 | `registerConfirm` | Verifies OTP → issues access + refresh tokens |
 | `loginEmail` | Validates credentials → issues access + refresh tokens |
+| `loginGoogle` | Exchanges Google auth code → finds/creates/links user → issues tokens |
 | `refresh` | Validates refresh token hash → rotates tokens |
 | `logout` | Revokes refresh token by hash |
+
+**Google OAuth sub-system** (`src/modules/authentification/usecases/auth.google_login.usecase.ts`):
+
+`AuthGoogleLoginUseCase` handles the OAuth 2.0 Authorization Code Flow using `google-auth-library`:
+
+1. Calls `OAuth2Client.getToken(code)` to exchange the authorization code for an ID token. `GOOGLE_REDIRECT_URI` must be `postmessage` when using the Google Identity Services (GIS) popup flow.
+2. Verifies the ID token with `client.verifyIdToken()` and extracts `sub` (Google account ID), `email`, and `name`.
+3. Resolves the local user via `RepositoryUserExternalLogin`:
+   - Found → use the stored `user_id`.
+   - Not found + email exists → link the Google account to the existing user.
+   - Not found + no email match → create a new user (no password, pre-verified), then link.
+4. Calls `user.canLogin()` to enforce active/verified guards.
+5. Returns `UserDtoForSelf`.
+
+**External login repository** (`src/modules/user/repository/repository.user.external_login.ts`):
+
+Manages the `user_external_logins` table. Methods: `findByProviderAndExternalId(provider, externalId)` and `create(userId, provider, externalId)`. Follows the same static `create(db)` factory pattern as all other repositories.
 
 **JWT sub-system** (`src/modules/authentification/jwt/`):
 
@@ -255,9 +273,19 @@ return this.txManager.runInTransaction(async (client) => {
 
 `UserIdExtractor` reads `req.user.sub` and throws `AppError(401)` if missing.
 
+### Google OAuth 2.0
+
+EDAE supports sign-in via Google using the Authorization Code Flow with the GIS popup mode. The frontend uses `useCodeClient` from `vue3-google-signin`; Google returns a one-time `code` to a JavaScript callback (no page redirect). The backend exchanges the code via `google-auth-library`.
+
+**Google Cloud Console setup** required:
+- Add your frontend origin (e.g. `http://localhost:5173`) to **Authorized JavaScript origins** — this is what GIS validates for popup flows.
+- `GOOGLE_REDIRECT_URI` must be set to `postmessage` on the backend to match the implicit redirect URI used by the GIS popup flow.
+
+OAuth users have `password_hashed = NULL` and `last_password = NULL` in the `users` table. The `canLogin()` entity guard still applies — soft-deleted or unverified users cannot obtain tokens.
+
 ### Password storage
 
-Passwords are hashed with **bcrypt** (cost factor 12). The raw password is never stored. For password reset and change operations, the hash of the previously set password is stored in `last_password_hash` to prevent immediate re-use.
+Passwords are hashed with **bcrypt** (cost factor 12). The raw password is never stored. For password reset and change operations, the hash of the previously set password is stored in `last_password` to prevent immediate re-use. Both `password_hashed` and `last_password` are `NULLABLE` to support OAuth-only accounts that have never set a password.
 
 ### Credential encryption
 
@@ -336,13 +364,16 @@ npm run migrate
 
 | Table | Key columns |
 |-------|------------|
-| `users` | `id`, `email`, `password_hash`, `name`, `is_verified`, `is_deleted`, `pending_email`, `last_password_hash`, `pending_password_hash` |
+| `users` | `id`, `email`, `password_hashed` (nullable), `name`, `is_verified`, `is_deleted`, `pending_email`, `last_password` (nullable), `pending_password` |
+| `user_external_logins` | `id`, `user_id` (FK → users CASCADE), `provider`, `external_id`, `created_at`; UNIQUE `(provider, external_id)` |
 | `connections` | `id`, `user_id`, `provider`, `name`, `credentials` (encrypted JSON), `is_deleted` |
 | `github_sources` | `id`, `user_id`, `repo_owner`, `repo_name`, `access_token` (encrypted) |
 | `github_subscriptions` | `id`, `github_source_id`, `event_type`, `connection_id`, `message_template`, `config`, `last_seen`, `is_active` |
 | `report_configurations` | `id`, `user_id`, `connection_id`, `frequency`, `schedule_day`, `is_active`, `last_sent_at` |
 | `verification_tokens` | `id`, `user_id`, `token_hash`, `type`, `expires_at`, `used_at` |
 | `refresh_tokens` | `id`, `user_id`, `token_hash`, `expires_at`, `revoked_at` |
+
+`password_hashed` and `last_password` are nullable to support OAuth-only accounts created via `POST /pub/auth/google`.
 
 ### PostgreSQL error mapping
 
@@ -488,8 +519,19 @@ Puppeteer is already configured with `--no-sandbox` and `--disable-setuid-sandbo
 
 Two stages (`builder` → `runtime`):
 
-- **builder** — Node 20 Alpine, installs deps, runs `vite build` to produce a static bundle in `dist/`.
+- **builder** — Node 20 Alpine, accepts `ARG VITE_GOOGLE_CLIENT_ID` (set as `ENV` before `vite build` so Vite embeds it in the bundle at build time), installs deps, runs `vite build` to produce a static bundle in `dist/`.
 - **runtime** — `nginx:stable-alpine`; copies the static bundle and the custom `nginx.conf`.
+
+`docker-compose.yml` passes the build arg automatically from `GOOGLE_CLIENT_ID` in `.env.docker`:
+
+```yaml
+frontend:
+  build:
+    args:
+      VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+```
+
+For local development, create `frontend/.env` with `VITE_GOOGLE_CLIENT_ID=<your-client-id>` (covered by the `*.env` gitignore rule).
 
 The custom `nginx.conf` in `frontend/nginx.conf`:
 - Serves `index.html` for all unmatched paths (Vue Router SPA fallback).
@@ -527,6 +569,20 @@ Allowed origins are the localhost dev ports plus `FRONTEND_URL` from the environ
 **What does NOT belong:**
 - Variables with safe defaults (`REDIS_HOST`, `REDIS_PORT`, `GITHUB_POLL_INTERVAL_MS`).
 - Test-only variables (`TEST_DATABASE_URL`) — required in tests but should not be present in production containers.
+
+**Google OAuth variables** (backend runtime):
+
+| Variable | Description |
+|----------|-------------|
+| `GOOGLE_CLIENT_ID` | OAuth client ID from Google Cloud Console |
+| `GOOGLE_CLIENT_SECRET` | OAuth client secret |
+| `GOOGLE_REDIRECT_URI` | Set to `postmessage` for GIS popup flow |
+
+**Google OAuth variable** (frontend build-time only):
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_GOOGLE_CLIENT_ID` | Client ID embedded by Vite at build time; same value as `GOOGLE_CLIENT_ID` |
 
 When adding a new environment variable:
 1. Add it to `src/check_env_vars.ts` if it is required at runtime.

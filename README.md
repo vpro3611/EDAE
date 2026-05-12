@@ -10,6 +10,7 @@
 -  **Periodic PDF reports** — daily, weekly, or monthly GitHub activity summaries sent to your preferred channel
 -  **Multiple delivery channels** — Telegram bot, Slack (webhook or bot), or email
 -  **Secure credential storage** — connection credentials encrypted with AES-256-GCM at rest
+-  **Google OAuth 2.0** — sign in or register with a Google account; existing users are automatically linked by email
 -  **Full account management** — registration, email verification, password reset, email change, account deletion (all OTP-confirmed)
 -  **Rate limiting** — built-in token-bucket rate limiting on all public endpoints to prevent abuse
 
@@ -101,6 +102,9 @@ Variables marked **required** are validated at startup by `src/check_env_vars.ts
 | `ACCESS_TOKEN_SECRET` | ✅ | — | Secret for signing JWT access tokens |
 | `REFRESH_TOKEN_SECRET` | ✅ | — | Secret for signing JWT refresh tokens |
 | `ENCRYPTION_KEY` | ✅ | — | 32-byte AES-256 key as 64 hex chars |
+| `GOOGLE_CLIENT_ID` | ✅ | — | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | ✅ | — | Google OAuth client secret |
+| `GOOGLE_REDIRECT_URI` | ✅ | `postmessage` | OAuth redirect URI (`postmessage` for GIS popup flow) |
 | `REDIS_HOST` | — | `localhost` | Redis hostname |
 | `REDIS_PORT` | — | `6379` | Redis port |
 | `REDIS_PASSWORD` | — | (none) | Redis password |
@@ -168,11 +172,39 @@ POST /pub/auth/logout   (cookie sent automatically)
   → clears the refresh token
 ```
 
+### Google OAuth flow
+
+```
+POST /pub/auth/google   { code }
+  → returns { accessToken, user }  +  sets refreshToken cookie
+```
+
+The frontend initiates the Google Identity Services (GIS) popup via the `useCodeClient` composable from `vue3-google-signin`. When the user completes the Google sign-in screen, Google returns a one-time `code` to the JavaScript callback. The frontend then sends that code to `POST /pub/auth/google`.
+
+The backend exchanges the code for a Google ID token, verifies it, and:
+
+1. **Existing Google login** — user is found via `user_external_logins`; tokens are issued immediately.
+2. **Email match** — a matching `users` row exists but has no Google login entry; the Google account is linked automatically.
+3. **New user** — no matching record at all; a new account is created (pre-verified, no password) and linked.
+
+In all cases the response is identical to a regular login: `{ accessToken, user }` with a `refreshToken` httpOnly cookie.
+
 ---
 
 ##  API Quick Reference
 
 All protected routes require `Authorization: Bearer <accessToken>`.
+
+### Authentication
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/pub/auth/register` | Start registration (sends OTP) |
+| `POST` | `/pub/auth/register/confirm` | Confirm registration OTP → issues tokens |
+| `POST` | `/pub/auth/login` | Email + password login → issues tokens |
+| `POST` | `/pub/auth/google` | Google OAuth code exchange → issues tokens |
+| `POST` | `/pub/auth/refresh` | Rotate refresh token → new access token |
+| `POST` | `/pub/auth/logout` | Revoke refresh token |
 
 ### User
 
