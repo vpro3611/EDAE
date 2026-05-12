@@ -49,6 +49,35 @@
         </button>
       </form>
 
+      <div class="divider">
+        <span class="divider-text">or</span>
+      </div>
+
+      <div class="google-section">
+        <div v-if="googleError" class="error-banner">
+          <span class="error-icon">⚠</span> {{ googleError }}
+        </div>
+        <button
+          class="btn-google"
+          type="button"
+          @click="handleGoogleLogin"
+          :disabled="!isGoogleReady || googleLoading"
+        >
+          <span v-if="googleLoading" class="btn-loading">
+            <span></span><span></span><span></span>
+          </span>
+          <template v-else>
+            <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Continue with Google
+          </template>
+        </button>
+      </div>
+
       <div class="form-footer">
         <span class="footer-text">No account?</span>
         <RouterLink to="/auth/register" class="footer-link">Create one</RouterLink>
@@ -63,6 +92,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useCodeClient } from 'vue3-google-signin'
 import { useAuthStore } from '../stores/auth'
 import AuthLayout from '../components/AuthLayout.vue'
 
@@ -77,6 +107,32 @@ const showPassword = ref(false)
 const loading = ref(false)
 const error = ref('')
 const fieldErrors = ref<Record<string, string>>({})
+
+const googleLoading = ref(false)
+const googleError = ref('')
+
+const { isReady: isGoogleReady, login: startGoogleLogin } = useCodeClient({
+  onSuccess: async ({ code }) => {
+    googleError.value = ''
+    googleLoading.value = true
+    try {
+      await auth.googleLogin(code)
+      router.push('/dashboard')
+    } catch (e) {
+      googleError.value = (e as Error).message
+    } finally {
+      googleLoading.value = false
+    }
+  },
+  onError: () => {
+    googleError.value = 'Google sign-in failed. Please try again.'
+  },
+})
+
+function handleGoogleLogin() {
+  googleError.value = ''
+  startGoogleLogin()
+}
 
 function validate(): boolean {
   const errors: Record<string, string> = {}
@@ -299,6 +355,79 @@ form {
 
 .btn-loading span:nth-child(2) { animation-delay: 0.15s; }
 .btn-loading span:nth-child(3) { animation-delay: 0.3s; }
+
+/* Divider */
+.divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.divider-text {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+/* Google section */
+.google-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeSlideUp 0.5s 0.15s ease both;
+}
+
+/* Google button */
+.btn-google {
+  width: 100%;
+  padding: 13px 16px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+}
+
+.btn-google:hover:not(:disabled) {
+  border-color: var(--text-2);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.btn-google:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-google:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.google-icon {
+  flex-shrink: 0;
+}
 
 /* Footer */
 .form-footer {

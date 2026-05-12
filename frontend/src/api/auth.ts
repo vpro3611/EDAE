@@ -47,3 +47,10 @@ export async function confirmPasswordReset(email: string, otp: string, newPasswo
     return data
   })
 }
+
+export async function googleLogin(code: string): Promise<AuthResponse> {
+  return call(async () => {
+    const { data } = await publicApi.post<AuthResponse>('/pub/auth/google', { code })
+    return data
+  })
+}

@@ -19,6 +19,8 @@ import {VerifyOtpUseCase} from "../token/usecases/token.verify_otp.usecase";
 import {RepositoryTokenReader} from "../token/repository/repository.token.reader";
 import {UserDtoForSelf} from "../user/dto/user.dto";
 import {UserLoginEmailUseCase} from "../user/usecases/user.login_email.usecase";
+import {AuthGoogleLoginUseCase} from "./usecases/auth.google_login.usecase";
+import {RepositoryUserExternalLogin} from "../user/repository/repository.user.external_login";
 
 
 export class AuthentificationService {
@@ -187,6 +189,31 @@ export class AuthentificationService {
 
             return {loggedUser, ...tokens};
         })
+    }
+
+    async loginGoogle(code: string): Promise<{refreshToken: string, accessToken: string, loggedUser: UserDtoForSelf}> {
+        return await this.txManager.runInTransaction(async (client) => {
+            const userRepoReader = RepositoryUserReader.create(client);
+            const userRepoWriter = RepositoryUserWriter.create(client);
+            const externalLoginRepo = RepositoryUserExternalLogin.create(client);
+            const refreshTokenRepo = JwtRefreshTokenRepository.create(client);
+            const userDtoMapper = this.userDtoMapper;
+
+            const googleLoginUseCase = AuthGoogleLoginUseCase.create(
+                userRepoReader,
+                userRepoWriter,
+                externalLoginRepo,
+                userDtoMapper,
+                process.env.GOOGLE_CLIENT_ID!,
+                process.env.GOOGLE_CLIENT_SECRET!,
+                process.env.GOOGLE_REDIRECT_URI!
+            );
+
+            const loggedUser = await googleLoginUseCase.execute(code);
+            const tokens = await this.generateTokens(loggedUser.id, refreshTokenRepo);
+
+            return {loggedUser, ...tokens};
+        });
     }
 
     async logout(refreshToken: string): Promise<void> {

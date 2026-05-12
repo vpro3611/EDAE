@@ -31,6 +31,13 @@ export const useAuthStore = defineStore('auth', () => {
     return data
   }
 
+  async function googleLogin(code: string) {
+    const data = await authApi.googleLogin(code)
+    accessToken.value = data.accessToken
+    user.value = data.user
+    return data
+  }
+
   async function register(name: string, email: string, password: string) {
     await authApi.register(name, email, password)
     setPendingEmail(email)
@@ -74,6 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
     pendingEmail,
     isAuthenticated,
     login,
+    googleLogin,
     register,
     confirmRegistration,
     refresh,

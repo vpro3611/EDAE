@@ -14,7 +14,7 @@ export class RepositoryUserWriter implements UserRepoWriterInterface {
         return new RepositoryUserWriter(db);
     }
 
-    async createUser(user: { name: string, email: string, password_hashed: string, last_password: string }): Promise<void> {
+    async createUser(user: { name: string, email: string, password_hashed: string | null, last_password: string | null }): Promise<void> {
         try {
             await this.db.query("INSERT INTO users (name, email, password_hashed, last_password) VALUES ($1, $2, $3, $4)",
                 [user.name, user.email, user.password_hashed, user.last_password]);
