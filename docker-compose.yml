@@ -62,6 +62,8 @@ services:
       REDIS_PORT: "6379"
     ports:
       - "3000:3000"
+    volumes:
+      - backend_logs:/app/logs
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -82,3 +84,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  backend_logs:
