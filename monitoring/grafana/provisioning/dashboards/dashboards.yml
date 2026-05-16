@@ -1,0 +1,10 @@
+apiVersion: 1
+
+providers:
+  - name: default
+    folder: EDAE
+    type: file
+    disableDeletion: true
+    updateIntervalSeconds: 30
+    options:
+      path: /var/lib/grafana/dashboards
