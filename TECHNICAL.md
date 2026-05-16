@@ -17,10 +17,11 @@ This document is aimed at developers working on or integrating with the EDAE cod
 9. [Rate Limiting](#9-rate-limiting)
 10. [Error Handling](#10-error-handling)
 11. [Dependency Injection](#11-dependency-injection)
-12. [Testing Strategy](#12-testing-strategy)
-13. [Docker & Deployment](#13-docker--deployment)
-14. [Environment Variables](#14-environment-variables)
-15. [Adding a New Module](#15-adding-a-new-module)
+12. [Observability](#12-observability)
+13. [Testing Strategy](#13-testing-strategy)
+14. [Docker & Deployment](#14-docker--deployment)
+15. [Environment Variables](#15-environment-variables)
+16. [Adding a New Module](#16-adding-a-new-module)
 
 ---
 
@@ -83,6 +84,16 @@ src/
     ├── github.poller.ts        ← per-event-type GitHub polling logic
     ├── github.poll.worker.ts   ← processes a single subscription
     └── report.worker.ts        ← scheduled PDF report delivery
+
+monitoring/
+├── prometheus.yml              ← scrape config (edae job + node-exporter job)
+└── grafana/
+    ├── provisioning/
+    │   ├── datasources/prometheus.yml   ← auto-provisions Prometheus datasource (uid: prometheus)
+    │   └── dashboards/dashboards.yml    ← file-based dashboard provider config
+    └── dashboards/
+        ├── edae-app.json       ← EDAE application dashboard (HTTP, business events, runtime)
+        └── node-exporter.json  ← host-level Node Exporter dashboard
 ```
 
 ---
@@ -245,6 +256,8 @@ Located at `src/modules/infra/`. Each adapter implements a domain-owned interfac
 | `InfraEmailSenderInterface` | `InfraEmailNodemailerImplementation` | Nodemailer SMTP email delivery |
 | `InfraEncryptionInterface` | `InfraCryptoAesImplementation` | AES-256-GCM encryption / decryption |
 | `TransactionManagerInterface` | `TransactionManager` | Acquires a `pg` client, runs a callback in `BEGIN`/`COMMIT`/`ROLLBACK` |
+| — (singleton) | `LoggerService` | Winston logger with console + daily-rotate-file transports |
+| — (singleton) | `MetricsService` | prom-client registry with default Node.js metrics + custom counters/histograms |
 
 `TransactionManagerInterface.runInTransaction<T>(callback: (client) => Promise<T>): Promise<T>`
 
@@ -452,7 +465,91 @@ All classes expose a static `create(...args)` factory instead of `new` — this 
 
 ---
 
-## 12. Testing Strategy
+## 12. Observability
+
+### 12.1 Logging
+
+`LoggerService` (`src/modules/infra/observability/logger.service.ts`) wraps Winston and is instantiated once in `src/container.ts`.
+
+**Transports:**
+
+| Transport | Format | Config |
+|-----------|--------|--------|
+| Console | Colourised simple text | Always active |
+| `DailyRotateFile` | JSON + timestamp | Files: `logs/application-%DATE%.log`, rotated daily, zipped, max 20 MB, 14-day retention |
+
+**Log levels:** `debug` when `NODE_ENV !== 'production'`, `info` otherwise.
+
+**Methods:** `info`, `warn`, `error`, `debug`, `http`.
+
+`loggingMiddleware` (`src/modules/middlewares/middleware.logging.ts`) attaches to every request via `res.on('finish')` and logs `METHOD path statusCode - Xms` at the `http` level.
+
+`errorsMiddleware` receives the `LoggerService` instance and logs error details before returning an HTTP response.
+
+In Docker the `logs/` directory is mounted as the `backend_logs` named volume so log files survive container restarts.
+
+### 12.2 Metrics
+
+`MetricsService` (`src/modules/infra/observability/metrics.service.ts`) owns a dedicated prom-client `Registry` and is also instantiated once in `src/container.ts`.
+
+**Default metrics:** Node.js process metrics collected via `collectDefaultMetrics` (heap, GC, event-loop lag, CPU seconds, etc.).
+
+**Custom metrics:**
+
+| Name | Type | Labels | Incremented by |
+|------|------|--------|----------------|
+| `http_request_duration_seconds` | Histogram | `method`, `route`, `status_code` | `metricsMiddleware` on every request |
+| `user_registrations_total` | Counter | — | `AuthentificationService.registerConfirm` |
+| `user_logins_total` | Counter | — | `AuthentificationService.loginEmail` + `loginGoogle` |
+| `reports_generated_total` | Counter | — | `GenerateReportService.generateForConfig` |
+
+`metricsMiddleware` (`src/modules/middlewares/middleware.metrics.ts`) records histogram observations via `res.on('finish')`. The `route` label uses `req.route.path` when matched (e.g. `/protected/user/:id`) and falls back to `req.originalUrl` for unmatched paths.
+
+**Metrics endpoint:**
+
+```
+GET /pub/metrics
+```
+
+This route is rate-limited with a token-bucket keyed by IP and returns the Prometheus text exposition format. Prometheus scrapes it every 15 seconds (configured in `monitoring/prometheus.yml`).
+
+### 12.3 Prometheus
+
+`monitoring/prometheus.yml` defines two scrape jobs:
+
+| Job | Target | Path |
+|-----|--------|------|
+| `edae` | `backend:3000` | `/pub/metrics` |
+| `node-exporter` | `node-exporter:9100` | `/metrics` (default) |
+
+Scrape interval and evaluation interval are both 15 s.
+
+Prometheus UI is available at **http://localhost:9090** when running via Docker Compose. Use it to run ad-hoc PromQL queries or verify scrape health under **Status → Targets**.
+
+### 12.4 Grafana
+
+Grafana is provisioned entirely from files — no manual setup is needed after `docker compose up`.
+
+**Datasource provisioning** (`monitoring/grafana/provisioning/datasources/prometheus.yml`):
+
+Grafana auto-creates a Prometheus datasource with a pinned `uid: prometheus`. The pinned UID is critical: dashboard JSON references this UID directly rather than using the `${DS_PROMETHEUS}` template placeholder, which is not resolved during file-based provisioning.
+
+**Dashboard provisioning** (`monitoring/grafana/provisioning/dashboards/dashboards.yml`):
+
+A file provider scans `/var/lib/grafana/dashboards` (mapped from `monitoring/grafana/dashboards/`) and loads any `.json` file as a dashboard, refreshing every 30 seconds.
+
+**Dashboards:**
+
+| File | Description |
+|------|-------------|
+| `edae-app.json` | EDAE application metrics — HTTP traffic, business events, Node.js runtime |
+| `node-exporter.json` | Host-level CPU, memory, disk, network via Node Exporter |
+
+Grafana is available at **http://localhost:3001**. Credentials: username `admin`, password from `GF_SECURITY_ADMIN_PASSWORD` in `.env.docker`.
+
+---
+
+## 13. Testing Strategy
 
 | Test type | Location | Strategy |
 |-----------|----------|----------|
@@ -471,12 +568,12 @@ All classes expose a static `create(...args)` factory instead of `new` — this 
 
 ---
 
-## 13. Docker & Deployment
+## 14. Docker & Deployment
 
 ### Service topology
 
 ```
-┌─────────────┐     :80      ┌───────────────────────────────────┐
+┌─────────────┐    :8080     ┌───────────────────────────────────┐
 │   Browser   │ ──────────── │  frontend  (nginx:stable-alpine)  │
 └─────────────┘              │  Serves built Vue SPA              │
                              │  Proxies /pub/* /protected/*       │
@@ -485,13 +582,22 @@ All classes expose a static `create(...args)` factory instead of `new` — this 
                              ┌──────────────▼────────────────────┐
                              │  backend   (node:20-slim)          │
                              │  Express API + BullMQ workers      │
-                             └───────────┬───────────┬───────────┘
-                                         │           │
-                          ┌──────────────▼──┐   ┌────▼────────────┐
-                          │  postgres:16     │   │  redis:7        │
-                          │  (primary store) │   │  (rate-limit +  │
-                          └─────────────────┘   │   job queue)    │
-                                                 └─────────────────┘
+                             │  GET /pub/metrics  ←──────────────┼──────┐
+                             └───────────┬───────────┬───────────┘      │
+                                         │           │                   │ scrape :3000
+                          ┌──────────────▼──┐   ┌────▼────────────┐    │
+                          │  postgres:16     │   │  redis:7        │    │
+                          │  (primary store) │   │  (rate-limit +  │  ┌─▼──────────────────┐
+                          └─────────────────┘   │   job queue)    │  │  prometheus :9090   │
+                                                 └─────────────────┘  │  scrapes backend   │
+                                                                       │  + node-exporter   │
+                          ┌──────────────────────┐                    └────────┬───────────┘
+                          │  node-exporter :9100  │──────scrape────────────────┘
+                          │  host metrics          │                            │ PromQL
+                          └──────────────────────┘                    ┌────────▼───────────┐
+                                                                       │  grafana :3001      │
+                                                                       │  dashboards         │
+                                                                       └────────────────────┘
 ```
 
 ### Compose services
@@ -499,10 +605,13 @@ All classes expose a static `create(...args)` factory instead of `new` — this 
 | Service | Image / Build | Purpose |
 |---------|--------------|---------|
 | `postgres` | `postgres:16-alpine` | Primary data store |
-| `redis` | `redis:7-alpine` | Rate-limit token buckets (via `src/redis.ts`) + BullMQ job queue |
+| `redis` | `redis:7-alpine` | Rate-limit token buckets + BullMQ job queue |
 | `migrate` | build (backend) | One-shot migration runner; completes before `backend` starts |
-| `backend` | build (backend) | HTTP API + GitHub poller + report workers |
-| `frontend` | build (frontend) | Vue SPA compiled by Vite, served by nginx |
+| `backend` | build (backend) | HTTP API + GitHub poller + report workers; exposes `/pub/metrics` |
+| `frontend` | build (frontend) | Vue SPA compiled by Vite, served by nginx on port `8080` |
+| `prometheus` | `prom/prometheus:v2.53.0` | Scrapes `backend:3000/pub/metrics` and `node-exporter:9100/metrics` every 15 s |
+| `node-exporter` | `prom/node-exporter:v1.8.1` | Exposes host CPU, memory, disk, and network metrics |
+| `grafana` | `grafana/grafana:11.1.0` | Pre-provisioned dashboards reading from Prometheus; port `3001` |
 
 The `migrate` service uses `service_completed_successfully` condition so the backend only starts after all migrations are applied.
 
@@ -558,7 +667,7 @@ Allowed origins are the localhost dev ports plus `FRONTEND_URL` from the environ
 
 ---
 
-## 14. Environment Variables
+## 15. Environment Variables
 
 `src/check_env_vars.ts` defines the `envVars` map. On startup (`src/index.ts`), `checkEnvVars(envVars)` iterates this map and throws if any value is falsy — the process exits immediately with a clear error message rather than failing later with a cryptic runtime error.
 
@@ -584,6 +693,14 @@ Allowed origins are the localhost dev ports plus `FRONTEND_URL` from the environ
 |----------|-------------|
 | `VITE_GOOGLE_CLIENT_ID` | Client ID embedded by Vite at build time; same value as `GOOGLE_CLIENT_ID` |
 
+**Observability variables:**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GITHUB_POLL_INTERVAL_MS` | `300000` | GitHub poll worker repeat interval in ms |
+| `REPORT_WORKER_INTERVAL_MS` | `3600000` | Report scheduler check interval in ms |
+| `GF_SECURITY_ADMIN_PASSWORD` | `admin` | Grafana admin password; consumed by the `grafana` Compose service |
+
 When adding a new environment variable:
 1. Add it to `src/check_env_vars.ts` if it is required at runtime.
 2. Add it to `.env.example` with a placeholder value and a comment.
@@ -591,7 +708,7 @@ When adding a new environment variable:
 
 ---
 
-## 15. Adding a New Module
+## 16. Adding a New Module
 
 Follow this checklist when adding a new domain module:
 

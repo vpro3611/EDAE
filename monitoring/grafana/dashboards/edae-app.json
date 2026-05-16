@@ -1,0 +1,291 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "type": "datasource",
+      "pluginId": "prometheus"
+    }
+  ],
+  "__requires": [
+    { "type": "grafana", "id": "grafana", "name": "Grafana", "version": "11.0.0" },
+    { "type": "datasource", "id": "prometheus", "name": "Prometheus", "version": "1.0.0" },
+    { "type": "panel", "id": "timeseries", "name": "Time series", "version": "" },
+    { "type": "panel", "id": "stat", "name": "Stat", "version": "" }
+  ],
+  "title": "EDAE Application",
+  "uid": "edae-app",
+  "schemaVersion": 38,
+  "version": 2,
+  "refresh": "10s",
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser",
+  "tags": ["edae"],
+  "panels": [
+
+    {
+      "id": 1,
+      "type": "row",
+      "title": "HTTP Traffic",
+      "collapsed": false,
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Request Rate by Route",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 0, "y": 1, "w": 14, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (route) (rate(http_request_duration_seconds_count[1m]))",
+          "legendFormat": "{{route}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } }
+      }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "5xx Errors / s",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 14, "y": 1, "w": 5, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(rate(http_request_duration_seconds_count{status_code=~\"5..\"}[5m])) or vector(0)",
+          "legendFormat": "5xx/s",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.01 },
+              { "color": "red", "value": 0.1 }
+            ]
+          }
+        }
+      },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" }
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "4xx Errors / s",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 19, "y": 1, "w": 5, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(rate(http_request_duration_seconds_count{status_code=~\"4..\"}[5m])) or vector(0)",
+          "legendFormat": "4xx/s",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.1 },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" }
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Latency Percentiles (P50 / P95 / P99)",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 14, "y": 5, "w": 10, "h": 4 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "P50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "P95",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "P99",
+          "refId": "C"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s", "custom": { "lineWidth": 2 } }
+      }
+    },
+
+    {
+      "id": 6,
+      "type": "row",
+      "title": "Business Events",
+      "collapsed": false,
+      "gridPos": { "x": 0, "y": 9, "w": 24, "h": 1 }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Registrations / min",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 0, "y": 10, "w": 10, "h": 7 },
+      "targets": [
+        {
+          "expr": "rate(user_registrations_total[1m]) * 60",
+          "legendFormat": "registrations/min",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2 } } }
+    },
+    {
+      "id": 8,
+      "type": "stat",
+      "title": "Total Registrations",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 10, "y": 10, "w": 2, "h": 7 },
+      "targets": [
+        {
+          "expr": "user_registrations_total or vector(0)",
+          "legendFormat": "total",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "none" }
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Logins / min",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 12, "y": 10, "w": 10, "h": 7 },
+      "targets": [
+        {
+          "expr": "rate(user_logins_total[1m]) * 60",
+          "legendFormat": "logins/min",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2 } } }
+    },
+    {
+      "id": 10,
+      "type": "stat",
+      "title": "Total Logins",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 22, "y": 10, "w": 2, "h": 7 },
+      "targets": [
+        {
+          "expr": "user_logins_total or vector(0)",
+          "legendFormat": "total",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short" } },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "none" }
+    },
+
+    {
+      "id": 11,
+      "type": "row",
+      "title": "Node.js Runtime",
+      "collapsed": false,
+      "gridPos": { "x": 0, "y": 17, "w": 24, "h": 1 }
+    },
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "Heap Memory",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 0, "y": 18, "w": 12, "h": 7 },
+      "targets": [
+        {
+          "expr": "nodejs_heap_size_used_bytes",
+          "legendFormat": "Heap Used",
+          "refId": "A"
+        },
+        {
+          "expr": "nodejs_heap_size_total_bytes",
+          "legendFormat": "Heap Total",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes", "custom": { "lineWidth": 2 } } }
+    },
+    {
+      "id": 13,
+      "type": "timeseries",
+      "title": "Event Loop Lag P99",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 12, "y": 18, "w": 6, "h": 7 },
+      "targets": [
+        {
+          "expr": "nodejs_eventloop_lag_p99_seconds",
+          "legendFormat": "lag p99",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": { "lineWidth": 2 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.1 },
+              { "color": "red", "value": 0.5 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": 14,
+      "type": "timeseries",
+      "title": "Process CPU %",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 18, "y": 18, "w": 6, "h": 7 },
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total[1m]) * 100",
+          "legendFormat": "CPU %",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "custom": { "lineWidth": 2 } } }
+    },
+    {
+      "id": 15,
+      "type": "timeseries",
+      "title": "Active Handles",
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "gridPos": { "x": 0, "y": 25, "w": 12, "h": 7 },
+      "targets": [
+        {
+          "expr": "nodejs_active_handles_total",
+          "legendFormat": "active handles",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "short", "custom": { "lineWidth": 2 } } }
+    }
+
+  ]
+}

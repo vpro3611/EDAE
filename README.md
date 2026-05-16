@@ -13,6 +13,8 @@
 -  **Google OAuth 2.0** — sign in or register with a Google account; existing users are automatically linked by email
 -  **Full account management** — registration, email verification, password reset, email change, account deletion (all OTP-confirmed)
 -  **Rate limiting** — built-in token-bucket rate limiting on all public endpoints to prevent abuse
+-  **Structured logging** — Winston logs every HTTP request to the console and to rotating daily files under `logs/`
+-  **Metrics & dashboards** — Prometheus scrapes the app; Grafana serves pre-built dashboards for request rate, latency percentiles, business events, and Node.js runtime health
 
 ---
 
@@ -40,8 +42,9 @@ docker compose up --build
 That's it. Docker Compose will:
 1. Start PostgreSQL and Redis with health checks.
 2. Run database migrations (`migrate` service) before the backend starts.
-3. Start the backend API on port `3000` (or `BACKEND_PORT`).
-4. Build and serve the Vue frontend via nginx on port `80` (or `FRONTEND_PORT`).
+3. Start the backend API on port `3000`.
+4. Build and serve the Vue frontend via nginx on port `8080`.
+5. Start Prometheus (port `9090`), Node Exporter, and Grafana (port `3001`) for monitoring.
 
 **Useful commands:**
 
@@ -109,6 +112,8 @@ Variables marked **required** are validated at startup by `src/check_env_vars.ts
 | `REDIS_PORT` | — | `6379` | Redis port |
 | `REDIS_PASSWORD` | — | (none) | Redis password |
 | `GITHUB_POLL_INTERVAL_MS` | — | `300000` | GitHub poll interval in ms |
+| `REPORT_WORKER_INTERVAL_MS` | — | `3600000` | Report scheduler check interval in ms |
+| `GF_SECURITY_ADMIN_PASSWORD` | — | `admin` | Grafana admin password (Docker only) |
 | `TEST_DATABASE_URL` | — | — | Used by the test suite only, not at runtime |
 
 > **Generating secrets:**
@@ -341,6 +346,57 @@ All protected routes require `Authorization: Bearer <accessToken>`.
 ```
 
 Reports are delivered as PDF attachments to the connection's channel. They cover commits, pull requests, releases, issues, and workflow runs across all your GitHub sources for the selected period.
+
+---
+
+##  Observability
+
+### Logs
+
+The backend writes structured JSON logs to `logs/application-YYYY-MM-DD.log` and streams colourised output to the console. Log files rotate daily, are compressed after rotation, and are kept for 14 days (max 20 MB per file). In Docker the `logs/` directory is mounted as the `backend_logs` volume.
+
+To tail live logs in Docker:
+
+```bash
+docker compose logs -f backend
+```
+
+To read a log file directly:
+
+```bash
+docker compose exec backend cat logs/application-$(date +%Y-%m-%d).log
+```
+
+Log level is `debug` in development and `info` in production (`NODE_ENV=production`).
+
+### Metrics & Grafana
+
+The backend exposes a Prometheus-compatible metrics endpoint:
+
+```
+GET /pub/metrics
+```
+
+The full observability stack starts automatically with `docker compose up`:
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| Grafana dashboards | http://localhost:3001 | `admin` / value of `GF_SECURITY_ADMIN_PASSWORD` |
+| Prometheus UI | http://localhost:9090 | — (no auth) |
+| Raw metrics | http://localhost:3000/pub/metrics | — |
+
+#### Using Grafana
+
+1. Open http://localhost:3001 in your browser.
+2. Log in with `admin` and your `GF_SECURITY_ADMIN_PASSWORD`.
+3. Navigate to **Dashboards → EDAE → EDAE Application**.
+
+The pre-built dashboard includes four sections:
+
+- **HTTP Traffic** — request rate by route, 4xx/5xx error rates, P50/P95/P99 latency percentiles.
+- **Business Events** — registrations and logins per minute, running totals.
+- **Node.js Runtime** — heap memory usage, event-loop lag P99, process CPU %.
+- **Node Exporter** — host-level CPU, memory, and disk metrics.
 
 ---
 

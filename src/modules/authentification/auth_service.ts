@@ -21,6 +21,7 @@ import {UserDtoForSelf} from "../user/dto/user.dto";
 import {UserLoginEmailUseCase} from "../user/usecases/user.login_email.usecase";
 import {AuthGoogleLoginUseCase} from "./usecases/auth.google_login.usecase";
 import {RepositoryUserExternalLogin} from "../user/repository/repository.user.external_login";
+import {MetricsService} from "../infra/observability/metrics.service";
 
 
 export class AuthentificationService {
@@ -32,7 +33,8 @@ export class AuthentificationService {
                 private readonly txManager: TransactionManagerInterface,
                 private readonly hasher: InfraPasswordHasherInterface,
                 private readonly emailSender: InfraEmailSenderInterface,
-                private readonly userDtoMapper: UserDtoMapper) {
+                private readonly userDtoMapper: UserDtoMapper,
+                private readonly metrics: MetricsService) {
     }
 
     static create(
@@ -40,9 +42,10 @@ export class AuthentificationService {
         txManager: TransactionManagerInterface,
         hasher: InfraPasswordHasherInterface,
         emailSender: InfraEmailSenderInterface,
-        userDtoMapper: UserDtoMapper
+        userDtoMapper: UserDtoMapper,
+        metrics: MetricsService
     ) {
-        return new AuthentificationService(jwtTokenService, txManager, hasher, emailSender, userDtoMapper);
+        return new AuthentificationService(jwtTokenService, txManager, hasher, emailSender, userDtoMapper, metrics);
     }
 
     private hashToken(token: string): string {
@@ -164,6 +167,7 @@ export class AuthentificationService {
 
             const tokens = await this.generateTokens(user.id, jwtRefreshTokenRepo);
 
+            this.metrics.userRegistrations.inc();
             return {user, ...tokens};
         })
     }
@@ -187,6 +191,7 @@ export class AuthentificationService {
             const loggedUser = await loginEmailUseCase.execute(email, password);
             const tokens = await this.generateTokens(loggedUser.id, refreshTokenRepo);
 
+            this.metrics.userLogins.inc();
             return {loggedUser, ...tokens};
         })
     }
@@ -212,6 +217,7 @@ export class AuthentificationService {
             const loggedUser = await googleLoginUseCase.execute(code);
             const tokens = await this.generateTokens(loggedUser.id, refreshTokenRepo);
 
+            this.metrics.userLogins.inc();
             return {loggedUser, ...tokens};
         });
     }

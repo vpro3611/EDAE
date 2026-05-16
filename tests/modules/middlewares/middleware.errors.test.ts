@@ -3,6 +3,7 @@ import { errorsMiddleware } from "../../../src/modules/middlewares/middleware.er
 import { AppError } from "../../../src/modules/errors/errors.global";
 import { DatabaseError } from "../../../src/modules/errors/errors.database";
 import { ZodError, z } from "zod";
+import { LoggerService } from "../../../src/modules/infra/observability/logger.service";
 
 function makeRes() {
     const json = jest.fn().mockReturnThis();
@@ -10,7 +11,15 @@ function makeRes() {
     return { res: { status, json } as unknown as Response, status, json };
 }
 
-const handler = errorsMiddleware();
+const mockLogger = {
+    error: jest.fn(),
+    warn: jest.fn(),
+    info: jest.fn(),
+    debug: jest.fn(),
+    http: jest.fn(),
+} as unknown as LoggerService;
+
+const handler = errorsMiddleware(mockLogger);
 const req = {} as Request;
 const next = jest.fn() as NextFunction;
 

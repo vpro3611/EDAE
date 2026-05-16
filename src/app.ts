@@ -28,11 +28,15 @@ import { GenerateReportBodySchema } from './modules/report/controllers/controlle
 
 // middlewares
 import {errorsMiddleware} from "./modules/middlewares/middleware.errors";
+import { loggingMiddleware } from "./modules/middlewares/middleware.logging";
+import { metricsMiddleware } from "./modules/middlewares/middleware.metrics";
 import { constructMiddlewareWrapper, preDefinedPublicLimiters} from "./api_limiter";
 
 export function createApp(dependencies: DepsContainer): Express {
     const app = express();
 
+    app.use(loggingMiddleware(dependencies.logger));
+    app.use(metricsMiddleware(dependencies.metrics));
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
@@ -61,11 +65,21 @@ export function createApp(dependencies: DepsContainer): Express {
 
     privateRouter.use(authMiddleware(dependencies.jwtTokenService));
 
-    publicRouter.get("/health", (req, res) => {
+    const buckets = preDefinedPublicLimiters();
+
+    publicRouter.get("/health", constructMiddlewareWrapper(buckets.healthCheckTokenBucket, "ip", "h:health"),
+        (req, res) => {
         res.status(200).json({message: "OK"});
     });
 
-    const buckets = preDefinedPublicLimiters();
+
+    publicRouter.get("/metrics", constructMiddlewareWrapper(buckets.metricsCheckTokenBucket, "ip", "m:metrics"),
+        async (req, res) => {
+            res.set('Content-Type', dependencies.metrics.getContentType());
+            res.end(await dependencies.metrics.getMetrics());
+    });
+
+
 
     publicRouter.post(
         "/auth/register",
@@ -148,7 +162,7 @@ export function createApp(dependencies: DepsContainer): Express {
     privateRouter.delete('/report-configs/:id', dependencies.controllerReportConfigDelete.deleteReportConfigCont);
     privateRouter.post('/reports/generate', validateBody(GenerateReportBodySchema), dependencies.controllerReportGenerate.generateReportCont);
 
-    app.use(errorsMiddleware());
+    app.use(errorsMiddleware(dependencies.logger));
 
     return app;
 }

@@ -70,6 +70,18 @@ export function preDefinedPublicLimiters() {
         300_000
     );
 
+    const metricsCheckTokenBucket = constructLimiterWithPresets(
+        10,
+        2,
+        10_000
+    );
+
+    const healthCheckTokenBucket = constructLimiterWithPresets(
+        10,
+        2,
+        10_000
+    );
+
     return {
         registerTokenBucket,
         registerConfirmTokenBucket,
@@ -78,6 +90,8 @@ export function preDefinedPublicLimiters() {
         logoutTokenBucket,
         passwordResetTokenBucket,
         passwordResetConfirmTokenBucket,
+        metricsCheckTokenBucket,
+        healthCheckTokenBucket,
     };
 }
 
