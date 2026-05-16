@@ -64,6 +64,8 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
         controllerReportConfigList: ControllerReportConfigList.create(mockList as any, extractor),
         controllerReportConfigDelete: ControllerReportConfigDelete.create(mockDelete as any, extractor),
         controllerReportGenerate: ControllerReportGenerate.create(mockGenerate as any, extractor),
+        logger: { info: jest.fn(), error: jest.fn(), warn: jest.fn(), debug: jest.fn(), http: jest.fn() } as any,
+        metrics: { httpRequestDuration: { observe: jest.fn() }, userRegistrations: { inc: jest.fn() }, userLogins: { inc: jest.fn() }, reportsGenerated: { inc: jest.fn() }, getMetrics: jest.fn().mockResolvedValue(''), getContentType: jest.fn().mockReturnValue('text/plain') } as any,
         ...overrides,
     } as DepsContainer;
 }
