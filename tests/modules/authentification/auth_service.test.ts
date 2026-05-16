@@ -11,6 +11,7 @@ import { RepositoryUserReader } from "../../../src/modules/user/repository/repos
 import { RequestRegistrationVerificationUseCase } from "../../../src/modules/user/usecases/user.request_registration_verification.usecase";
 import { ConfirmRegistrationUseCase } from "../../../src/modules/user/usecases/user.confirm_registration.usecase";
 import { UserLoginEmailUseCase } from "../../../src/modules/user/usecases/user.login_email.usecase";
+import { MetricsService } from "../../../src/modules/infra/observability/metrics.service";
 
 jest.mock("../../../src/modules/authentification/jwt/repository/jwt.refresh_token.repository");
 jest.mock("../../../src/modules/user/repository/repository.user.reader");
@@ -28,6 +29,7 @@ describe("AuthentificationService Unit Tests", () => {
   let hasher: jest.Mocked<InfraPasswordHasherInterface>;
   let emailSender: jest.Mocked<InfraEmailSenderInterface>;
   let userDtoMapper: UserDtoMapper;
+  let metrics: MetricsService;
 
   beforeEach(() => {
     jwtTokenService = {
@@ -59,12 +61,22 @@ describe("AuthentificationService Unit Tests", () => {
 
     userDtoMapper = UserDtoMapper.create();
 
+    metrics = {
+      userRegistrations: { inc: jest.fn() },
+      userLogins: { inc: jest.fn() },
+      reportsGenerated: { inc: jest.fn() },
+      httpRequestDuration: { observe: jest.fn() },
+      getMetrics: jest.fn(),
+      getContentType: jest.fn(),
+    } as unknown as MetricsService;
+
     authService = AuthentificationService.create(
       jwtTokenService,
       txManager,
       hasher,
       emailSender,
-      userDtoMapper
+      userDtoMapper,
+      metrics
     );
   });
 
