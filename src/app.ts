@@ -65,11 +65,13 @@ export function createApp(dependencies: DepsContainer): Express {
 
     privateRouter.use(authMiddleware(dependencies.jwtTokenService));
 
-    publicRouter.get("/health", (req, res) => {
+    const buckets = preDefinedPublicLimiters();
+
+    publicRouter.get("/health", constructMiddlewareWrapper(buckets.healthCheckTokenBucket, "ip", "h:health"),
+        (req, res) => {
         res.status(200).json({message: "OK"});
     });
 
-    const buckets = preDefinedPublicLimiters();
 
     publicRouter.get("/metrics", constructMiddlewareWrapper(buckets.metricsCheckTokenBucket, "ip", "m:metrics"),
         async (req, res) => {
