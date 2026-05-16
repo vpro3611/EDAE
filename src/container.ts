@@ -94,8 +94,13 @@ import { ControllerReportConfigCreate } from './modules/report/controllers/contr
 import { ControllerReportConfigList } from './modules/report/controllers/controller.report_config.list';
 import { ControllerReportConfigDelete } from './modules/report/controllers/controller.report_config.delete';
 import { ControllerReportGenerate } from './modules/report/controllers/controller.report.generate';
+import { LoggerService } from './modules/infra/observability/logger.service';
+import { MetricsService } from './modules/infra/observability/metrics.service';
 
 export function createDepsContainer() {
+    const logger = new LoggerService(process.env.NODE_ENV || 'development');
+    const metrics = new MetricsService();
+
     const userRepoReader = RepositoryUserReader.create(pool);
     const userRepoWriter = RepositoryUserWriter.create(pool);
     const tokenRepoReader = RepositoryTokenReader.create(pool);
@@ -193,7 +198,7 @@ export function createDepsContainer() {
     const getSelfProfileUseCase = UserGetSelfProfileUseCase.create(userRepoReader, userDtoMapper);
     const getOtherProfileUseCase = UserGetOtherProfileUseCase.create(userRepoReader, userDtoMapper);
 
-    const authentificationService = AuthentificationService.create(jwtTokenService, txManager, bcryptHasher, emailSender, userDtoMapper);
+    const authentificationService = AuthentificationService.create(jwtTokenService, txManager, bcryptHasher, emailSender, userDtoMapper, metrics);
 
     const txChangePassword = TxServiceChangePassword.create(txManager, bcryptHasher);
     const txUpdateName = TxServiceUpdateName.create(txManager, userDtoMapper);
@@ -289,6 +294,8 @@ export function createDepsContainer() {
 
         emailSender,
         encryption,
+        logger,
+        metrics,
     };
 }
 
