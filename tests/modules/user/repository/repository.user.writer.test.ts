@@ -134,6 +134,60 @@ describe('RepositoryUserWriter Integration Test', () => {
         });
     });
 
+    describe('purgeDeletedUsers', () => {
+        it('should hard-delete all soft-deleted users and return the count', async () => {
+            await pool.query(
+                "INSERT INTO users (name, email, password_hashed, last_password, is_deleted) VALUES ($1, $2, $3, $4, $5)",
+                ['Purge A', 'purge_a@example.com', 'pass', 'pass', true]
+            );
+            await pool.query(
+                "INSERT INTO users (name, email, password_hashed, last_password, is_deleted) VALUES ($1, $2, $3, $4, $5)",
+                ['Purge B', 'purge_b@example.com', 'pass', 'pass', true]
+            );
+            await pool.query(
+                "INSERT INTO users (name, email, password_hashed, last_password, is_deleted) VALUES ($1, $2, $3, $4, $5)",
+                ['Keep', 'purge_keep@example.com', 'pass', 'pass', false]
+            );
+
+            const count = await writer.purgeDeletedUsers();
+
+            expect(count).toBe(2);
+            const remaining = await pool.query('SELECT email FROM users');
+            expect(remaining.rows).toHaveLength(1);
+            expect(remaining.rows[0].email).toBe('purge_keep@example.com');
+        });
+
+        it('should return 0 when there are no soft-deleted users', async () => {
+            await pool.query(
+                "INSERT INTO users (name, email, password_hashed, last_password, is_deleted) VALUES ($1, $2, $3, $4, $5)",
+                ['Active', 'active@example.com', 'pass', 'pass', false]
+            );
+
+            const count = await writer.purgeDeletedUsers();
+
+            expect(count).toBe(0);
+            const remaining = await pool.query('SELECT email FROM users');
+            expect(remaining.rows).toHaveLength(1);
+        });
+
+        it('should cascade-delete all child rows for purged users', async () => {
+            const result = await pool.query(
+                "INSERT INTO users (name, email, password_hashed, last_password, is_deleted) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+                ['Cascade User', 'cascade@example.com', 'pass', 'pass', true]
+            );
+            const userId = result.rows[0].id;
+            await pool.query(
+                "INSERT INTO refresh_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, now() + interval '1 day')",
+                [userId, 'somehash']
+            );
+
+            await writer.purgeDeletedUsers();
+
+            const tokens = await pool.query('SELECT id FROM refresh_tokens WHERE user_id = $1', [userId]);
+            expect(tokens.rows).toHaveLength(0);
+        });
+    });
+
     describe('error handling', () => {
         const badDb = {
             query: () => Promise.reject(new Error('simulated db error'))
@@ -156,6 +210,10 @@ describe('RepositoryUserWriter Integration Test', () => {
 
         it('should throw DatabaseError on database failure in markUserAsVerified', async () => {
             await expect(badWriter.markUserAsVerified('uuid')).rejects.toThrow();
+        });
+
+        it('should throw DatabaseError on database failure in purgeDeletedUsers', async () => {
+            await expect(badWriter.purgeDeletedUsers()).rejects.toThrow();
         });
     });
 });
