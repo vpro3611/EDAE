@@ -12,6 +12,7 @@
 -  **Secure credential storage** — connection credentials encrypted with AES-256-GCM at rest
 -  **Google OAuth 2.0** — sign in or register with a Google account; existing users are automatically linked by email
 -  **Full account management** — registration, email verification, password reset, email change, account deletion (all OTP-confirmed)
+-  **Automated data hygiene** — a scheduled cron job hard-deletes soft-deleted user accounts (and all their data, via cascade) every 24 hours
 -  **Rate limiting** — built-in token-bucket rate limiting on all public endpoints to prevent abuse
 -  **Structured logging** — Winston logs every HTTP request to the console and to rotating daily files under `logs/`
 -  **Metrics & dashboards** — Prometheus scrapes the app; Grafana serves pre-built dashboards for request rate, latency percentiles, business events, and Node.js runtime health
@@ -113,6 +114,7 @@ Variables marked **required** are validated at startup by `src/check_env_vars.ts
 | `REDIS_PASSWORD` | — | (none) | Redis password |
 | `GITHUB_POLL_INTERVAL_MS` | — | `300000` | GitHub poll interval in ms |
 | `REPORT_WORKER_INTERVAL_MS` | — | `3600000` | Report scheduler check interval in ms |
+| `USER_PURGE_CRON` | — | `0 3 * * *` | Cron expression for hard-deleting soft-deleted users (default: daily at 03:00) |
 | `GF_SECURITY_ADMIN_PASSWORD` | — | `admin` | Grafana admin password (Docker only) |
 | `TEST_DATABASE_URL` | — | — | Used by the test suite only, not at runtime |
 
