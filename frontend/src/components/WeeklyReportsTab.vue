@@ -18,7 +18,6 @@
       </div>
 
       <form v-if="showCreate" @submit.prevent="handleCreate" class="inline-form">
-        <!-- Connection picker -->
         <div class="field-group">
           <span class="field-label">Connection</span>
           <select v-model="createConnectionId" class="select-input" required>
@@ -30,7 +29,6 @@
           <div v-if="connectionsError" class="inline-error">{{ connectionsError }}</div>
         </div>
 
-        <!-- Frequency picker -->
         <div class="field-group">
           <span class="field-label">Frequency</span>
           <div class="provider-btns">
@@ -45,7 +43,6 @@
           </div>
         </div>
 
-        <!-- Schedule day (weekly only) -->
         <div v-if="createFrequency === 'weekly'" class="field-group">
           <span class="field-label">Day of week</span>
           <div class="provider-btns">
@@ -82,9 +79,9 @@
         </div>
       </div>
 
-      <div v-if="listLoading" class="empty-state">Loading…</div>
+      <div v-if="listLoading" class="conn-loading">Loading…</div>
       <div v-else-if="listError" class="inline-error" style="margin-top: 12px">{{ listError }}</div>
-      <div v-else-if="configs.length === 0" class="empty-state">No report schedules yet.</div>
+      <div v-else-if="configs.length === 0" class="conn-empty">No report schedules yet.</div>
 
       <div v-else class="item-list">
         <div v-for="cfg in configs" :key="cfg.id" class="item-row">
@@ -134,7 +131,6 @@ import * as reportsApi from '../api/reports'
 import * as connectionsApi from '../api/connections'
 import type { ReportConfigDto, ReportFrequency, ConnectionDto } from '../types'
 
-// ── State ──
 const configs = ref<ReportConfigDto[]>([])
 const connections = ref<ConnectionDto[]>([])
 
@@ -145,7 +141,7 @@ const connectionsError = ref('')
 const showCreate = ref(false)
 const createConnectionId = ref('')
 const createFrequency = ref<ReportFrequency>('weekly')
-const createScheduleDay = ref(1) // Monday
+const createScheduleDay = ref(1)
 const createLoading = ref(false)
 const createError = ref('')
 const createSuccess = ref('')
@@ -158,7 +154,6 @@ const actionSuccess = ref('')
 const frequencies: ReportFrequency[] = ['daily', 'weekly', 'monthly']
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-// ── Load ──
 async function loadConfigs() {
   listLoading.value = true
   listError.value = ''
@@ -184,7 +179,6 @@ onMounted(() => {
   loadConnections()
 })
 
-// ── Helpers ──
 function connectionName(id: string): string {
   const c = connections.value.find(c => c.id === id)
   return c ? `${c.name} (${c.provider})` : id
@@ -194,7 +188,6 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-// ── Create ──
 async function handleCreate() {
   createError.value = ''
   createSuccess.value = ''
@@ -219,7 +212,6 @@ async function handleCreate() {
   }
 }
 
-// ── Delete ──
 async function handleDelete(id: string) {
   actionError.value = ''
   actionSuccess.value = ''
@@ -236,14 +228,12 @@ async function handleDelete(id: string) {
   }
 }
 
-// ── Generate now ──
 async function handleGenerate(id: string) {
   actionError.value = ''
   actionSuccess.value = ''
   generatingId.value = id
   try {
     await reportsApi.generateReport(id)
-    // Refresh last_sent_at
     await loadConfigs()
     actionSuccess.value = 'Report generated and dispatched.'
     setTimeout(() => { actionSuccess.value = '' }, 4000)
@@ -256,90 +246,9 @@ async function handleGenerate(id: string) {
 </script>
 
 <style scoped>
-/* ── Dashboard vocabulary (mirrors ConnectionsTab) ── */
-.section-header { margin-bottom: 4px; }
-.section-title { font-family: var(--font-display); font-size: 28px; font-weight: 400; color: var(--text); letter-spacing: -0.01em; margin-bottom: 4px; }
-.section-sub { font-size: 13px; color: var(--text-2); }
+/* Component-specific only — shared primitives from assets/shared.css */
 
-.settings-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 22px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.block-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.block-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-.block-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
-
-.inline-form { display: flex; flex-direction: column; gap: 14px; }
-.inline-error { font-size: 12px; color: var(--error); padding: 6px 10px; background: rgba(224,96,96,0.08); border-radius: 3px; }
-.inline-success { font-size: 12px; color: var(--success); padding: 6px 10px; background: rgba(90,201,136,0.08); border-radius: 3px; }
-.inline-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-.field-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-
-.field-group { display: flex; flex-direction: column; gap: 8px; }
-
-.btn-ghost {
-  background: none; border: 1px solid var(--border); color: var(--text-2);
-  font-family: var(--font-ui); font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
-  padding: 7px 14px; border-radius: 3px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
-}
-.btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
-.btn-ghost:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.btn-primary-sm {
-  background: var(--accent); color: #1a1205; border: none;
-  font-family: var(--font-ui); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 7px 18px; border-radius: 3px; cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; gap: 6px; white-space: nowrap; min-width: 72px; justify-content: center;
-}
-.btn-primary-sm:hover:not(:disabled) { background: #d9bb8e; box-shadow: 0 2px 12px rgba(200,169,126,0.25); }
-.btn-primary-sm:disabled { opacity: 0.55; cursor: not-allowed; }
-
-.btn-loading { display: flex; gap: 4px; align-items: center; }
-.btn-loading span { width: 4px; height: 4px; border-radius: 50%; background: currentColor; animation: bounce 0.9s infinite ease-in-out; }
-.btn-loading span:nth-child(2) { animation-delay: 0.15s; }
-.btn-loading span:nth-child(3) { animation-delay: 0.3s; }
-
-.provider-select { display: flex; flex-direction: column; gap: 6px; }
-.provider-btns { display: flex; gap: 6px; flex-wrap: wrap; }
-.provider-btn {
-  padding: 4px 12px; border-radius: 4px; border: 1px solid var(--border);
-  background: transparent; color: var(--muted); cursor: pointer;
-  font-size: 12px; text-transform: capitalize; transition: all 0.15s; font-family: var(--font-ui);
-}
-.provider-btn.active {
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* ── Select field ── */
-.select-input {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-size: 13px;
-  padding: 9px 12px;
-  width: 100%;
-  outline: none;
-  transition: border-color 0.2s;
-  appearance: none;
-  cursor: pointer;
-}
-.select-input:focus { border-color: var(--accent); }
-.select-input option { background: #1a1a2e; color: var(--text); }
-
-/* ── Config list ── */
-.item-list { display: flex; flex-direction: column; gap: 0; }
+.item-list { display: flex; flex-direction: column; }
 
 .item-row {
   display: flex;
@@ -349,6 +258,7 @@ async function handleGenerate(id: string) {
   border-bottom: 1px solid var(--border);
   gap: 12px;
 }
+
 .item-row:last-child { border-bottom: none; }
 
 .item-info { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
@@ -362,11 +272,7 @@ async function handleGenerate(id: string) {
   color: var(--text);
 }
 
-.item-sub {
-  color: var(--text-2);
-  font-weight: 400;
-  font-size: 12px;
-}
+.item-sub { color: var(--text-2); font-weight: 400; font-size: 12px; }
 
 .item-meta {
   display: flex;
@@ -379,8 +285,8 @@ async function handleGenerate(id: string) {
 .badge-freq {
   display: inline-block;
   padding: 2px 8px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
   border-radius: 20px;
   font-size: 10px;
   color: var(--accent);
@@ -390,30 +296,4 @@ async function handleGenerate(id: string) {
 }
 
 .item-actions { display: flex; gap: 8px; flex-shrink: 0; }
-
-.btn-sm { font-size: 11px; padding: 4px 10px; }
-
-.btn-danger-sm {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  border: 1px solid color-mix(in srgb, #e57373 40%, transparent);
-  background: color-mix(in srgb, #e57373 10%, transparent);
-  color: #e57373;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: flex; align-items: center; gap: 4px;
-  font-family: var(--font-ui);
-}
-.btn-danger-sm:hover:not(:disabled) { background: color-mix(in srgb, #e57373 20%, transparent); }
-.btn-danger-sm:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.empty-state {
-  text-align: center;
-  padding: 24px 0;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-@keyframes bounce { 0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; } 40% { transform: scale(1.2); opacity: 1; } }
 </style>
