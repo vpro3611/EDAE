@@ -14,26 +14,25 @@ import { RouterView } from 'vue-router'
 }
 
 :root {
-  --bg:        #07070f;
-  --surface:   #0d0d1b;
-  --surface-2: #13132a;
+  --bg:        #06060e;
+  --surface:   #0c0c1a;
+  --surface-2: #121228;
   --accent:    #c8a97e;
-  --accent-dim: rgba(200, 169, 126, 0.12);
-  --accent-glow: rgba(200, 169, 126, 0.25);
-  --text:      #ede8dc;
-  --text-2:    #9690a0;
-  --muted:     #4a4a62;
+  --accent-dim: rgba(200, 169, 126, 0.11);
+  --accent-glow: rgba(200, 169, 126, 0.22);
+  --text:      #ece7db;
+  --text-2:    #928c9e;
+  --muted:     #48486a;
   --border:    rgba(255, 255, 255, 0.07);
-  --border-accent: rgba(200, 169, 126, 0.35);
+  --border-accent: rgba(200, 169, 126, 0.32);
   --error:     #e06060;
   --success:   #5ac988;
   --font-display: 'Cormorant Garamond', Georgia, serif;
   --font-ui:   'Syne', system-ui, sans-serif;
+  --font-mono: 'DM Mono', 'Courier New', monospace;
 }
 
-html, body {
-  height: 100%;
-}
+html, body { height: 100%; }
 
 body {
   background: var(--bg);
@@ -44,17 +43,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#app {
-  min-height: 100vh;
-}
+#app { min-height: 100vh; }
 
-::selection {
-  background: var(--accent-dim);
-  color: var(--accent);
-}
+::selection { background: var(--accent-dim); color: var(--accent); }
 
-:focus-visible {
-  outline: 1px solid var(--accent);
-  outline-offset: 2px;
-}
+:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
 </style>
