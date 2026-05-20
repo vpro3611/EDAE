@@ -63,7 +63,7 @@
         </div>
         <div class="conn-actions">
           <button class="btn-danger-sm" @click="handleDeleteSource(src.id)" :disabled="deletingSourceId === src.id">
-            <span v-if="deletingSourceId === src.id" class="btn-loading danger-load"><span></span><span></span><span></span></span>
+            <span v-if="deletingSourceId === src.id" class="btn-loading"><span></span><span></span><span></span></span>
             <span v-else>Remove</span>
           </button>
         </div>
@@ -131,7 +131,7 @@
                 @focus="msFocused = true" @blur="msFocused = false" />
               <label for="subMs">Notify when {{ subEventType === 'star_milestone' ? 'stars' : 'forks' }} reach</label>
             </div>
-            <div class="field-hint">
+            <div class="field-hint" style="margin-top: 6px;">
               You will receive a notification once the repository crosses this
               {{ subEventType === 'star_milestone' ? 'star' : 'fork' }} count.
               Default: {{ subEventType === 'star_milestone' ? '100' : '10' }}.
@@ -159,7 +159,7 @@
           </div>
           <div class="conn-actions">
             <button class="btn-danger-sm" @click="handleDeleteSub(sub.id)" :disabled="deletingSubId === sub.id">
-              <span v-if="deletingSubId === sub.id" class="btn-loading danger-load"><span></span><span></span><span></span></span>
+              <span v-if="deletingSubId === sub.id" class="btn-loading"><span></span><span></span><span></span></span>
               <span v-else>Remove</span>
             </button>
           </div>
@@ -218,7 +218,6 @@ function connectionName(id: string): string {
   return connections.value.find(c => c.id === id)?.name ?? id.slice(0, 8) + '…'
 }
 
-// ── Sources ──
 const sources = ref<GithubSourceDto[]>([])
 const sourcesLoading = ref(false)
 const sourceActionError = ref('')
@@ -282,10 +281,7 @@ async function handleDeleteSource(id: string) {
   }
 }
 
-// ── Connections (for subscription form dropdown) ──
 const connections = ref<ConnectionDto[]>([])
-
-// ── Subscriptions ──
 const subscriptions = ref<SubscriptionDto[]>([])
 const subsLoading = ref(false)
 const subActionError = ref('')
@@ -399,156 +395,35 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* ── Shared block styles (mirror DashboardView / ConnectionsTab) ── */
-.section-header { margin-bottom: 4px; }
-.section-title { font-family: var(--font-display); font-size: 28px; font-weight: 400; color: var(--text); letter-spacing: -0.01em; margin-bottom: 4px; }
-.section-sub { font-size: 13px; color: var(--text-2); }
+/* Component-specific only — shared primitives from assets/shared.css */
 
-.settings-block {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 22px 24px;
-  display: flex; flex-direction: column; gap: 16px;
-}
-
-.block-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.block-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-.block-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
-
-.inline-form { display: flex; flex-direction: column; gap: 14px; }
-
-.float-field {
-  position: relative; padding-top: 18px;
-  border-bottom: 1px solid var(--border); transition: border-color 0.2s;
-}
-.float-field input {
-  width: 100%; background: transparent; border: none; outline: none;
-  color: var(--text); font-family: var(--font-ui); font-size: 15px;
-  padding: 8px 0;
-}
-.float-field label {
-  position: absolute; left: 0; top: 26px; font-size: 15px; color: var(--text-2);
-  pointer-events: none; transition: top 0.2s, font-size 0.2s, color 0.2s, letter-spacing 0.2s;
-}
-.float-field.active label { top: 2px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.float-field:focus-within { border-bottom-color: var(--accent); }
-
-.field-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-.field-hint { font-size: 11px; color: var(--text-2); margin-top: 6px; line-height: 1.5; }
-
-.inline-error { font-size: 12px; color: var(--error); padding: 6px 10px; background: rgba(224,96,96,0.08); border-radius: 3px; animation: shake 0.3s ease; }
-.inline-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-/* ── Field row (side-by-side) ── */
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 500px) { .field-row { grid-template-columns: 1fr; } }
 
-/* ── Select ── */
-.select-field { display: flex; flex-direction: column; gap: 6px; }
-
-.native-select {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-size: 13px;
-  padding: 8px 10px;
-  cursor: pointer;
-  transition: border-color 0.2s;
-  outline: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 30px;
-}
-.native-select:focus { border-color: var(--accent); }
-.native-select option { background: #111; }
-
-/* ── Source selector ── */
 .source-selector { display: flex; flex-direction: column; gap: 7px; }
 .pills { display: flex; gap: 6px; flex-wrap: wrap; }
 
-.provider-btn {
-  padding: 4px 12px; border-radius: 4px; border: 1px solid var(--border);
-  background: transparent; color: var(--muted); cursor: pointer;
-  font-size: 12px; font-family: var(--font-ui);
-  transition: all 0.15s;
-}
-.provider-btn.active {
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  border-color: var(--accent); color: var(--accent);
-}
-
-/* ── Sub form separation ── */
 .sub-form { padding-top: 4px; border-top: 1px solid var(--border); }
 
-/* ── Rows ── */
-.conn-row {
-  padding: 12px 0; border-bottom: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 8px;
-}
-.conn-row:last-child { border-bottom: none; }
-
-.conn-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.conn-name { font-size: 13px; color: var(--text); font-weight: 500; }
 .sub-via { font-weight: 400; color: var(--text-2); }
-.conn-date { font-size: 11px; color: var(--muted); margin-left: auto; }
-.conn-actions { display: flex; gap: 8px; }
-.conn-empty, .conn-loading { font-size: 13px; color: var(--muted); padding: 16px 0; }
 
-/* ── Badges ── */
+/* Event badge colours */
 .event-badge {
   display: inline-block; padding: 2px 8px; border-radius: 4px;
   font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
 }
-.badge-token { color: #5ac89e; background: color-mix(in srgb, #5ac89e 12%, transparent); border: 1px solid color-mix(in srgb, #5ac89e 25%, transparent); }
 
-/* Event type colours — grouped by category */
-[data-event="new_release"]        { color: #c8a97e; background: color-mix(in srgb, #c8a97e 12%, transparent); border: 1px solid color-mix(in srgb, #c8a97e 25%, transparent); }
-[data-event="new_commit"]         { color: #a0c4a0; background: color-mix(in srgb, #a0c4a0 12%, transparent); border: 1px solid color-mix(in srgb, #a0c4a0 25%, transparent); }
-[data-event="new_branch"]         { color: #a0c4a0; background: color-mix(in srgb, #a0c4a0 12%, transparent); border: 1px solid color-mix(in srgb, #a0c4a0 25%, transparent); }
-[data-event="new_tag"]            { color: #a0c4a0; background: color-mix(in srgb, #a0c4a0 12%, transparent); border: 1px solid color-mix(in srgb, #a0c4a0 25%, transparent); }
-[data-event="issue_opened"]       { color: #e8956d; background: color-mix(in srgb, #e8956d 12%, transparent); border: 1px solid color-mix(in srgb, #e8956d 25%, transparent); }
-[data-event="issue_closed"]       { color: #5ac89e; background: color-mix(in srgb, #5ac89e 12%, transparent); border: 1px solid color-mix(in srgb, #5ac89e 25%, transparent); }
-[data-event="pr_opened"]          { color: #8b9ef0; background: color-mix(in srgb, #8b9ef0 12%, transparent); border: 1px solid color-mix(in srgb, #8b9ef0 25%, transparent); }
-[data-event="pr_merged"]          { color: #b57df0; background: color-mix(in srgb, #b57df0 12%, transparent); border: 1px solid color-mix(in srgb, #b57df0 25%, transparent); }
-[data-event="workflow_completed"] { color: #6eb8e8; background: color-mix(in srgb, #6eb8e8 12%, transparent); border: 1px solid color-mix(in srgb, #6eb8e8 25%, transparent); }
-[data-event="star_milestone"]     { color: #e8d06d; background: color-mix(in srgb, #e8d06d 12%, transparent); border: 1px solid color-mix(in srgb, #e8d06d 25%, transparent); }
-[data-event="fork_milestone"]     { color: #e8d06d; background: color-mix(in srgb, #e8d06d 12%, transparent); border: 1px solid color-mix(in srgb, #e8d06d 25%, transparent); }
+.badge-token { color: #5ac89e; background: color-mix(in srgb, #5ac89e 10%, transparent); border: 1px solid color-mix(in srgb, #5ac89e 22%, transparent); }
 
-/* ── Buttons ── */
-.btn-ghost {
-  background: none; border: 1px solid var(--border); color: var(--text-2);
-  font-family: var(--font-ui); font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
-  padding: 7px 14px; border-radius: 3px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
-}
-.btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
-
-.btn-primary-sm {
-  background: var(--accent); color: #1a1205; border: none;
-  font-family: var(--font-ui); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 7px 18px; border-radius: 3px; cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; gap: 6px; white-space: nowrap; min-width: 72px; justify-content: center;
-}
-.btn-primary-sm:hover:not(:disabled) { background: #d9bb8e; box-shadow: 0 2px 12px rgba(200,169,126,0.25); }
-.btn-primary-sm:disabled { opacity: 0.55; cursor: not-allowed; }
-
-.btn-danger-sm {
-  font-size: 11px; padding: 4px 10px; border-radius: 4px;
-  border: 1px solid color-mix(in srgb, #e57373 40%, transparent);
-  background: color-mix(in srgb, #e57373 10%, transparent);
-  color: #e57373; cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; gap: 4px;
-}
-.btn-danger-sm:hover:not(:disabled) { background: color-mix(in srgb, #e57373 20%, transparent); }
-.btn-danger-sm:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.btn-loading { display: flex; gap: 4px; align-items: center; }
-.btn-loading span { width: 4px; height: 4px; border-radius: 50%; background: #1a1205; animation: bounce 0.9s infinite ease-in-out; }
-.btn-loading span:nth-child(2) { animation-delay: 0.15s; }
-.btn-loading span:nth-child(3) { animation-delay: 0.3s; }
-.danger-load span { background: #e57373; }
-
-@keyframes bounce { 0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; } 40% { transform: scale(1.2); opacity: 1; } }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+[data-event="new_release"]        { color: #c8a97e; background: color-mix(in srgb, #c8a97e 10%, transparent); border: 1px solid color-mix(in srgb, #c8a97e 22%, transparent); }
+[data-event="new_commit"]         { color: #a0c4a0; background: color-mix(in srgb, #a0c4a0 10%, transparent); border: 1px solid color-mix(in srgb, #a0c4a0 22%, transparent); }
+[data-event="new_branch"]         { color: #a0c4a0; background: color-mix(in srgb, #a0c4a0 10%, transparent); border: 1px solid color-mix(in srgb, #a0c4a0 22%, transparent); }
+[data-event="new_tag"]            { color: #a0c4a0; background: color-mix(in srgb, #a0c4a0 10%, transparent); border: 1px solid color-mix(in srgb, #a0c4a0 22%, transparent); }
+[data-event="issue_opened"]       { color: #e8956d; background: color-mix(in srgb, #e8956d 10%, transparent); border: 1px solid color-mix(in srgb, #e8956d 22%, transparent); }
+[data-event="issue_closed"]       { color: #5ac89e; background: color-mix(in srgb, #5ac89e 10%, transparent); border: 1px solid color-mix(in srgb, #5ac89e 22%, transparent); }
+[data-event="pr_opened"]          { color: #8b9ef0; background: color-mix(in srgb, #8b9ef0 10%, transparent); border: 1px solid color-mix(in srgb, #8b9ef0 22%, transparent); }
+[data-event="pr_merged"]          { color: #b57df0; background: color-mix(in srgb, #b57df0 10%, transparent); border: 1px solid color-mix(in srgb, #b57df0 22%, transparent); }
+[data-event="workflow_completed"] { color: #6eb8e8; background: color-mix(in srgb, #6eb8e8 10%, transparent); border: 1px solid color-mix(in srgb, #6eb8e8 22%, transparent); }
+[data-event="star_milestone"]     { color: #e8d06d; background: color-mix(in srgb, #e8d06d 10%, transparent); border: 1px solid color-mix(in srgb, #e8d06d 22%, transparent); }
+[data-event="fork_milestone"]     { color: #e8d06d; background: color-mix(in srgb, #e8d06d 10%, transparent); border: 1px solid color-mix(in srgb, #e8d06d 22%, transparent); }
 </style>

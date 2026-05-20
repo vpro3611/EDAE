@@ -79,6 +79,9 @@ src/
 │   ├── middlewares/            ← Express middlewares (auth, errors, Zod)
 │   └── errors/                 ← AppError, DatabaseError, pg error mapper
 │
+├── jobs/
+│   └── user.purge.job.ts       ← daily hard-delete of soft-deleted users (node-cron)
+│
 └── workers/
     ├── worker.bootstrap.ts     ← BullMQ queue + worker initialisation
     ├── github.poller.ts        ← per-event-type GitHub polling logic
@@ -147,7 +150,7 @@ Core user management. Handles the full lifecycle of a user account.
 | `RequestEmailChangeUseCase` | Stores pending email, sends OTP |
 | `ConfirmEmailChangeUseCase` | Verifies OTP, swaps email |
 | `RequestAccountDeletionUseCase` | Sends deletion confirmation OTP |
-| `ConfirmAccountDeletionUseCase` | Verifies OTP, soft-deletes user |
+| `ConfirmAccountDeletionUseCase` | Verifies OTP, soft-deletes user (`is_deleted = true`) |
 | `UserGetSelfProfileUseCase` | Returns `UserDtoForSelf` |
 | `UserGetOtherProfileUseCase` | Returns `UserDtoForOther` (no sensitive fields) |
 
@@ -320,9 +323,9 @@ Update this list to match your deployment origin.
 
 ---
 
-## 7. Background Workers
+## 7. Background Workers & Scheduled Jobs
 
-Workers are bootstrapped in `src/workers/worker.bootstrap.ts` and started by `src/index.ts` alongside the HTTP server.
+Workers are bootstrapped in `src/workers/worker.bootstrap.ts` and started by `src/index.ts` alongside the HTTP server. Scheduled jobs live in `src/jobs/` and are started in `src/server.ts`.
 
 ### GitHub poll worker
 
@@ -559,6 +562,7 @@ Grafana is available at **http://localhost:3001**. Credentials: username `admin`
 | Repository integration | `tests/modules/<domain>/repository/` | Real PostgreSQL against `TEST_DATABASE_URL`; seed in `beforeAll`, close pool in `afterAll` |
 | DTO mapper unit | `tests/modules/<domain>/dto/` | No mocks; exercise mapper directly |
 | Controller e2e | `tests/modules/<domain>/controllers/` | `supertest` against real Express app; real controllers + mocked tx services; covers success, 400 validation, 401 guard, AppError propagation |
+| Scheduled job unit | `tests/jobs/` | `jest.mock('node-cron')`; inject mock writer; verify scheduling, startup run, error handling |
 
 **Coverage threshold:** 90% on statements, branches, functions, and lines (enforced via `jest.config.js`).
 
@@ -614,6 +618,32 @@ Grafana is available at **http://localhost:3001**. Credentials: username `admin`
 | `grafana` | `grafana/grafana:11.1.0` | Pre-provisioned dashboards reading from Prometheus; port `3001` |
 
 The `migrate` service uses `service_completed_successfully` condition so the backend only starts after all migrations are applied.
+
+### User purge job
+
+`src/jobs/user.purge.job.ts` — a lightweight `node-cron` job that hard-deletes users where `is_deleted = true`.
+
+**Behaviour:**
+- Runs **once immediately on server startup** (catches any rows left from a previous cycle).
+- Schedules a recurring run via `node-cron` using the `USER_PURGE_CRON` environment variable (default `0 3 * * *` — daily at 03:00).
+- Logs the number of purged rows on each execution.
+- Validates the cron expression at startup; logs an error and skips scheduling if it is invalid.
+
+**Cascade semantics:** Because every child table (`connections`, `refresh_tokens`, `verification_tokens`, `github_sources`, `report_configurations`, `user_external_logins`, `github_subscriptions`) declares `ON DELETE CASCADE` back to `users`, a single `DELETE FROM users WHERE is_deleted = true` removes all associated rows atomically — no manual cleanup required.
+
+**`UserPurgeJob` API:**
+
+```typescript
+// Production — wraps RepositoryUserWriter around the shared pool
+UserPurgeJob.create(pool).start();
+
+// Testing — inject a mock writer directly
+new UserPurgeJob(mockWriter).run();
+```
+
+| Env variable | Default | Description |
+|---|---|---|
+| `USER_PURGE_CRON` | `0 3 * * *` | Standard cron expression controlling the purge schedule |
 
 ### Backend Dockerfile internals
 
@@ -699,6 +729,7 @@ Allowed origins are the localhost dev ports plus `FRONTEND_URL` from the environ
 |----------|---------|-------------|
 | `GITHUB_POLL_INTERVAL_MS` | `300000` | GitHub poll worker repeat interval in ms |
 | `REPORT_WORKER_INTERVAL_MS` | `3600000` | Report scheduler check interval in ms |
+| `USER_PURGE_CRON` | `0 3 * * *` | Cron expression for the user hard-delete job (see §7) |
 | `GF_SECURITY_ADMIN_PASSWORD` | `admin` | Grafana admin password; consumed by the `grafana` Compose service |
 
 When adding a new environment variable:

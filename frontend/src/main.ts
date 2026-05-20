@@ -1,3 +1,4 @@
+import './assets/shared.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import GoogleSignInPlugin from 'vue3-google-signin'

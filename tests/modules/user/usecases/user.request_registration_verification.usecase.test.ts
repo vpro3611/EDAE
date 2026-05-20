@@ -28,6 +28,7 @@ describe('RequestRegistrationVerificationUseCase Unit Tests', () => {
             updateUser: jest.fn(),
             deleteUser: jest.fn(),
             markUserAsVerified: jest.fn(),
+            purgeDeletedUsers: jest.fn(),
         };
         mockPasswordHasher = { hash: jest.fn().mockResolvedValue('hashed'), compare: jest.fn() };
         mockCreateOtp = { execute: jest.fn().mockResolvedValue(undefined) };

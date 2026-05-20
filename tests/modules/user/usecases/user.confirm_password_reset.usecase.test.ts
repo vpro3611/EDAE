@@ -28,6 +28,7 @@ describe('ConfirmPasswordResetUseCase Unit Tests', () => {
             updateUser: jest.fn().mockResolvedValue(undefined),
             deleteUser: jest.fn(),
             markUserAsVerified: jest.fn(),
+            purgeDeletedUsers: jest.fn(),
         };
         mockPasswordHasher = { hash: jest.fn(), compare: jest.fn() };
         mockVerifyOtp = { execute: jest.fn().mockResolvedValue(undefined) };
