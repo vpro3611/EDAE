@@ -4,8 +4,9 @@
       <input
         v-for="(_, i) in 6"
         :key="i"
-        :ref="el => { if (el) inputs[i] = el }"
+        :ref="el => { if (el) inputs[i] = el as HTMLInputElement }"
         class="otp-box"
+        :class="{ filled: !!digits[i] }"
         type="text"
         inputmode="numeric"
         maxlength="1"
@@ -16,6 +17,14 @@
         @paste="onPaste($event)"
         @focus="$event.target.select()"
       />
+    </div>
+    <div class="otp-progress" aria-hidden="true">
+      <div
+        v-for="i in 6"
+        :key="i"
+        class="otp-pip"
+        :class="{ active: !!digits[i - 1] }"
+      ></div>
     </div>
   </div>
 </template>
@@ -73,37 +82,67 @@ function onPaste(e: ClipboardEvent) {
 <style scoped>
 .otp-root {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
 .otp-boxes {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
 }
 
 .otp-box {
   width: 48px;
-  height: 56px;
+  height: 58px;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-bottom: 2px solid var(--muted);
   color: var(--text);
   font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 26px;
+  font-weight: 400;
   text-align: center;
-  border-radius: 4px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: 6px;
   outline: none;
+  caret-color: var(--accent);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.15s;
 }
 
 .otp-box:focus {
   border-color: var(--accent);
-  border-bottom-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-dim), 0 4px 16px var(--accent-dim);
+  background: rgba(200, 169, 126, 0.05);
+  box-shadow: 0 0 0 2px rgba(200, 169, 126, 0.12), 0 4px 20px rgba(200, 169, 126, 0.08);
+  transform: translateY(-1px);
 }
 
-.otp-box:not(:placeholder-shown):not(:focus) {
-  border-bottom-color: var(--accent);
+.otp-box.filled {
+  border-color: var(--border-accent);
+  background: rgba(200, 169, 126, 0.07);
+  color: var(--accent);
+}
+
+.otp-box.filled:focus {
+  background: rgba(200, 169, 126, 0.1);
+}
+
+/* Progress indicator */
+.otp-progress {
+  display: flex;
+  gap: 5px;
+}
+
+.otp-pip {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background 0.25s, transform 0.2s;
+}
+
+.otp-pip.active {
+  background: var(--accent);
+  transform: scale(1.15);
 }
 </style>
