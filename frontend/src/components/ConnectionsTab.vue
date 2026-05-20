@@ -45,23 +45,13 @@
 
         <template v-if="createProvider === 'telegram'">
           <div class="float-field" :class="{ active: createBotTokenFocused || createBotToken }">
-            <input
-              id="createBotToken"
-              v-model="createBotToken"
-              type="text"
-              @focus="createBotTokenFocused = true"
-              @blur="createBotTokenFocused = false"
-            />
+            <input id="createBotToken" v-model="createBotToken" type="text"
+              @focus="createBotTokenFocused = true" @blur="createBotTokenFocused = false" />
             <label for="createBotToken">Bot token</label>
           </div>
           <div class="float-field" :class="{ active: createChatIdFocused || createChatId }">
-            <input
-              id="createChatId"
-              v-model="createChatId"
-              type="text"
-              @focus="createChatIdFocused = true"
-              @blur="createChatIdFocused = false"
-            />
+            <input id="createChatId" v-model="createChatId" type="text"
+              @focus="createChatIdFocused = true" @blur="createChatIdFocused = false" />
             <label for="createChatId">Chat ID</label>
           </div>
         </template>
@@ -94,13 +84,8 @@
         </template>
 
         <div v-if="createProvider === 'email'" class="float-field" :class="{ active: createAddressFocused || createAddress }">
-          <input
-            id="createAddress"
-            v-model="createAddress"
-            type="email"
-            @focus="createAddressFocused = true"
-            @blur="createAddressFocused = false"
-          />
+          <input id="createAddress" v-model="createAddress" type="email"
+            @focus="createAddressFocused = true" @blur="createAddressFocused = false" />
           <label for="createAddress">Email address</label>
         </div>
 
@@ -254,7 +239,6 @@ function formatDate(iso?: string): string {
   return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date(iso))
 }
 
-// ── Active list ──
 const connections = ref<ConnectionDto[]>([])
 const listLoading = ref(false)
 const actionError = ref('')
@@ -270,7 +254,6 @@ onMounted(async () => {
   }
 })
 
-// ── Create form ──
 const showCreateForm = ref(false)
 const createName = ref('')
 const createNameFocused = ref(false)
@@ -340,7 +323,6 @@ async function handleCreate() {
   }
 }
 
-// ── Inline edit ──
 const editingId = ref<string | null>(null)
 const editName = ref('')
 const editNameFocused = ref(false)
@@ -409,9 +391,7 @@ async function handleEdit(conn: ConnectionDto) {
       return
     }
     const payload: { name?: string; credentials?: ConnectionCredentials } = {}
-    if (editName.value.trim()) {
-      payload.name = editName.value.trim()
-    }
+    if (editName.value.trim()) payload.name = editName.value.trim()
     const origCreds = conn.credentials
     let credentialsChanged = false
     if (origCreds.provider === 'telegram') {
@@ -427,9 +407,7 @@ async function handleEdit(conn: ConnectionDto) {
     } else {
       credentialsChanged = editAddress.value !== (origCreds as EmailCredentials).address
     }
-    if (credentialsChanged) {
-      payload.credentials = buildEditCredentials(conn.provider)
-    }
+    if (credentialsChanged) payload.credentials = buildEditCredentials(conn.provider)
     const updated = await connApi.updateConnection(conn.id, payload)
     const idx = connections.value.findIndex(c => c.id === conn.id)
     if (idx !== -1) connections.value[idx] = updated
@@ -441,7 +419,6 @@ async function handleEdit(conn: ConnectionDto) {
   }
 }
 
-// ── Delete ──
 const deletingId = ref<string | null>(null)
 
 async function handleDelete(id: string) {
@@ -451,9 +428,7 @@ async function handleDelete(id: string) {
     await connApi.softDelete(id)
     const deleted = connections.value.find(c => c.id === id)
     connections.value = connections.value.filter(c => c.id !== id)
-    if (deletedLoaded.value && deleted) {
-      deletedConnections.value.unshift(deleted)
-    }
+    if (deletedLoaded.value && deleted) deletedConnections.value.unshift(deleted)
   } catch (e) {
     actionError.value = (e as Error).message
   } finally {
@@ -461,7 +436,6 @@ async function handleDelete(id: string) {
   }
 }
 
-// ── Deleted section ──
 const showDeleted = ref(false)
 const deletedConnections = ref<ConnectionDto[]>([])
 const deletedLoading = ref(false)
@@ -499,145 +473,10 @@ async function handleRestore(id: string) {
 </script>
 
 <style scoped>
-/* ── Shared dashboard utility classes (copied from DashboardView scoped styles) ── */
-.section-header { margin-bottom: 4px; }
-.section-title { font-family: var(--font-display); font-size: 28px; font-weight: 400; color: var(--text); letter-spacing: -0.01em; margin-bottom: 4px; }
-.section-sub { font-size: 13px; color: var(--text-2); }
-
-.settings-block {
-  background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 22px 24px;
-  display: flex; flex-direction: column; gap: 16px;
+/* Component-specific only — shared primitives from assets/shared.css */
+.edit-form {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
 }
-
-.block-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.block-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-.block-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
-
-.inline-form { display: flex; flex-direction: column; gap: 14px; }
-
-.float-field {
-  position: relative; padding-top: 18px;
-  border-bottom: 1px solid var(--border); transition: border-color 0.2s;
-}
-.float-field input {
-  width: 100%; background: transparent; border: none; outline: none;
-  color: var(--text); font-family: var(--font-ui); font-size: 15px;
-  padding: 8px 36px 8px 0;
-}
-.float-field label {
-  position: absolute; left: 0; top: 26px; font-size: 15px; color: var(--text-2);
-  pointer-events: none; transition: top 0.2s, font-size 0.2s, color 0.2s, letter-spacing 0.2s;
-}
-.float-field.active label { top: 2px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.float-field:focus-within { border-bottom-color: var(--accent); }
-
-.float-field .field-toggle {
-  position: absolute; right: 0; top: 50%; transform: translateY(-25%);
-  background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px;
-  display: flex; align-items: center; transition: color 0.2s;
-}
-.float-field .field-toggle:hover { color: var(--text-2); }
-
-.field-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
-
-.inline-error { font-size: 12px; color: var(--error); padding: 6px 10px; background: rgba(224,96,96,0.08); border-radius: 3px; animation: shake 0.3s ease; }
-.inline-success { font-size: 12px; color: var(--success); padding: 6px 10px; background: rgba(90,201,136,0.08); border-radius: 3px; }
-
-.inline-actions { display: flex; gap: 10px; justify-content: flex-end; }
-
-.btn-ghost {
-  background: none; border: 1px solid var(--border); color: var(--text-2);
-  font-family: var(--font-ui); font-size: 12px; font-weight: 500; letter-spacing: 0.06em;
-  padding: 7px 14px; border-radius: 3px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
-}
-.btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.15); }
-
-.btn-primary-sm {
-  background: var(--accent); color: #1a1205; border: none;
-  font-family: var(--font-ui); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 7px 18px; border-radius: 3px; cursor: pointer; transition: all 0.2s;
-  display: flex; align-items: center; gap: 6px; white-space: nowrap; min-width: 72px; justify-content: center;
-}
-.btn-primary-sm:hover:not(:disabled) { background: #d9bb8e; box-shadow: 0 2px 12px rgba(200,169,126,0.25); }
-.btn-primary-sm:disabled { opacity: 0.55; cursor: not-allowed; }
-
-.btn-loading { display: flex; gap: 4px; align-items: center; }
-.btn-loading span { width: 4px; height: 4px; border-radius: 50%; background: #1a1205; animation: bounce 0.9s infinite ease-in-out; }
-.btn-loading span:nth-child(2) { animation-delay: 0.15s; }
-.btn-loading span:nth-child(3) { animation-delay: 0.3s; }
-
-@keyframes bounce { 0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; } 40% { transform: scale(1.2); opacity: 1; } }
-@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
-
-/* ── Component-specific styles ── */
-.conn-row {
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.conn-row:last-child { border-bottom: none; }
-
-.conn-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.conn-name { font-size: 13px; color: var(--fg); font-weight: 500; }
-.conn-date { font-size: 11px; color: var(--muted); margin-left: auto; }
-.conn-actions { display: flex; gap: 8px; }
-
-.provider-badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-.provider-badge[data-provider="telegram"] { color: #4fc3f7; background: color-mix(in srgb, #4fc3f7 12%, transparent); border: 1px solid color-mix(in srgb, #4fc3f7 25%, transparent); }
-.provider-badge[data-provider="slack"]    { color: #a8d8a8; background: color-mix(in srgb, #a8d8a8 12%, transparent); border: 1px solid color-mix(in srgb, #a8d8a8 25%, transparent); }
-.provider-badge[data-provider="email"]   { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); }
-
-.provider-select { display: flex; flex-direction: column; gap: 6px; }
-.provider-btns { display: flex; gap: 6px; }
-.provider-btn {
-  padding: 4px 12px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  font-size: 12px;
-  text-transform: capitalize;
-  transition: all 0.15s;
-}
-.provider-btn.active {
-  background: color-mix(in srgb, var(--accent) 15%, transparent);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.edit-form { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
-.conn-empty, .conn-loading { font-size: 13px; color: var(--muted); padding: 16px 0; }
-
-.btn-sm { font-size: 11px; padding: 4px 10px; }
-.btn-danger-sm {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 4px;
-  border: 1px solid color-mix(in srgb, #e57373 40%, transparent);
-  background: color-mix(in srgb, #e57373 10%, transparent);
-  color: #e57373;
-  cursor: pointer;
-  transition: all 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.btn-danger-sm:hover:not(:disabled) { background: color-mix(in srgb, #e57373 20%, transparent); }
-.btn-danger-sm:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
