@@ -28,6 +28,7 @@ describe('ConfirmRegistrationUseCase Unit Tests', () => {
             updateUser: jest.fn(),
             deleteUser: jest.fn(),
             markUserAsVerified: jest.fn().mockResolvedValue(undefined),
+            purgeDeletedUsers: jest.fn(),
         };
         mockVerifyOtp = { execute: jest.fn().mockResolvedValue(undefined) };
         useCase = new ConfirmRegistrationUseCase(
