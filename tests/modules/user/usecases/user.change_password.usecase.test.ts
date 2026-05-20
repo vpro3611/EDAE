@@ -36,6 +36,7 @@ describe("UserChangePasswordUseCase Unit Tests", () => {
             updateUser: jest.fn(),
             deleteUser: jest.fn(),
             markUserAsVerified: jest.fn(),
+            purgeDeletedUsers: jest.fn(),
         };
         mockPasswordHasher = {
             hash: jest.fn(),

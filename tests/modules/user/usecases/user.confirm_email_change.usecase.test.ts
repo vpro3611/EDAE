@@ -27,6 +27,7 @@ describe('ConfirmEmailChangeUseCase Unit Tests', () => {
             updateUser: jest.fn().mockResolvedValue(undefined),
             deleteUser: jest.fn(),
             markUserAsVerified: jest.fn(),
+            purgeDeletedUsers: jest.fn(),
         };
         mockVerifyOtp = { execute: jest.fn().mockResolvedValue(undefined) };
         useCase = new ConfirmEmailChangeUseCase(mockUserRepoReader, mockUserRepoWriter, mockVerifyOtp as any, UserDtoMapper.create());

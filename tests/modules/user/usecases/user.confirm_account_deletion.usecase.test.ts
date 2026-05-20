@@ -27,6 +27,7 @@ describe('ConfirmAccountDeletionUseCase Unit Tests', () => {
             updateUser: jest.fn(),
             deleteUser: jest.fn().mockResolvedValue(undefined),
             markUserAsVerified: jest.fn(),
+            purgeDeletedUsers: jest.fn(),
         };
         mockVerifyOtp = { execute: jest.fn().mockResolvedValue(undefined) };
         useCase = new ConfirmAccountDeletionUseCase(mockUserRepoReader, mockUserRepoWriter, mockVerifyOtp as any);
