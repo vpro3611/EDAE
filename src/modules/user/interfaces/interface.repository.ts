@@ -6,6 +6,7 @@ export interface UserRepoWriterInterface {
     updateUser(user: User): Promise<void>;
     deleteUser(id: string): Promise<void>;
     markUserAsVerified(id: string): Promise<void>;
+    purgeDeletedUsers(): Promise<number>;
 }
 
 export interface UserRepoReaderInterface {

@@ -49,4 +49,13 @@ export class RepositoryUserWriter implements UserRepoWriterInterface {
             handleDatabaseError(e, `${this.moduleName}.markUserAsVerified: ${id}`);
         }
     }
+
+    async purgeDeletedUsers(): Promise<number> {
+        try {
+            const result = await this.db.query("DELETE FROM users WHERE is_deleted = true");
+            return result.rowCount ?? 0;
+        } catch (e) {
+            handleDatabaseError(e, `${this.moduleName}.purgeDeletedUsers`);
+        }
+    }
 }
