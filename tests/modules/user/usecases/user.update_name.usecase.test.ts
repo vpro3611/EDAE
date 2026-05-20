@@ -35,6 +35,7 @@ describe("UserUpdateNameUseCase Unit Tests", () => {
             updateUser: jest.fn(),
             deleteUser: jest.fn(),
             markUserAsVerified: jest.fn(),
+            purgeDeletedUsers: jest.fn(),
         };
         useCase = new UserUpdateNameUseCase(mockUserRepoReader, mockUserRepoWriter, UserDtoMapper.create());
     });

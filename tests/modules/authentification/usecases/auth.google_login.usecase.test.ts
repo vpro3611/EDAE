@@ -89,6 +89,7 @@ function buildUseCase(
     updateUser: jest.fn().mockResolvedValue(undefined),
     deleteUser: jest.fn().mockResolvedValue(undefined),
     markUserAsVerified: jest.fn().mockResolvedValue(undefined),
+            purgeDeletedUsers: jest.fn(),
     ...writerOverrides,
   };
 
@@ -238,6 +239,7 @@ describe('AuthGoogleLoginUseCase', () => {
         {
           createUser: mockCreateUser,
           markUserAsVerified: jest.fn().mockResolvedValue(undefined),
+            purgeDeletedUsers: jest.fn(),
         },
         { findByProviderAndExternalId: jest.fn().mockResolvedValue(null) },
       );
