@@ -7,6 +7,7 @@ import { RepositorySubscriptionReader } from '../modules/subscription/repository
 import { InfraEncryptionInterface } from '../modules/infra/encryption/infra.encryption.interface';
 import { InfraEmailSenderInterface } from '../modules/infra/email/infra.email_sender.interface';
 import { bootstrapReportWorker } from './report.worker';
+import { getRedisConnectionOptions } from '../redis';
 
 const QUEUE_NAME = 'github-poll';
 const JOB_KEY = 'github-poll-tick';
@@ -22,11 +23,7 @@ export async function bootstrapWorkers(
         ? rawPollIntervalMs
         : DEFAULT_POLL_INTERVAL_MS;
 
-    const redisConnection = {
-        host: process.env.REDIS_HOST ?? 'localhost',
-        port: Number(process.env.REDIS_PORT ?? 6379),
-        ...(process.env.REDIS_PASSWORD ? { password: process.env.REDIS_PASSWORD } : {}),
-    };
+    const redisConnection = getRedisConnectionOptions();
 
     const queue = new Queue(QUEUE_NAME, { connection: redisConnection });
 

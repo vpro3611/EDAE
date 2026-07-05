@@ -10,6 +10,7 @@ import { FetchGithubActivityUseCase } from '../modules/report/usecases/fetch_git
 import { PdfService } from '../modules/report/pdf/pdf.service';
 import { NotificationDispatcher } from '../modules/notification/notification.dispatcher';
 import { GenerateReportService } from '../modules/report/generate_report.service';
+import { getRedisConnectionOptions } from '../redis';
 
 const QUEUE_NAME = 'report-worker';
 const JOB_KEY = 'report-tick';
@@ -23,11 +24,7 @@ export async function bootstrapReportWorker(
     const rawInterval = Number(process.env.REPORT_WORKER_INTERVAL_MS ?? DEFAULT_INTERVAL_MS);
     const intervalMs = Number.isFinite(rawInterval) && rawInterval > 0 ? rawInterval : DEFAULT_INTERVAL_MS;
 
-    const redisConnection = {
-        host: process.env.REDIS_HOST ?? 'localhost',
-        port: Number(process.env.REDIS_PORT ?? 6379),
-        ...(process.env.REDIS_PASSWORD ? { password: process.env.REDIS_PASSWORD } : {}),
-    };
+    const redisConnection = getRedisConnectionOptions();
 
     const queue = new Queue(QUEUE_NAME, { connection: redisConnection });
     await queue.add(JOB_KEY, {}, { repeat: { every: intervalMs }, jobId: JOB_KEY });

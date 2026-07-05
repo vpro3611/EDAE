@@ -115,7 +115,7 @@ npm run start
 Set these backend environment variables on Render:
 
 - `DATABASE_URL` — Neon connection string
-- `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD` — Aiven Valkey connection details
+- `REDIS_URL` — Aiven Valkey / Upstash Redis connection string
 - `API_URL` — Render backend public URL
 - `FRONTEND_URL` — Vercel frontend public URL
 - `ACCESS_TOKEN_SECRET`
@@ -171,9 +171,7 @@ Variables marked **required** are validated at startup by `src/check_env_vars.ts
 | `GOOGLE_CLIENT_ID` | ✅ | — | Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | ✅ | — | Google OAuth client secret |
 | `GOOGLE_REDIRECT_URI` | ✅ | `postmessage` | OAuth redirect URI (`postmessage` for GIS popup flow) |
-| `REDIS_HOST` | — | `localhost` | Redis hostname |
-| `REDIS_PORT` | — | `6379` | Redis port |
-| `REDIS_PASSWORD` | — | (none) | Redis password |
+| `REDIS_URL` | ✅ | — | Redis / Valkey connection string, e.g. `rediss://...` in production |
 | `VITE_API_BASE_URL` | frontend | — | Public backend base URL used by the Vercel frontend |
 | `VITE_GOOGLE_CLIENT_ID` | frontend | — | Google client ID exposed to the Vercel frontend |
 | `GITHUB_POLL_INTERVAL_MS` | — | `300000` | GitHub poll interval in ms |
