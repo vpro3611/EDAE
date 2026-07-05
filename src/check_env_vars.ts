@@ -16,7 +16,7 @@ export const envVars: Record<string, string | undefined> = {
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
   ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
-  REDIS_UR: process.env.REDIS_URL,
+  REDIS_URL: process.env.REDIS_URL,
 };
 
 export function checkEnvVars(
