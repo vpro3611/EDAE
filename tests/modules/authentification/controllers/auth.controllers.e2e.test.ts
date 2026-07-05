@@ -88,6 +88,18 @@ function buildContainer(overrides: Partial<DepsContainer> = {}): DepsContainer {
 }
 
 describe("Auth controllers e2e", () => {
+    const originalEnv = process.env;
+
+    beforeEach(() => {
+        process.env = { ...originalEnv };
+        process.env.FRONTEND_URL = "https://edae-frontend.vercel.app";
+        process.env.NODE_ENV = "test";
+    });
+
+    afterAll(() => {
+        process.env = originalEnv;
+    });
+
     describe("POST /pub/auth/register", () => {
         it("returns 201 and status message on valid body", async () => {
             const app = createApp(buildContainer());
@@ -151,6 +163,7 @@ describe("Auth controllers e2e", () => {
             expect(res.body.accessToken).toBe("access-token");
             const setCookie = res.headers["set-cookie"] as unknown as string[];
             expect(setCookie?.some((c: string) => c.startsWith("refreshToken="))).toBe(true);
+            expect(setCookie?.some((c: string) => c.includes("SameSite=Lax"))).toBe(true);
         });
 
         it("returns 400 when body is missing otp", async () => {
@@ -177,6 +190,34 @@ describe("Auth controllers e2e", () => {
             expect(res.body.user.email).toBe("alice@example.com");
             const setCookie = res.headers["set-cookie"] as unknown as string[];
             expect(setCookie?.some((c: string) => c.startsWith("refreshToken="))).toBe(true);
+            expect(setCookie?.some((c: string) => c.includes("SameSite=Lax"))).toBe(true);
+        });
+
+        it("returns credentialed CORS headers for the configured frontend origin", async () => {
+            const app = createApp(buildContainer());
+
+            const res = await request(app)
+                .post("/pub/auth/login")
+                .set("Origin", "https://edae-frontend.vercel.app")
+                .send({ email: "alice@example.com", password: "Pass123!" });
+
+            expect(res.status).toBe(200);
+            expect(res.headers["access-control-allow-origin"]).toBe("https://edae-frontend.vercel.app");
+            expect(res.headers["access-control-allow-credentials"]).toBe("true");
+        });
+
+        it("uses Secure and SameSite=None cookies in production", async () => {
+            process.env.NODE_ENV = "production";
+            const app = createApp(buildContainer());
+
+            const res = await request(app)
+                .post("/pub/auth/login")
+                .send({ email: "alice@example.com", password: "Pass123!" });
+
+            expect(res.status).toBe(200);
+            const setCookie = res.headers["set-cookie"] as unknown as string[];
+            expect(setCookie?.some((c: string) => c.includes("Secure"))).toBe(true);
+            expect(setCookie?.some((c: string) => c.includes("SameSite=None"))).toBe(true);
         });
 
         it("returns 400 when body fails schema validation", async () => {
@@ -220,6 +261,7 @@ describe("Auth controllers e2e", () => {
             expect(res.body.user.id).toBe("uuid-1");
             const setCookie = res.headers["set-cookie"] as unknown as string[];
             expect(setCookie?.some((c: string) => c.startsWith("refreshToken="))).toBe(true);
+            expect(setCookie?.some((c: string) => c.includes("SameSite=Lax"))).toBe(true);
         });
 
         it("returns 401 when refreshToken cookie is absent", async () => {
@@ -259,6 +301,7 @@ describe("Auth controllers e2e", () => {
             expect(res.status).toBe(200);
             const setCookie = res.headers["set-cookie"] as unknown as string[];
             expect(setCookie?.some((c: string) => c.includes("refreshToken=;") || c.includes("refreshToken=;") || c.includes("Expires=Thu, 01 Jan 1970"))).toBe(true);
+            expect(setCookie?.some((c: string) => c.includes("SameSite=Lax"))).toBe(true);
         });
 
         it("returns 401 when refreshToken cookie is absent", async () => {
@@ -283,6 +326,7 @@ describe("Auth controllers e2e", () => {
             expect(res.body.user.email).toBe("alice@example.com");
             const setCookie = res.headers["set-cookie"] as unknown as string[];
             expect(setCookie?.some((c: string) => c.startsWith("refreshToken="))).toBe(true);
+            expect(setCookie?.some((c: string) => c.includes("SameSite=Lax"))).toBe(true);
         });
 
         it("returns 400 when code field is missing", async () => {

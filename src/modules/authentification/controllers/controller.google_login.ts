@@ -1,7 +1,7 @@
 import { AuthentificationService } from "../auth_service";
 import { Request, Response } from "express";
 import { z } from "zod";
-import { REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE } from "../jwt/jwt.config";
+import { getRefreshTokenCookieOptions } from "../cookies";
 
 export const GoogleLoginBodySchema = z.object({
   code: z.string(),
@@ -19,12 +19,7 @@ export class ControllerGoogleLogin {
   googleLoginCont = async (req: Request<{}, {}, GoogleLoginBodySchemaType>, res: Response) => {
     const { code } = req.body;
     const { loggedUser, accessToken, refreshToken } = await this.authService.loginGoogle(code);
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE,
-    });
+    res.cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions());
     return res.status(200).json({ accessToken, user: loggedUser });
   };
 }

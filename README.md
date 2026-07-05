@@ -87,6 +87,68 @@ cd frontend && npm install && npm run dev
 
 The frontend Vite dev server runs on port `5173` and proxies `/pub` and `/protected` to the backend.
 
+### Option C — Production deployment
+
+This repository is set up for the following stack:
+
+- **Database:** Neon PostgreSQL
+- **Redis / queues:** Aiven for Valkey
+- **Backend:** one Render web service
+- **Frontend:** one Vercel project
+
+#### Backend on Render
+
+Use one Render **Web Service** for the backend. The current server process already starts:
+
+- the Express API
+- BullMQ repeatable workers
+- the scheduled user purge job
+
+Recommended commands:
+
+```bash
+npm install
+npm run build
+npm run start
+```
+
+Set these backend environment variables on Render:
+
+- `DATABASE_URL` — Neon connection string
+- `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD` — Aiven Valkey connection details
+- `API_URL` — Render backend public URL
+- `FRONTEND_URL` — Vercel frontend public URL
+- `ACCESS_TOKEN_SECRET`
+- `REFRESH_TOKEN_SECRET`
+- `ENCRYPTION_KEY`
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`
+
+#### Frontend on Vercel
+
+Set these frontend environment variables on Vercel:
+
+- `VITE_API_BASE_URL` — Render backend public URL, for example `https://edae-api.onrender.com`
+- `VITE_GOOGLE_CLIENT_ID` — the same Google client ID used by the backend
+
+Use:
+
+- Root directory: `frontend`
+- Build command: `npm run build`
+
+#### Cross-origin auth on default platform domains
+
+This deployment uses direct browser calls from `*.vercel.app` to `*.onrender.com`, so refresh-token cookies are cross-site in production.
+
+The repository now handles that by:
+
+- enabling credentialed CORS for `FRONTEND_URL`
+- sending refresh cookies with `Secure`
+- sending refresh cookies with `SameSite=None` in production
+- keeping `withCredentials: true` in Axios
+
+If `FRONTEND_URL` or `VITE_API_BASE_URL` is wrong, login and refresh will fail in the browser.
+
 ### Configuration reference
 
 Variables marked **required** are validated at startup by `src/check_env_vars.ts` — the server will refuse to start if any are missing.
@@ -112,6 +174,8 @@ Variables marked **required** are validated at startup by `src/check_env_vars.ts
 | `REDIS_HOST` | — | `localhost` | Redis hostname |
 | `REDIS_PORT` | — | `6379` | Redis port |
 | `REDIS_PASSWORD` | — | (none) | Redis password |
+| `VITE_API_BASE_URL` | frontend | — | Public backend base URL used by the Vercel frontend |
+| `VITE_GOOGLE_CLIENT_ID` | frontend | — | Google client ID exposed to the Vercel frontend |
 | `GITHUB_POLL_INTERVAL_MS` | — | `300000` | GitHub poll interval in ms |
 | `REPORT_WORKER_INTERVAL_MS` | — | `3600000` | Report scheduler check interval in ms |
 | `USER_PURGE_CRON` | — | `0 3 * * *` | Cron expression for hard-deleting soft-deleted users (default: daily at 03:00) |

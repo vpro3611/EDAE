@@ -1,6 +1,6 @@
 import { AuthentificationService } from "../auth_service";
 import { Request, Response } from "express";
-import { REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE } from "../jwt/jwt.config";
+import { getRefreshTokenCookieOptions } from "../cookies";
 
 export class ControllerRefresh {
     constructor(private readonly authService: AuthentificationService) {}
@@ -18,12 +18,7 @@ export class ControllerRefresh {
 
         const { user, accessToken, refreshToken: newRefreshToken } = await this.authService.refresh(refreshToken);
 
-        res.cookie("refreshToken", newRefreshToken, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE,
-        });
+        res.cookie("refreshToken", newRefreshToken, getRefreshTokenCookieOptions());
 
         return res.status(200).json({ accessToken, user });
     };

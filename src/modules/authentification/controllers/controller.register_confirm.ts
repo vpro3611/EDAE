@@ -1,7 +1,7 @@
 import {AuthentificationService} from "../auth_service";
 import {Request, Response} from "express";
 import {z} from "zod";
-import {REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE} from "../jwt/jwt.config";
+import {getRefreshTokenCookieOptions} from "../cookies";
 
 
 export const RegisterConfirmRequestBodySchema = z.object({
@@ -25,12 +25,7 @@ export class ControllerRegisterConfirm {
 
             const result = await this.authService.registerConfirm(email, otp);
 
-            res.cookie("refreshToken", result.refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                maxAge: REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE,
-            });
+            res.cookie("refreshToken", result.refreshToken, getRefreshTokenCookieOptions());
 
             return res.status(200).json({user: result.user, accessToken: result.accessToken});
         }

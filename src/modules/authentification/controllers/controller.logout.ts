@@ -1,5 +1,6 @@
 import { AuthentificationService } from "../auth_service";
 import { Request, Response } from "express";
+import { getRefreshTokenClearCookieOptions } from "../cookies";
 
 export class ControllerLogout {
     constructor(private readonly authService: AuthentificationService) {}
@@ -17,11 +18,7 @@ export class ControllerLogout {
 
         await this.authService.logout(refreshToken);
 
-        res.clearCookie("refreshToken", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-        });
+        res.clearCookie("refreshToken", getRefreshTokenClearCookieOptions());
 
         return res.status(200).json({ message: "Logged out successfully." });
     };

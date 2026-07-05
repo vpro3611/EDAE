@@ -1,7 +1,7 @@
 import { AuthentificationService } from "../auth_service";
 import { Request, Response } from "express";
 import { z } from "zod";
-import { REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE } from "../jwt/jwt.config";
+import { getRefreshTokenCookieOptions } from "../cookies";
 
 export const LoginEmailRequestBodySchema = z.object({
     email: z.string().email(),
@@ -23,12 +23,7 @@ export class ControllerLoginEmail {
 
             const { loggedUser, accessToken, refreshToken } = await this.authService.loginEmail(email, password);
 
-            res.cookie("refreshToken", refreshToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                maxAge: REFRESH_TOKEN_EXPIRATION_TIME_FOR_DATABASE,
-            });
+            res.cookie("refreshToken", refreshToken, getRefreshTokenCookieOptions());
 
             return res.status(200).json({ accessToken, user: loggedUser });
         };

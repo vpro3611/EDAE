@@ -1,9 +1,9 @@
 import {DepsContainer} from "./container";
 import express, {Express} from "express";
 import cookieParser from "cookie-parser";
+import cors, {CorsOptions} from "cors";
 import {authMiddleware} from "./modules/middlewares/middleware.auth";
 import {validateBody} from "./modules/middlewares/middleware.validators";
-import {CorsOptions} from "cors";
 
 // auth controllers
 import { RegisterRequestBodySchema} from "./modules/authentification/controllers/controller.register_request";
@@ -34,6 +34,7 @@ import { constructMiddlewareWrapper, preDefinedPublicLimiters} from "./api_limit
 
 export function createApp(dependencies: DepsContainer): Express {
     const app = express();
+    app.set("trust proxy", 1);
 
     app.use(loggingMiddleware(dependencies.logger));
     app.use(metricsMiddleware(dependencies.metrics));
@@ -57,8 +58,11 @@ export function createApp(dependencies: DepsContainer): Express {
             } else {
                 callback(null, false);
             }
-        }
+        },
+        credentials: true,
     };
+
+    app.use(cors(corsOptions));
 
     app.use("/pub", publicRouter);
     app.use("/protected", privateRouter);

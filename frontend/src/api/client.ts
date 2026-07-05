@@ -1,5 +1,6 @@
 import axios, { type AxiosError } from 'axios'
 import { getToken, callRefresh } from './token'
+import { resolveApiBaseUrl } from './base_url'
 
 interface ApiErrorData {
   message?: string
@@ -26,9 +27,17 @@ export async function call<T>(fn: () => Promise<T>): Promise<T> {
   }
 }
 
-export const publicApi = axios.create({ withCredentials: true })
+const apiBaseUrl = resolveApiBaseUrl(import.meta.env)
 
-export const privateApi = axios.create({ withCredentials: true })
+export const publicApi = axios.create({
+  baseURL: apiBaseUrl,
+  withCredentials: true,
+})
+
+export const privateApi = axios.create({
+  baseURL: apiBaseUrl,
+  withCredentials: true,
+})
 
 privateApi.interceptors.request.use((config) => {
   const token = getToken()
