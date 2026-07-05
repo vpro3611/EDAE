@@ -1,10 +1,7 @@
-import Redis from 'ioredis'
+import Redis from "ioredis";
 
-export const REDIS = new Redis({
-    host: process.env.REDIS_HOST ?? 'localhost',
-    port: Number(process.env.REDIS_PORT ?? 6379),
-    ...(process.env.REDIS_PASSWORD ? { password: process.env.REDIS_PASSWORD } : {}),
-});
+// This is being used only for local develomplent, while REDIS_URL for production deployment
 
-
-
+export const REDIS = new Redis(
+  process.env.REDIS_URL ?? "redis://localhost:6379",
+);
