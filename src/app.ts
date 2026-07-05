@@ -54,20 +54,22 @@ export function createApp(dependencies: DepsContainer): Express {
     process.env.FRONTEND_URL!,
   ];
 
-  const corsOptions: CorsOptions = {
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(null, false);
-      }
-    },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  };
-
-  app.use(cors(corsOptions));
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (!origin) {
+          return callback(null, true);
+        }
+        if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+        return callback(null, false);
+      },
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
+  );
 
   app.use("/pub", publicRouter);
   app.use("/protected", privateRouter);
